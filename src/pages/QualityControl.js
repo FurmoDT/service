@@ -1,5 +1,9 @@
+import FileUpload from "../component/FileUpload";
+
 const QualityControl = () => {
-    return <div>QC</div>
+    return <div>
+        <FileUpload/>
+    </div>
 };
 
 export default QualityControl
