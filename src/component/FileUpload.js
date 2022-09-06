@@ -1,5 +1,4 @@
-import React, {useCallback, useMemo} from 'react'
-import {Fragment} from "react";
+import React, {Fragment, useCallback, useMemo} from 'react'
 import {useDropzone} from 'react-dropzone'
 
 const baseStyle = {
@@ -26,9 +25,10 @@ const activeStyle = {
     borderColor: '#00e676'
 };
 
-const FileUpload = () => {
+const FileUpload = (props) => {
     const onDrop = useCallback((acceptedFiles) => {
         acceptedFiles.forEach((file) => {
+            props.setFile(acceptedFiles)
             const reader = new FileReader()
 
             reader.onabort = () => console.log('file reading was aborted')
@@ -55,7 +55,8 @@ const FileUpload = () => {
         isFocused,
         isDragActive
     ]);
-    const file = acceptedFiles.map(file => file.name);
+    // props.setFile(acceptedFiles.map(file => file.name))
+    // const file = acceptedFiles.map(file => file.name);
     return (
         <div className="container">
             <div {...getRootProps({style})}>
@@ -69,8 +70,8 @@ const FileUpload = () => {
                         </Fragment>
                 }
                 {
-                    file.length ?
-                        <h3>uploaded file<br/>{file}</h3> : null
+                    props.file.length ?
+                        <h3>uploaded file<br/>{props.file.map(file => file.name)}</h3> : null
                 }
             </div>
         </div>
