@@ -42,7 +42,7 @@ const FileUpload = (props) => {
         })
 
     }, [])
-    const {acceptedFiles, getRootProps, getInputProps, isFocused, isDragActive} = useDropzone({
+    const {getRootProps, getInputProps, isFocused, isDragActive} = useDropzone({
         onDrop,
         accept: {'text/plain': ['.srt']},
         multiple: false
@@ -55,8 +55,6 @@ const FileUpload = (props) => {
         isFocused,
         isDragActive
     ]);
-    // props.setFile(acceptedFiles.map(file => file.name))
-    // const file = acceptedFiles.map(file => file.name);
     return (
         <div className="container">
             <div {...getRootProps({style})}>
