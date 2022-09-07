@@ -28,7 +28,11 @@ const activeStyle = {
 const FileUpload = (props) => {
     const onDrop = useCallback((acceptedFiles) => {
         acceptedFiles.forEach((file) => {
-            props.setFile(acceptedFiles)
+            if (file.name.endsWith('.srt')) {
+                props.setFile(acceptedFiles)
+            } else {
+                return
+            }
             const reader = new FileReader()
 
             reader.onabort = () => console.log('file reading was aborted')
