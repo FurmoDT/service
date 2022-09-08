@@ -14,7 +14,8 @@ const QualityControl = () => {
             reader.onerror = () => console.log('file reading has failed')
             reader.onload = () => {
                 // Do whatever you want with the file contents
-                const binaryStr = reader.result
+                let binaryStr = new ArrayBuffer(0)
+                binaryStr = reader.result
                 languageEncoding(value).then((fileInfo) => {
                     const enc = new TextDecoder(fileInfo.encoding);
                     console.log(enc.decode(binaryStr))
