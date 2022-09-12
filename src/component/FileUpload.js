@@ -48,7 +48,7 @@ const FileUpload = (props) => {
                 reader.readAsArrayBuffer(file)
             }
         })
-    }, [])
+    }, [props])
     const {getRootProps, getInputProps, isFocused, isDragActive} = useDropzone({
         onDrop,
         accept: {'text/plain': ['.srt']},
