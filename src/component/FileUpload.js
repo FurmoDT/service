@@ -1,5 +1,7 @@
-import React, {Fragment, useCallback, useMemo} from 'react'
+import {Fragment, useCallback, useMemo} from 'react'
 import {useDropzone} from 'react-dropzone'
+import languageEncoding from "detect-file-encoding-and-language";
+
 
 const baseStyle = {
     flex: 1,
@@ -29,7 +31,21 @@ const FileUpload = (props) => {
     const onDrop = useCallback((acceptedFiles) => {
         acceptedFiles.forEach((file) => {
             if (file.name.endsWith('.srt')) {
-                props.setFile(acceptedFiles)
+                const reader = new FileReader()
+
+                reader.onabort = () => console.log('file reading was aborted')
+                reader.onerror = () => console.log('file reading has failed')
+                reader.onload = () => {
+                    // Do whatever you want with the file contents
+                    let binaryStr = new ArrayBuffer(0)
+                    binaryStr = reader.result
+                    languageEncoding(file).then((fileInfo) => {
+                        const decoder = new TextDecoder(fileInfo.encoding);
+                        const str = decoder.decode(binaryStr)
+                        props.setFile({'filename': file.name, 'data': str})
+                    });
+                }
+                reader.readAsArrayBuffer(file)
             }
         })
     }, [])
@@ -59,8 +75,8 @@ const FileUpload = (props) => {
                         </Fragment>
                 }
                 {
-                    props.file.length ?
-                        <h3>uploaded file<br/>{props.file.map(file => file.name)}</h3> : null
+                    props.file ?
+                        <h3>uploaded file<br/>{props.file.filename}</h3> : null
                 }
             </div>
         </div>
