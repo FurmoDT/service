@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import styles from "../css/SpreadSheet.module.css"
+import {parse} from "../utils/srtParser";
 
 
 class SpreadSheet extends Component {
@@ -7,9 +8,9 @@ class SpreadSheet extends Component {
         const luckysheet = window.luckysheet;
         const column = [
             {'r': 0, 'c': 0, v: {v: 'TC_IN', ht: 0}}, {'r': 0, 'c': 1, v: {v: 'TC_OUT', ht: 0}},
-            {'r': 0, 'c': 2, v: {v: 'SOURCE', ht: 0}}, {'r': 0, 'c': 3, v: {v: 'TARGET', ht: 0}},
-            {'r': 0, 'c': 4, v: {v: 'ERROR', ht: 0}}
+            {'r': 0, 'c': 2, v: {v: 'TEXT', ht: 0}}, {'r': 0, 'c': 3, v: {v: 'ERROR', ht: 0}},
         ]
+        const cellData = this.props.file.data ? parse(this.props.file.data) : []
         luckysheet.create({
             hook: {
                 cellEditBefore: function (range) {
@@ -47,25 +48,21 @@ class SpreadSheet extends Component {
             data: [{
                 index: 0,
                 defaultRowHeight: 30,
-                celldata: [...column, ...[{'r': 1, 'c': 0, v: {v: 'sample1', bg: '#61dafb'}}, {
-                    'r': 1,
-                    'c': 1,
-                    v: {v: 'sample2'}
-                }]],
+                // celldata: [...column, ...parse(this.props.file.data)],
+                celldata: [...column, ...cellData],
                 config: {
                     columnlen: {
                         '0': 150,
                         '1': 150,
-                        '2': 600,
-                        '3': 600,
-                        '4': 200,
+                        '2': 800,
+                        '3': 200,
                     }
                 },
                 frozen: {
                     type: 'row'
                 },
             }],
-            column: 5,
+            column: 4,
             functionButton: '<button id="" class="btn btn-primary" style="padding:3px 6px;font-size: 12px;margin-right: 10px;">download</button>',
         });
         document.getElementById('luckysheet_info_detail_title').remove()
