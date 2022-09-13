@@ -5,7 +5,19 @@ import styles from "../css/SpreadSheet.module.css"
 class SpreadSheet extends Component {
     createSheet = () => {
         const luckysheet = window.luckysheet;
+        const column = [
+            {'r': 0, 'c': 0, v: {v: 'TC_IN', ht: 0}}, {'r': 0, 'c': 1, v: {v: 'TC_OUT', ht: 0}},
+            {'r': 0, 'c': 2, v: {v: 'SOURCE', ht: 0}}, {'r': 0, 'c': 3, v: {v: 'TARGET', ht: 0}},
+            {'r': 0, 'c': 4, v: {v: 'ERROR', ht: 0}}
+        ]
         luckysheet.create({
+            hook: {
+                cellEditBefore: function (range) {
+                    if (range[0].row_focus === 0) {
+                        throw new Error('header')
+                    }
+                }
+            },
             container: "luckysheet",
             title: this.props.file.filename ? this.props.file.filename : '',
             showtoolbar: false,
@@ -35,15 +47,25 @@ class SpreadSheet extends Component {
             data: [{
                 index: 0,
                 defaultRowHeight: 30,
+                celldata: [...column, ...[{'r': 1, 'c': 0, v: {v: 'sample1', bg: '#61dafb'}}, {
+                    'r': 1,
+                    'c': 1,
+                    v: {v: 'sample2'}
+                }]],
                 config: {
                     columnlen: {
-                        '0': 20
+                        '0': 150,
+                        '1': 150,
+                        '2': 600,
+                        '3': 600,
+                        '4': 200,
                     }
                 },
-                celldata: [{'r': 0, 'c': 0, v: {v: 'sample1', bg: '#61dafb'}}, {'r': 0, 'c': 1, v: {v: 'sample2'}}]
+                frozen: {
+                    type: 'row'
+                },
             }],
-            row: 10,
-            column: 10,
+            column: 5,
             functionButton: '<button id="" class="btn btn-primary" style="padding:3px 6px;font-size: 12px;margin-right: 10px;">download</button>',
         });
         document.getElementById('luckysheet_info_detail_title').remove()
