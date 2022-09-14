@@ -19,7 +19,7 @@ class SpreadSheet extends Component {
                         throw new Error('header')
                     }
                 },
-                cellUpdateBefore: function(r, c, v){
+                cellUpdateBefore: function (r, c, v) {
                     validator(r, c, v, luckysheet)
                 }
             },
@@ -66,7 +66,8 @@ class SpreadSheet extends Component {
                 },
             }],
             column: 4,
-            functionButton: '<button id="" class="btn btn-primary" style="padding:3px 6px;font-size: 12px;margin-right: 10px;">download</button>',
+            functionButton: '<button id="download" class="btn btn-primary" style="padding:3px 6px;font-size: 12px;margin-right: 10px;">download</button>' +
+                ' <button id="email" class="btn btn-primary btn-danger" style="padding:3px 6px;font-size: 12px;margin-right: 10px;">send email</button>',
         });
         document.getElementById('luckysheet_info_detail_title').remove()
         document.getElementById('luckysheet_info_detail_update').remove()
@@ -76,6 +77,10 @@ class SpreadSheet extends Component {
             logo[i].remove()
         }
         document.getElementById('luckysheet_info_detail_input').style.textAlign = 'center'
+        document.getElementById('email').onclick = () => {
+            const sample = ''
+            window.location.href = `mailto:?subject=sample&body=sample&attachment=${sample}`
+        }
     }
 
     componentDidMount() {
