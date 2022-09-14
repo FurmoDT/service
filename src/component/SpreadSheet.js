@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import styles from "../css/SpreadSheet.module.css"
-import {parse} from "../utils/srtParser";
+import {parse, toArray, toSrt} from "../utils/srtParser";
 import {validator} from "../utils/validator";
 
 
@@ -67,7 +67,7 @@ class SpreadSheet extends Component {
             }],
             column: 4,
             functionButton: '<button id="download" class="btn btn-primary" style="padding:3px 6px;font-size: 12px;margin-right: 10px;">download</button>' +
-                ' <button id="email" class="btn btn-primary btn-danger" style="padding:3px 6px;font-size: 12px;margin-right: 10px;">send email</button>',
+                ' <button id="email" class="btn btn-primary btn-danger" style="padding:3px 6px;font-size: 12px;margin-right: 10px;">email</button>',
         });
         document.getElementById('luckysheet_info_detail_title').remove()
         document.getElementById('luckysheet_info_detail_update').remove()
@@ -77,9 +77,21 @@ class SpreadSheet extends Component {
             logo[i].remove()
         }
         document.getElementById('luckysheet_info_detail_input').style.textAlign = 'center'
+        const fileDownload = () => {
+            const fileData = toSrt(toArray(this.props.file.data))
+            const blob = new Blob([fileData], {type: "text/plain"})
+            const url = URL.createObjectURL(blob)
+            const link = document.createElement("a")
+            link.download = `qualified_${this.props.file.filename}`
+            link.href = url;
+            link.click();
+        }
+        document.getElementById('download').onclick = () => {
+            fileDownload()
+        }
         document.getElementById('email').onclick = () => {
-            const sample = ''
-            window.location.href = `mailto:?subject=sample&body=sample&attachment=${sample}`
+            fileDownload()
+            window.location.href = 'mailto:'
         }
     }
 
