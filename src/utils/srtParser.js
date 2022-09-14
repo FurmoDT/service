@@ -16,8 +16,8 @@ export const parse = (srtText) => {
             o.index = line;
         } else if (line.indexOf(' --> ') > -1) { // timestamp
             times = line.split(' --> ');
-            items.push({'r': o.index, 'c': 0, v: {v: times[0]}})
-            items.push({'r': o.index, 'c': 1, v: {v: times[1]}})
+            items.push({'r': o.index, 'c': 0, v: {v: times[0], ff: 1}})
+            items.push({'r': o.index, 'c': 1, v: {v: times[1], ff: 1}})
         } else if (line === '') { // reset
             o = {text: ''};
         } else { // text
@@ -25,7 +25,7 @@ export const parse = (srtText) => {
                 lineBreak = '';
             }
             o.text += line + lineBreak;
-            items.push({'r': o.index, 'c': 2, v: {v: line + lineBreak}})
+            items.push({'r': o.index, 'c': 2, v: {v: line + lineBreak, ff: 1}})
         }
     }
     return items;

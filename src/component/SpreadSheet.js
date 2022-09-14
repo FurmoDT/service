@@ -1,14 +1,15 @@
 import React, {Component} from 'react';
 import styles from "../css/SpreadSheet.module.css"
 import {parse} from "../utils/srtParser";
+import {validator} from "../utils/validator";
 
 
 class SpreadSheet extends Component {
     createSheet = () => {
         const luckysheet = window.luckysheet;
         const column = [
-            {'r': 0, 'c': 0, v: {v: 'TC_IN', ht: 0}}, {'r': 0, 'c': 1, v: {v: 'TC_OUT', ht: 0}},
-            {'r': 0, 'c': 2, v: {v: 'TEXT', ht: 0}}, {'r': 0, 'c': 3, v: {v: 'ERROR', ht: 0}},
+            {'r': 0, 'c': 0, v: {v: 'TC_IN', ht: 0, ff: 1}}, {'r': 0, 'c': 1, v: {v: 'TC_OUT', ht: 0, ff: 1}},
+            {'r': 0, 'c': 2, v: {v: 'TEXT', ht: 0, ff: 1}}, {'r': 0, 'c': 3, v: {v: 'ERROR', ht: 0, ff: 1}},
         ]
         const cellData = this.props.file.data ? parse(this.props.file.data) : []
         luckysheet.create({
@@ -17,6 +18,9 @@ class SpreadSheet extends Component {
                     if (range[0].row_focus === 0) {
                         throw new Error('header')
                     }
+                },
+                cellUpdateBefore: function(r, c, v){
+                    validator(r, c, v, luckysheet)
                 }
             },
             container: "luckysheet",
@@ -48,7 +52,6 @@ class SpreadSheet extends Component {
             data: [{
                 index: 0,
                 defaultRowHeight: 30,
-                // celldata: [...column, ...parse(this.props.file.data)],
                 celldata: [...column, ...cellData],
                 config: {
                     columnlen: {
@@ -56,7 +59,7 @@ class SpreadSheet extends Component {
                         '1': 150,
                         '2': 800,
                         '3': 200,
-                    }
+                    },
                 },
                 frozen: {
                     type: 'row'
