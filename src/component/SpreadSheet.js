@@ -47,7 +47,7 @@ const SpreadSheet = (props) => {
             hot.addHook('beforeChange', (changes) => {
                 // add event if needed
             })
-            fileDownload(props.file)
+            // fileDownload(props.file)
         }
     }, [props]);
 
