@@ -1,115 +1,55 @@
-import React, {Component} from 'react';
-import styles from "../css/SpreadSheet.module.css"
-import {parse, toArray, toSrt} from "../utils/srtParser";
+import Handsontable from 'handsontable';
+import 'handsontable/dist/handsontable.full.css';
+import {useEffect, useRef} from "react";
+import {parse} from "../utils/srtParser";
 import {validator} from "../utils/validator";
 
+function customRenderer(instance, td) {
+    Handsontable.renderers.TextRenderer.apply(this, arguments);
+    validator(arguments[2], arguments[3], arguments[5], td)
+}
 
-class SpreadSheet extends Component {
-    createSheet = () => {
-        const luckysheet = window.luckysheet;
-        const column = [
-            {'r': 0, 'c': 0, v: {v: 'TC_IN', ht: 0, ff: 1}}, {'r': 0, 'c': 1, v: {v: 'TC_OUT', ht: 0, ff: 1}},
-            {'r': 0, 'c': 2, v: {v: 'TEXT', ht: 0, ff: 1}}, {'r': 0, 'c': 3, v: {v: 'ERROR', ht: 0, ff: 1}},
-        ]
-        const cellData = this.props.file.data ? parse(this.props.file.data) : []
-        luckysheet.create({
-            hook: {
-                cellEditBefore: function (range) {
-                    if (range[0].row_focus === 0) {
-                        throw new Error('header')
+const SpreadSheet = (props) => {
+    const container = useRef(null);
+    useEffect(() => {
+        if (container.current) {
+            //rendering twice
+            const child = document.getElementById('SpreadSheet').children
+            for (let i = 0; i < child.length; i++){
+                child[i].remove()
+            }
+            const cellData = props.file.data ? parse(props.file.data) : []
+            const hot = new Handsontable(container.current, {
+                rowHeaders: true,
+                colHeaders: ['TC_IN', 'TC_OUT', 'TEXT', 'ERROR'],
+                data: cellData,
+                colWidths: [300, 300, 600, 300],
+                rowHeights: 30,
+                width: 'auto',
+                height: 'auto',
+                className: 'htLeft',
+                columns:[
+                    {data: 'start'},
+                    {data: 'end'},
+                    {data: 'text', renderer: customRenderer},
+                    {data: 'error'},
+                ],
+                contextMenu: {
+                    items: {
+                        'row_above': {},
+                        'row_below': {},
+                        'remove_row': {},
                     }
                 },
-                cellUpdateBefore: function (r, c, v) {
-                    validator(r, c, v, luckysheet)
-                }
-            },
-            container: "luckysheet",
-            title: this.props.file.filename ? this.props.file.filename : '',
-            showtoolbar: false,
-            showsheetbar: false,
-            sheetFormulaBar: false,
-            showstatisticBarConfig: {
-                count: false, // Count bar
-                view: false, // Print view
-                zoom: true // Zoom
-            },
-            cellRightClickConfig: {
-                copyAs: false, // copy as
-                deleteRow: false, // delete the selected row
-                deleteColumn: false, // delete the selected column
-                deleteCell: false, // delete cell
-                clear: false, // clear content
-                matrix: false, // matrix operation selection
-                sort: false, // sort selection
-                filter: false, // filter selection
-                chart: false, // chart generation
-                image: false, // insert picture
-                link: false, // insert link
-                data: false, // data verification
-                cellFormat: false // Set cell format
-            },
-            enableAddRow: false,
-            data: [{
-                index: 0,
-                defaultRowHeight: 30,
-                celldata: [...column, ...cellData],
-                config: {
-                    columnlen: {
-                        '0': 150,
-                        '1': 150,
-                        '2': 800,
-                        '3': 200,
-                    },
-                },
-                frozen: {
-                    type: 'row'
-                },
-            }],
-            column: 4,
-            functionButton: '<button id="download" class="btn btn-primary" style="padding:3px 6px;font-size: 12px;margin-right: 10px;">download</button>' +
-                ' <button id="email" class="btn btn-primary btn-danger" style="padding:3px 6px;font-size: 12px;margin-right: 10px;">email</button>',
-        });
-        document.getElementById('luckysheet_info_detail_title').remove()
-        document.getElementById('luckysheet_info_detail_update').remove()
-        document.getElementById('luckysheet_info_detail_save').remove()
-        const logo = document.getElementById('luckysheet_info_detail').getElementsByClassName('luckysheet-share-logo')
-        for (let i = 0; logo.length; i++) {
-            logo[i].remove()
+                licenseKey: 'non-commercial-and-evaluation'
+            })
+            hot.addHook('beforeChange', (changes) => {
+                // add event if needed
+            })
         }
-        document.getElementById('luckysheet_info_detail_input').style.textAlign = 'center'
-        const fileDownload = () => {
-            const fileData = toSrt(toArray(this.props.file.data))
-            const blob = new Blob([fileData], {type: "text/plain"})
-            const url = URL.createObjectURL(blob)
-            const link = document.createElement("a")
-            link.download = `qualified_${this.props.file.filename}`
-            link.href = url;
-            link.click();
-        }
-        document.getElementById('download').onclick = () => {
-            fileDownload()
-        }
-        document.getElementById('email').onclick = () => {
-            fileDownload()
-            window.location.href = 'mailto:'
-        }
-    }
+    }, [props]);
 
-    componentDidMount() {
-        this.createSheet()
-    }
-
-    componentDidUpdate(prevProps) {
-        if (prevProps.file !== this.props.file) {
-            this.createSheet()
-        }
-    }
-
-
-    render() {
-        return <div id="luckysheet" className={styles.sheet}></div>
-    }
-
+    return <div id={"SpreadSheet"} ref={container}></div>;
 }
 
 export default SpreadSheet
