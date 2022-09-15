@@ -3,6 +3,7 @@ import 'handsontable/dist/handsontable.full.css';
 import {useEffect, useRef} from "react";
 import {parse} from "../utils/srtParser";
 import {validator} from "../utils/validator";
+import {fileDownload} from "../utils/fileDownload";
 
 function customRenderer(instance, td) {
     Handsontable.renderers.TextRenderer.apply(this, arguments);
@@ -15,7 +16,7 @@ const SpreadSheet = (props) => {
         if (container.current) {
             //rendering twice
             const child = document.getElementById('SpreadSheet').children
-            for (let i = 0; i < child.length; i++){
+            for (let i = 0; i < child.length; i++) {
                 child[i].remove()
             }
             const cellData = props.file.data ? parse(props.file.data) : []
@@ -28,7 +29,7 @@ const SpreadSheet = (props) => {
                 width: 'auto',
                 height: 'auto',
                 className: 'htLeft',
-                columns:[
+                columns: [
                     {data: 'start'},
                     {data: 'end'},
                     {data: 'text', renderer: customRenderer},
@@ -46,6 +47,7 @@ const SpreadSheet = (props) => {
             hot.addHook('beforeChange', (changes) => {
                 // add event if needed
             })
+            fileDownload(props.file)
         }
     }, [props]);
 
