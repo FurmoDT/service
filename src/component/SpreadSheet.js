@@ -27,7 +27,7 @@ const SpreadSheet = (props) => {
                 colWidths: [300, 300, 600, 300],
                 rowHeights: 30,
                 width: 'auto',
-                height: 'auto',
+                height: 600,
                 className: 'htLeft',
                 columns: [
                     {data: 'start'},
