@@ -13,23 +13,23 @@ function customRenderer(instance, td) {
 const SpreadSheet = (props) => {
     const container = useRef(null);
     useEffect(() => {
-        if (container.current) {
+        const cellData = props.file.data ? parse(props.file.data) : []
+        if (container.current && cellData.length) {
             //rendering twice
             const child = document.getElementById('SpreadSheet').children
             for (let i = 0; i < child.length; i++) {
                 child[i].remove()
             }
-            const cellData = props.file.data ? parse(props.file.data) : []
             const hot = new Handsontable(container.current, {
-                rowHeaders: true,
-                colHeaders: ['TC_IN', 'TC_OUT', 'TEXT', 'ERROR'],
+                colHeaders: ['No.', 'TC_IN', 'TC_OUT', 'TEXT', 'GRAMMARLY'],
                 data: cellData,
-                colWidths: [100, 100, 600, 300],
+                colWidths: [50, 100, 100, 500, 500],
                 rowHeights: 30,
                 width: 'auto',
                 height: 600,
                 className: 'htLeft',
                 columns: [
+                    {data: 'index', className: 'htCenter'},
                     {data: 'start', className: 'htCenter'},
                     {data: 'end', className: 'htCenter'},
                     {data: 'text', renderer: customRenderer},
@@ -44,9 +44,27 @@ const SpreadSheet = (props) => {
                 },
                 licenseKey: 'non-commercial-and-evaluation'
             })
-            hot.addHook('beforeChange', (changes) => {
-                // add event if needed
+            const merge = () => {
+                return {mergeCells: [{row: 0, col: 4, rowspan: hot.countRows(), colspan: 1}]}
+            }
+            let text = ''
+
+            hot.addHook('afterCreateRow', () => {
+                hot.updateSettings(merge())
             })
+            hot.addHook('afterBeginEditing', (row, column) => {
+                // add grammarly
+            })
+            hot.addHook('afterChange', () => {
+                // add grammarly
+            })
+            hot.addHook('afterSelection', (row, column, row2, column2, preventScrolling, selectionLayerLevel) => {
+                preventScrolling.value = true
+            })
+
+            cellData.map((v) => text += v.text + '\n\n')
+            hot.setDataAtCell(0, 4, text)
+            hot.updateSettings(merge())
             // fileDownload(props.file)
         }
     }, [props]);
