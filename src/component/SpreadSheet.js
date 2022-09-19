@@ -4,6 +4,7 @@ import {useEffect, useRef} from "react";
 import {parse} from "../utils/srtParser";
 import {validator} from "../utils/validator";
 import {fileDownload} from "../utils/fileDownload";
+import * as Grammarly from "@grammarly/editor-sdk";
 
 function customRenderer(instance, td) {
     Handsontable.renderers.TextRenderer.apply(this, arguments);
@@ -13,6 +14,10 @@ function customRenderer(instance, td) {
 const SpreadSheet = (props) => {
     const container = useRef(null);
     useEffect(() => {
+        const setGrammarly = async () => {
+            return await Grammarly.init("client_9m1fYK3MPQxwKsib5CxtpB");
+        }
+        const grammarly = setGrammarly()
         const cellData = props.file.data ? parse(props.file.data) : []
         if (container.current && cellData.length) {
             //rendering twice
@@ -49,15 +54,32 @@ const SpreadSheet = (props) => {
                 return {mergeCells: [{row: 0, col: 3, rowspan: hot.countRows(), colspan: 1}]}
             }
             let text = ''
+            let plugin = null
+            let grammarlyColPos = 0
 
             hot.addHook('afterCreateRow', () => {
                 hot.updateSettings(merge())
             })
             hot.addHook('afterBeginEditing', (row, column) => {
-                // add grammarly
+                grammarly.then(r => {
+                    plugin = r.addPlugin(
+                        document.querySelector("textarea"),
+                        {
+                            documentDialect: "american",
+                        },
+                    )
+                    const textarea = document.querySelector('grammarly-editor-plugin').querySelector('textarea')
+                    textarea.onmouseup = textarea.onkeyup = () => {
+                        grammarlyColPos = textarea.selectionStart
+                    }
+                    textarea.setSelectionRange(grammarlyColPos, grammarlyColPos)
+                    textarea.focus()
+                });
             })
             hot.addHook('afterChange', () => {
-                // add grammarly
+                if (plugin) {
+                    plugin.disconnect()
+                }
             })
             hot.addHook('afterSelection', (row, column, row2, column2, preventScrolling, selectionLayerLevel) => {
                 preventScrolling.value = true
