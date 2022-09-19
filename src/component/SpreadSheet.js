@@ -21,9 +21,9 @@ const SpreadSheet = (props) => {
                 child[i].remove()
             }
             const hot = new Handsontable(container.current, {
-                colHeaders: ['No.', 'TC_IN', 'TC_OUT', 'TEXT', 'GRAMMARLY'],
+                colHeaders: ['No.', 'TC_IN', 'TC_OUT', 'GRAMMARLY', 'TEXT', 'ERROR'],
                 data: cellData,
-                colWidths: [50, 100, 100, 500, 500],
+                colWidths: [50, 100, 100, 500, 500, 200],
                 rowHeights: 30,
                 width: 'auto',
                 height: 600,
@@ -32,8 +32,9 @@ const SpreadSheet = (props) => {
                     {data: 'index', className: 'htCenter'},
                     {data: 'start', className: 'htCenter'},
                     {data: 'end', className: 'htCenter'},
+                    {data: 'grammarly'},
                     {data: 'text', renderer: customRenderer},
-                    {data: 'error'},
+                    {data: 'error', className: 'htCenter'},
                 ],
                 contextMenu: {
                     items: {
@@ -45,7 +46,7 @@ const SpreadSheet = (props) => {
                 licenseKey: 'non-commercial-and-evaluation'
             })
             const merge = () => {
-                return {mergeCells: [{row: 0, col: 4, rowspan: hot.countRows(), colspan: 1}]}
+                return {mergeCells: [{row: 0, col: 3, rowspan: hot.countRows(), colspan: 1}]}
             }
             let text = ''
 
@@ -63,7 +64,7 @@ const SpreadSheet = (props) => {
             })
 
             cellData.map((v) => text += v.text + '\n\n')
-            hot.setDataAtCell(0, 4, text)
+            hot.setDataAtCell(0, 3, text)
             hot.updateSettings(merge())
             // fileDownload(props.file)
         }
