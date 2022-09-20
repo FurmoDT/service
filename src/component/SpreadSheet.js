@@ -33,6 +33,7 @@ const SpreadSheet = (props) => {
                 width: 'auto',
                 height: 600,
                 className: 'htLeft',
+                fixedColumnsStart: 3,
                 columns: [
                     {data: 'index', className: 'htCenter'},
                     {data: 'start', className: 'htCenter'},
