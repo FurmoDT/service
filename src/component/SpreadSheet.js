@@ -33,6 +33,7 @@ const SpreadSheet = (props) => {
                 width: 'auto',
                 height: 600,
                 className: 'htLeft',
+                hiddenColumns: {indicators: true},
                 fixedColumnsStart: 3,
                 columns: [
                     {data: 'index', className: 'htCenter'},
@@ -47,6 +48,8 @@ const SpreadSheet = (props) => {
                         'row_above': {},
                         'row_below': {},
                         'remove_row': {},
+                        'hidden_columns_show': {},
+                        'hidden_columns_hide': {},
                     }
                 },
                 licenseKey: 'non-commercial-and-evaluation'
