@@ -96,7 +96,7 @@ const SpreadSheet = (props) => {
         }
     }, [props]);
 
-    return <div id={"SpreadSheet"} ref={container}></div>;
+    return <div id={"SpreadSheet"} ref={container} style={{borderStyle: 'solid', borderWidth: 'thin'}}></div>;
 }
 
 export default SpreadSheet
