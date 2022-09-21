@@ -31,7 +31,7 @@ const SpreadSheet = (props) => {
                 colWidths: [50, 100, 100, 500, 500, 200],
                 rowHeights: 30,
                 width: 'auto',
-                height: 600,
+                height: 800,
                 className: 'htLeft',
                 hiddenColumns: {indicators: true},
                 fixedColumnsStart: 3,
@@ -86,7 +86,9 @@ const SpreadSheet = (props) => {
                 }
             })
             hot.addHook('afterSelection', (row, column, row2, column2, preventScrolling, selectionLayerLevel) => {
-                preventScrolling.value = true
+                if (column === 3) {
+                    preventScrolling.value = true
+                }
             })
 
             cellData.map((v) => text += v.text + '\n\n')
@@ -96,11 +98,12 @@ const SpreadSheet = (props) => {
         }
     }, [props]);
 
-    return <div id={"SpreadSheet"} ref={container} style={{borderStyle: 'solid', borderWidth: 'thin'}} onFocus={() => {
+    return <div id={"SpreadSheet"} ref={container}
+                style={{borderStyle: 'solid', borderWidth: 'thin', overflow: "hidden"}} onFocus={() => {
         if (document.getElementById('trigger').parentElement.classList[1] === 'is-open') {
             document.getElementById('trigger').click()
         }
-    }}></div>;
+    }}/>
 }
 
 export default SpreadSheet
