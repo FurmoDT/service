@@ -4,15 +4,10 @@ import SpreadSheet from "../component/SpreadSheet";
 import Collapsible from 'react-collapsible';
 
 
-const Trigger = () => {
-    return <button/>
-
-}
-
 const QualityControl = () => {
     const [file, setFile] = useState([])
     return <Fragment>
-        <Collapsible trigger={<Trigger/>}>
+        <Collapsible trigger={<div id={'trigger'}/>}>
             <FileUpload file={file} setFile={(value) => {
                 setFile(value)
             }}/>

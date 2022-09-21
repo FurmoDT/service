@@ -1,13 +1,6 @@
 import React, {useState} from 'react';
 import {
-    MDBContainer,
-    MDBNavbar,
-    MDBNavbarBrand,
-    MDBNavbarToggler,
-    MDBNavbarNav,
-    MDBNavbarItem,
-    MDBNavbarLink,
-    MDBCollapse,
+    MDBContainer, MDBNavbar, MDBNavbarBrand, MDBNavbarToggler, MDBNavbarNav, MDBNavbarItem, MDBNavbarLink, MDBCollapse,
 } from 'mdb-react-ui-kit';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css'
 import {FaBars} from "react-icons/fa";
@@ -29,7 +22,8 @@ export default function Navbar() {
                         </MDBNavbarLink>
                     </MDBNavbarItem>
                     <MDBNavbarItem>
-                        <MDBNavbarLink>
+                        <MDBNavbarLink style={{cursor: "pointer"}}
+                                       onClick={() => document.getElementById('trigger').click()}>
                             Setting
                         </MDBNavbarLink>
                     </MDBNavbarItem>
