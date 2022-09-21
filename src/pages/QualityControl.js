@@ -2,6 +2,7 @@ import {Fragment, useState} from "react";
 import FileUpload from "../component/FileUpload";
 import SpreadSheet from "../component/SpreadSheet";
 import Collapsible from 'react-collapsible';
+import Guideline from "../component/Guideline";
 
 
 const QualityControl = () => {
@@ -11,6 +12,7 @@ const QualityControl = () => {
             <FileUpload file={file} setFile={(value) => {
                 setFile(value)
             }}/>
+            <Guideline/>
         </Collapsible>
         <SpreadSheet file={file}/>
     </Fragment>
