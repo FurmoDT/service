@@ -7,7 +7,7 @@ import Collapsible from 'react-collapsible';
 const QualityControl = () => {
     const [file, setFile] = useState([])
     return <Fragment>
-        <Collapsible trigger={<div id={'trigger'}/>}>
+        <Collapsible open={true} trigger={<div id={'trigger'}/>}>
             <FileUpload file={file} setFile={(value) => {
                 setFile(value)
             }}/>
