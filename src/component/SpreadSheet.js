@@ -96,7 +96,11 @@ const SpreadSheet = (props) => {
         }
     }, [props]);
 
-    return <div id={"SpreadSheet"} ref={container} style={{borderStyle: 'solid', borderWidth: 'thin'}}></div>;
+    return <div id={"SpreadSheet"} ref={container} style={{borderStyle: 'solid', borderWidth: 'thin'}} onFocus={() => {
+        if (document.getElementById('trigger').parentElement.classList[1] === 'is-open') {
+            document.getElementById('trigger').click()
+        }
+    }}></div>;
 }
 
 export default SpreadSheet
