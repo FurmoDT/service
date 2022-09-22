@@ -15,7 +15,7 @@ const SpreadSheet = (props) => {
     const container = useRef(null);
     useEffect(() => {
         const setGrammarly = async () => {
-            return await Grammarly.init("client_9m1fYK3MPQxwKsib5CxtpB");
+            return await Grammarly.init("client_3a8upV1a1GuH7TqFpd98Sn");
         }
         const grammarly = setGrammarly()
         const cellData = props.file.data ? parse(props.file.data) : []
