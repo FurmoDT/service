@@ -34,7 +34,6 @@ const SpreadSheet = (props) => {
                 height: 800,
                 className: 'htLeft',
                 hiddenColumns: {indicators: true},
-                fixedColumnsStart: 3,
                 columns: [
                     {data: 'index', className: 'htCenter'},
                     {data: 'start', className: 'htCenter'},
@@ -74,9 +73,13 @@ const SpreadSheet = (props) => {
                     )
                     const textarea = document.querySelector('grammarly-editor-plugin').querySelector('textarea')
                     textarea.onmouseup = textarea.onkeyup = () => {
-                        grammarlyColPos = textarea.selectionStart
+                        if (column === 3) {
+                            grammarlyColPos = textarea.selectionStart
+                        }
                     }
-                    textarea.setSelectionRange(grammarlyColPos, grammarlyColPos)
+                    if (column === 3) {
+                        textarea.setSelectionRange(grammarlyColPos, grammarlyColPos)
+                    }
                     textarea.focus()
                 });
             })
