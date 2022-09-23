@@ -59,6 +59,7 @@ const SpreadSheet = (props) => {
             let text = ''
             let plugin = null
             let grammarlyColPos = 0
+            const updateIndex = new Set()
 
             hot.addHook('afterCreateRow', () => {
                 hot.updateSettings(merge())
@@ -72,11 +73,24 @@ const SpreadSheet = (props) => {
                         },
                     )
                     const textarea = document.querySelector('grammarly-editor-plugin').querySelector('textarea')
-                    textarea.onmouseup = textarea.onkeyup = () => {
+                    const updateGrammarlyData = () => {
                         if (column === 3) {
                             grammarlyColPos = textarea.selectionStart
+                            const textareaValue = textarea.value
+                            let lastLineBreak = textareaValue.lastIndexOf('\n', grammarlyColPos - 1)
+                            const curLine = textareaValue.slice(lastLineBreak + 1, textareaValue.indexOf('\n', grammarlyColPos))
+                            if (!curLine.startsWith('Index:')) {
+                                let prevLine = curLine
+                                while (!prevLine.startsWith('Index:')) {
+                                    prevLine = textareaValue.slice(textareaValue.lastIndexOf('\n', lastLineBreak - 1) + 1, lastLineBreak)
+                                    lastLineBreak = textareaValue.lastIndexOf('\n', lastLineBreak - 1)
+                                }
+                                updateIndex.add(prevLine)
+                            }
                         }
                     }
+                    document.querySelector('grammarly-editor-plugin').addEventListener('click', updateGrammarlyData)
+                    document.querySelector('grammarly-editor-plugin').addEventListener('keyup', updateGrammarlyData)
                     if (column === 3) {
                         textarea.setSelectionRange(grammarlyColPos, grammarlyColPos)
                     }
@@ -87,6 +101,10 @@ const SpreadSheet = (props) => {
                 if (plugin) {
                     plugin.disconnect()
                 }
+                if (updateIndex.size) {
+                    // updateIndex.foreach update TEXT Column
+                    updateIndex.clear()
+                }
             })
             hot.addHook('afterSelection', (row, column, row2, column2, preventScrolling, selectionLayerLevel) => {
                 if (column === 3) {
@@ -94,7 +112,7 @@ const SpreadSheet = (props) => {
                 }
             })
 
-            cellData.map((v) => text += v.text + '\n\n')
+            cellData.map((v, index) => text += 'Index:' + (index + 1) + '\n' + v.text + '\n')
             hot.setDataAtCell(0, 3, text)
             hot.updateSettings(merge())
             // fileDownload(props.file)
