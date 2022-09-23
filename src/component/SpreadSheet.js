@@ -56,8 +56,8 @@ const SpreadSheet = (props) => {
             const merge = () => {
                 return {mergeCells: [{row: 0, col: 3, rowspan: hot.countRows(), colspan: 1}]}
             }
-            let text = ''
-            let plugin = null
+            let grammarlyText = ''
+            let grammarlyPlugin = null
             let grammarlyColPos = 0
             const updateIndex = new Set()
 
@@ -66,7 +66,7 @@ const SpreadSheet = (props) => {
             })
             hot.addHook('afterBeginEditing', (row, column) => {
                 grammarly.then(r => {
-                    plugin = r.addPlugin(
+                    grammarlyPlugin = r.addPlugin(
                         document.querySelector("textarea"),
                         {
                             documentDialect: "american",
@@ -78,14 +78,13 @@ const SpreadSheet = (props) => {
                             grammarlyColPos = textarea.selectionStart
                             const textareaValue = textarea.value
                             let lastLineBreak = textareaValue.lastIndexOf('\n', grammarlyColPos - 1)
-                            const curLine = textareaValue.slice(lastLineBreak + 1, textareaValue.indexOf('\n', grammarlyColPos))
+                            let curLine = textareaValue.slice(lastLineBreak + 1, textareaValue.indexOf('\n', grammarlyColPos))
                             if (!curLine.startsWith('Index:')) {
-                                let prevLine = curLine
-                                while (!prevLine.startsWith('Index:')) {
-                                    prevLine = textareaValue.slice(textareaValue.lastIndexOf('\n', lastLineBreak - 1) + 1, lastLineBreak)
+                                while (!curLine.startsWith('Index:')) {
+                                    curLine = textareaValue.slice(textareaValue.lastIndexOf('\n', lastLineBreak - 1) + 1, lastLineBreak)
                                     lastLineBreak = textareaValue.lastIndexOf('\n', lastLineBreak - 1)
                                 }
-                                updateIndex.add(prevLine)
+                                updateIndex.add(curLine.split('Index:')[1])
                             }
                         }
                     }
@@ -97,12 +96,17 @@ const SpreadSheet = (props) => {
                     textarea.focus()
                 });
             })
-            hot.addHook('afterChange', () => {
-                if (plugin) {
-                    plugin.disconnect()
+            hot.addHook('afterChange', (changes) => {
+                if (grammarlyPlugin) {
+                    grammarlyPlugin.disconnect()
                 }
-                if (updateIndex.size) {
-                    // updateIndex.foreach update TEXT Column
+                if (changes[0][1] === 'grammarly' && updateIndex.size) {
+                    const text = changes[0][3]
+                    hot.batchRender(() => {
+                        updateIndex.forEach((value) => {
+                            hot.setDataAtCell(Number(value) - 1, 4, text.slice(text.indexOf('\n', text.indexOf(`Index:${value}`)) + 1, text.indexOf(`Index:${Number(value) + 1}`) - 1))
+                        })
+                    })
                     updateIndex.clear()
                 }
             })
@@ -112,8 +116,8 @@ const SpreadSheet = (props) => {
                 }
             })
 
-            cellData.map((v, index) => text += 'Index:' + (index + 1) + '\n' + v.text + '\n')
-            hot.setDataAtCell(0, 3, text)
+            cellData.map((v, index) => grammarlyText += 'Index:' + (index + 1) + '\n' + v.text + '\n')
+            hot.setDataAtCell(0, 3, grammarlyText)
             hot.updateSettings(merge())
             // fileDownload(props.file)
         }
