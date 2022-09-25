@@ -12,33 +12,33 @@ function customRenderer(instance, td) {
 }
 
 const SpreadSheet = (props) => {
-    const container = useRef(null);
+    const containerMain = useRef(null);
+    const containerGrammarly = useRef(null);
     useEffect(() => {
+        const hot = {main: null, grammarly: null}
         const setGrammarly = async () => {
             return await Grammarly.init("client_3a8upV1a1GuH7TqFpd98Sn");
         }
         const grammarly = setGrammarly()
         const cellData = props.file.data ? parse(props.file.data) : []
-        if (container.current && cellData.length) {
+        if (containerMain.current && cellData.length) {
             //rendering twice
             const child = document.getElementById('SpreadSheet').children
             for (let i = 0; i < child.length; i++) {
                 child[i].remove()
             }
-            const hot = new Handsontable(container.current, {
-                colHeaders: ['No.', 'TC_IN', 'TC_OUT', 'GRAMMARLY', 'TEXT', 'ERROR'],
+            hot.main = new Handsontable(containerMain.current, {
+                colHeaders: ['No.', 'TC_IN', 'TC_OUT', 'TEXT', 'ERROR'],
                 data: cellData,
-                colWidths: [50, 100, 100, 500, 500, 200],
+                colWidths: [50, 100, 100, 500, 200],
                 rowHeights: 30,
-                width: 'auto',
+                width: '70%',
                 height: 800,
                 className: 'htLeft',
-                hiddenColumns: {indicators: true},
                 columns: [
                     {data: 'index', className: 'htCenter'},
                     {data: 'start', className: 'htCenter'},
                     {data: 'end', className: 'htCenter'},
-                    {data: 'grammarly'},
                     {data: 'text', renderer: customRenderer},
                     {data: 'error', className: 'htCenter'},
                 ],
@@ -47,88 +47,119 @@ const SpreadSheet = (props) => {
                         'row_above': {},
                         'row_below': {},
                         'remove_row': {},
-                        'hidden_columns_show': {},
-                        'hidden_columns_hide': {},
                     }
                 },
                 licenseKey: 'non-commercial-and-evaluation'
             })
-            const merge = () => {
-                return {mergeCells: [{row: 0, col: 3, rowspan: hot.countRows(), colspan: 1}]}
-            }
-            let grammarlyText = ''
             let grammarlyPlugin = null
-            let grammarlyColPos = 0
-            const updateIndex = new Set()
 
-            hot.addHook('afterCreateRow', () => {
-                hot.updateSettings(merge())
-            })
-            hot.addHook('afterBeginEditing', (row, column) => {
+            hot.main.addHook('afterBeginEditing', (row, column) => {
                 grammarly.then(r => {
                     grammarlyPlugin = r.addPlugin(
-                        document.querySelector("textarea"),
+                        document.getElementById('SpreadSheet').querySelector("textarea"),
                         {
                             documentDialect: "american",
                         },
                     )
-                    const textarea = document.querySelector('grammarly-editor-plugin').querySelector('textarea')
+                    const textarea = document.getElementById('SpreadSheet').querySelector('grammarly-editor-plugin').querySelector('textarea')
+                    textarea.focus()
+                });
+            })
+            hot.main.addHook('afterChange', (changes) => {
+                if (grammarlyPlugin) {
+                    grammarlyPlugin.disconnect()
+                }
+            })
+        }
+        if (containerGrammarly.current && cellData.length) {
+            //rendering twice
+            const child = document.getElementById('GrammarlySheet').children
+            for (let i = 0; i < child.length; i++) {
+                child[i].remove()
+            }
+            hot.grammarly = new Handsontable(containerGrammarly.current, {
+                colHeaders: ['Grammarly'],
+                colWidths: 500,
+                rowHeights: 30,
+                width: '30%',
+                height: 800,
+                className: 'htLeft',
+                columns: [
+                    {data: 'grammarly'},
+                ],
+                maxRows: 1,
+                licenseKey: 'non-commercial-and-evaluation'
+            })
+            let grammarlyText = ''
+            let grammarlyColPos = 0
+            let grammarlyPlugin = null
+            const updateIndex = new Set()
+
+            hot.grammarly.addHook('afterBeginEditing', (row, column) => {
+                grammarly.then(r => {
+                    grammarlyPlugin = r.addPlugin(
+                        document.getElementById('GrammarlySheet').querySelector("textarea"),
+                        {
+                            documentDialect: "american",
+                        },
+                    )
+                    const textarea = document.getElementById('GrammarlySheet').querySelector('grammarly-editor-plugin').querySelector('textarea')
                     const updateGrammarlyData = () => {
-                        if (column === 3) {
-                            grammarlyColPos = textarea.selectionStart
-                            const textareaValue = textarea.value
-                            let lastLineBreak = textareaValue.lastIndexOf('\n', grammarlyColPos - 1)
-                            let curLine = textareaValue.slice(lastLineBreak + 1, textareaValue.indexOf('\n', grammarlyColPos))
-                            if (!curLine.startsWith('Index:')) {
-                                while (!curLine.startsWith('Index:')) {
-                                    curLine = textareaValue.slice(textareaValue.lastIndexOf('\n', lastLineBreak - 1) + 1, lastLineBreak)
-                                    lastLineBreak = textareaValue.lastIndexOf('\n', lastLineBreak - 1)
-                                }
-                                updateIndex.add(curLine.split('Index:')[1])
+                        grammarlyColPos = textarea.selectionStart
+                        const textareaValue = textarea.value
+                        let lastLineBreak = textareaValue.lastIndexOf('\n', grammarlyColPos - 1)
+                        let curLine = textareaValue.slice(lastLineBreak + 1, textareaValue.indexOf('\n', grammarlyColPos))
+                        if (!curLine.startsWith('Index:')) {
+                            while (!curLine.startsWith('Index:')) {
+                                curLine = textareaValue.slice(textareaValue.lastIndexOf('\n', lastLineBreak - 1) + 1, lastLineBreak)
+                                lastLineBreak = textareaValue.lastIndexOf('\n', lastLineBreak - 1)
                             }
+                            updateIndex.add(curLine.split('Index:')[1])
                         }
                     }
                     document.querySelector('grammarly-editor-plugin').addEventListener('click', updateGrammarlyData)
                     document.querySelector('grammarly-editor-plugin').addEventListener('keyup', updateGrammarlyData)
-                    if (column === 3) {
-                        textarea.setSelectionRange(grammarlyColPos, grammarlyColPos)
-                    }
+                    textarea.setSelectionRange(grammarlyColPos, grammarlyColPos)
                     textarea.focus()
                 });
             })
-            hot.addHook('afterChange', (changes) => {
+            hot.grammarly.addHook('afterChange', (changes) => {
                 if (grammarlyPlugin) {
                     grammarlyPlugin.disconnect()
                 }
-                if (changes[0][1] === 'grammarly' && updateIndex.size) {
+                if (updateIndex.size) {
                     const text = changes[0][3]
-                    hot.batchRender(() => {
+                    hot.main.batchRender(() => {
                         updateIndex.forEach((value) => {
-                            hot.setDataAtCell(Number(value) - 1, 4, text.slice(text.indexOf('\n', text.indexOf(`Index:${value}`)) + 1, text.indexOf(`Index:${Number(value) + 1}`) - 1))
+                            hot.main.setDataAtCell(Number(value) - 1, 3, text.slice(text.indexOf('\n', text.indexOf(`Index:${value}`)) + 1, text.indexOf(`Index:${Number(value) + 1}`) - 1))
                         })
                     })
                     updateIndex.clear()
                 }
             })
-            hot.addHook('afterSelection', (row, column, row2, column2, preventScrolling, selectionLayerLevel) => {
-                if (column === 3) {
-                    preventScrolling.value = true
-                }
+            hot.grammarly.addHook('afterSelection', (row, column, row2, column2, preventScrolling, selectionLayerLevel) => {
+                preventScrolling.value = true
             })
 
             cellData.map((v, index) => grammarlyText += 'Index:' + (index + 1) + '\n' + v.text + '\n')
-            hot.setDataAtCell(0, 3, grammarlyText)
-            hot.updateSettings(merge())
-            // fileDownload(props.file)
+            hot.grammarly.setDataAtCell(0, 0, grammarlyText)
         }
     }, [props]);
 
-    return <div id={"SpreadSheet"} ref={container}
-                style={{borderStyle: 'solid', borderWidth: 'thin', overflow: "hidden"}} onFocus={() => {
-        if (document.getElementById('trigger').parentElement.classList[1] === 'is-open') {
-            document.getElementById('trigger').click()
-        }
-    }}/>
+    return <div style={{flexDirection: "row", display: "flex"}}>
+        <div id={"GrammarlySheet"} ref={containerGrammarly} style={{borderStyle: 'solid', borderWidth: 'thin'}}
+             onFocus={() => {
+                 if (document.getElementById('trigger').parentElement.classList[1] === 'is-open') {
+                     document.getElementById('trigger').click()
+                 }
+             }}/>
+        <div id={"SpreadSheet"} ref={containerMain} style={{borderStyle: 'solid', borderWidth: 'thin'}}
+             onFocus={() => {
+                 if (document.getElementById('trigger').parentElement.classList[1] === 'is-open') {
+                     document.getElementById('trigger').click()
+                 }
+             }}/>
+    </div>
 }
 
 export default SpreadSheet
