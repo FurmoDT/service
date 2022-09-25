@@ -6,7 +6,9 @@ export const tcValidator = (r, c, v, td, instance) => {
 
 
 export const validator = (r, c, v, td) => {
-    if (v && v.length > 0){
-        td.style.backgroundColor = 'yellow';
+    if (!v) {
+        td.style.backgroundColor = 'red';
+    } else if (v.includes('  ')) {
+        td.style.backgroundColor = 'red';
     }
 }
