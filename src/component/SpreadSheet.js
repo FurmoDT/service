@@ -117,8 +117,8 @@ const SpreadSheet = (props) => {
                             updateIndex.add(curLine.split('Index:')[1])
                         }
                     }
-                    document.querySelector('grammarly-editor-plugin').addEventListener('click', updateGrammarlyData)
-                    document.querySelector('grammarly-editor-plugin').addEventListener('keyup', updateGrammarlyData)
+                    document.getElementById('GrammarlySheet').querySelector('grammarly-editor-plugin').addEventListener('click', updateGrammarlyData)
+                    document.getElementById('GrammarlySheet').querySelector('grammarly-editor-plugin').addEventListener('keyup', updateGrammarlyData)
                     textarea.setSelectionRange(grammarlyColPos, grammarlyColPos)
                     textarea.focus()
                 });
