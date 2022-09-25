@@ -2,9 +2,14 @@ import Handsontable from 'handsontable';
 import 'handsontable/dist/handsontable.full.css';
 import {useEffect, useRef} from "react";
 import {parse} from "../utils/srtParser";
-import {validator} from "../utils/validator";
+import {tcValidator, validator} from "../utils/validator";
 import {fileDownload} from "../utils/fileDownload";
 import * as Grammarly from "@grammarly/editor-sdk";
+
+function tcRenderer(instance, td) {
+    Handsontable.renderers.TextRenderer.apply(this, arguments);
+    tcValidator(arguments[2], arguments[3], arguments[5], td, instance)
+}
 
 function customRenderer(instance, td) {
     Handsontable.renderers.TextRenderer.apply(this, arguments);
@@ -37,8 +42,8 @@ const SpreadSheet = (props) => {
                 className: 'htLeft',
                 columns: [
                     {data: 'index', className: 'htCenter'},
-                    {data: 'start', className: 'htCenter'},
-                    {data: 'end', className: 'htCenter'},
+                    {data: 'start', className: 'htCenter', renderer: tcRenderer},
+                    {data: 'end', className: 'htCenter', renderer: tcRenderer},
                     {data: 'text', renderer: customRenderer},
                     {data: 'error', className: 'htCenter'},
                 ],
