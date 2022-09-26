@@ -28,12 +28,25 @@ const SpreadSheet = (props) => {
         }
         const grammarly = setGrammarly()
         cellData = props.file.data ? parse(props.file.data) : []
-        props.buttonDownload.current.style.display = props.file.data ? '': 'none'
+        props.buttonDownload.current.style.display = props.file.data ? '' : 'none'
         props.buttonDownload.current.onclick = () => {
+            const Unchecked = []
+            const Violated = []
             cellData.forEach((value, index) => {
                 cellData[index]['index'] = index + 1
+                if (value['validated'] === undefined) {
+                    Unchecked.push(index + 1)
+                } else if (value['validated'].size) {
+                    Violated.push(index + 1)
+                }
             })
-            fileDownload(cellData, props.file.filename)
+            if (Unchecked.length) {
+                alert('Line Unchecked: ' + Unchecked.toString())
+            } else if (Violated.length) {
+                alert('QC Violation: ' + Violated.toString())
+            } else {
+                fileDownload(cellData, props.file.filename)
+            }
         }
         if (containerMain.current && cellData.length) {
             //rendering twice
@@ -87,6 +100,14 @@ const SpreadSheet = (props) => {
             hot.main.addHook('afterCreateRow', (index) => {
                 cellData[index]['text'] = ''
             })
+            hot.main.addHook('afterGetRowHeader', (row) => {
+                if (cellData[row]['validated'] === undefined) {
+                    cellData[row]['validated'] = new Set()
+                }
+            })
+            for (let i = 0; i < hot.main.countRenderedRows() - 2; i++) { // default rendered rows
+                cellData[i]['validated'] = new Set()
+            }
         }
         if (containerGrammarly.current && cellData.length) {
             //rendering twice
