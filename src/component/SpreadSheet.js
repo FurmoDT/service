@@ -33,15 +33,15 @@ const SpreadSheet = (props) => {
                 child[i].remove()
             }
             hot.main = new Handsontable(containerMain.current, {
-                colHeaders: ['No.', 'TC_IN', 'TC_OUT', 'TEXT', 'ERROR'],
+                colHeaders: ['TC_IN', 'TC_OUT', 'TEXT', 'ERROR'],
                 data: cellData,
-                colWidths: [50, 100, 100, 500, 200],
+                colWidths: [100, 100, 500, 200],
+                rowHeaders: true,
                 rowHeights: 30,
                 width: '70%',
                 height: 800,
                 className: 'htLeft',
                 columns: [
-                    {data: 'index', className: 'htCenter'},
                     {data: 'start', className: 'htCenter', renderer: tcRenderer},
                     {data: 'end', className: 'htCenter', renderer: tcRenderer},
                     {data: 'text', renderer: textRenderer},
@@ -136,7 +136,7 @@ const SpreadSheet = (props) => {
                     const text = changes[0][3]
                     hot.main.batchRender(() => {
                         updateIndex.forEach((value) => {
-                            hot.main.setDataAtCell(Number(value) - 1, 3, text.slice(text.indexOf('\n', text.indexOf(`Index:${value}`)) + 1, text.indexOf(`Index:${Number(value) + 1}`) - 1))
+                            hot.main.setDataAtCell(Number(value) - 1, 2, text.slice(text.indexOf('\n', text.indexOf(`Index:${value}`)) + 1, text.indexOf(`Index:${Number(value) + 1}`) - 1))
                         })
                     })
                     updateIndex.clear()

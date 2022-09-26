@@ -1,5 +1,5 @@
 export const tcValidator = (r, c, v, td, instance) => {
-    if (!v || (c === 1 && instance.getDataAtCell(r - 1, c + 1) > v) || (c === 2 && instance.getDataAtCell(r, c - 1) > v)) {
+    if (!v || (c === 0 && instance.getDataAtCell(r - 1, c + 1) > v) || (c === 1 && instance.getDataAtCell(r, c - 1) > v)) {
         td.style.backgroundColor = 'red'
     }
 }
