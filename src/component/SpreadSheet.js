@@ -28,6 +28,7 @@ const SpreadSheet = (props) => {
         }
         const grammarly = setGrammarly()
         cellData = props.file.data ? parse(props.file.data) : []
+        props.buttonDownload.current.style.display = props.file.data ? '': 'none'
         props.buttonDownload.current.onclick = () => {
             cellData.forEach((value, index) => {
                 cellData[index]['index'] = index + 1

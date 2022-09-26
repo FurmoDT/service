@@ -15,7 +15,7 @@ const QualityControl = () => {
                 setFile(value)
             }}/>
             <Guideline/>
-            <MDBBtn id={'btn-download'} size='sm' ref={buttonDownload} rounded={true}>DOWNLOAD</MDBBtn>
+            <MDBBtn id={'btn-download'} size='sm' ref={buttonDownload} rounded={true} style={{margin: 10}}>DOWNLOAD</MDBBtn>
         </Collapsible>
         <SpreadSheet buttonDownload={buttonDownload} file={file}/>
     </Fragment>
