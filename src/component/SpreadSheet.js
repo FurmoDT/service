@@ -28,6 +28,12 @@ const SpreadSheet = (props) => {
         }
         const grammarly = setGrammarly()
         cellData = props.file.data ? parse(props.file.data) : []
+        props.buttonDownload.current.onclick = () => {
+            cellData.forEach((value, index) => {
+                cellData[index]['index'] = index + 1
+            })
+            fileDownload(cellData, props.file.filename)
+        }
         if (containerMain.current && cellData.length) {
             //rendering twice
             const child = document.getElementById('SpreadSheet').children
@@ -116,7 +122,7 @@ const SpreadSheet = (props) => {
                     const textarea = document.getElementById('GrammarlySheet').querySelector('grammarly-editor-plugin').querySelector('textarea')
                     let curText = ''
                     cellData.map((v, index) => curText += 'Index:' + (index + 1) + '\n' + v.text + '\n')
-                    if (grammarlyText !== curText){
+                    if (grammarlyText !== curText) {
                         textarea.value = curText
                         grammarlyText = curText
                     }

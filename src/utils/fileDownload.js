@@ -1,12 +1,12 @@
-import {parse, toSrt} from "./srtParser";
+import {toSrt} from "./srtParser";
 
 
-export const fileDownload = (file) => {
-    const fileData = toSrt(parse(file.data))
+export const fileDownload = (data, filename) => {
+    const fileData = toSrt(data)
     const blob = new Blob([fileData], {type: "text/plain"})
     const url = URL.createObjectURL(blob)
     const link = document.createElement("a")
-    link.download = `qualified_${file.filename}`
+    link.download = `qualified_${filename}`
     link.href = url;
     link.click();
 }
