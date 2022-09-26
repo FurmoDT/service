@@ -2,7 +2,7 @@ import Handsontable from 'handsontable';
 import 'handsontable/dist/handsontable.full.css';
 import {useEffect, useRef} from "react";
 import {parse} from "../utils/srtParser";
-import {tcValidator, validator} from "../utils/validator";
+import {tcValidator, textValidator} from "../utils/validator";
 import {fileDownload} from "../utils/fileDownload";
 import * as Grammarly from "@grammarly/editor-sdk";
 
@@ -10,12 +10,12 @@ let cellData = []
 
 function tcRenderer(instance, td) {
     Handsontable.renderers.TextRenderer.apply(this, arguments);
-    tcValidator(arguments[2], arguments[3], arguments[5], td, instance)
+    tcValidator(arguments[2], arguments[3], arguments[5], td, instance, cellData)
 }
 
 function textRenderer(instance, td) {
     Handsontable.renderers.TextRenderer.apply(this, arguments);
-    validator(arguments[2], arguments[3], arguments[5], td)
+    textValidator(arguments[2], arguments[3], arguments[5], td, instance, cellData)
 }
 
 const SpreadSheet = (props) => {
