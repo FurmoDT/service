@@ -13,7 +13,6 @@ export const parse = (srtText) => {
         let lineBreak = '\n';
 
         if (typeof parseInt(line, 10) === 'number' && (i === 0 || lines[i - 1] === '')) { // index
-            o.index = line;
         } else if (line.indexOf(' --> ') > -1) { // timestamp
             times = line.split(' --> ');
             o.start = times[0];

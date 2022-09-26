@@ -6,6 +6,8 @@ import {tcValidator, validator} from "../utils/validator";
 import {fileDownload} from "../utils/fileDownload";
 import * as Grammarly from "@grammarly/editor-sdk";
 
+let cellData = []
+
 function tcRenderer(instance, td) {
     Handsontable.renderers.TextRenderer.apply(this, arguments);
     tcValidator(arguments[2], arguments[3], arguments[5], td, instance)
@@ -25,7 +27,7 @@ const SpreadSheet = (props) => {
             return await Grammarly.init("client_3a8upV1a1GuH7TqFpd98Sn");
         }
         const grammarly = setGrammarly()
-        const cellData = props.file.data ? parse(props.file.data) : []
+        cellData = props.file.data ? parse(props.file.data) : []
         if (containerMain.current && cellData.length) {
             //rendering twice
             const child = document.getElementById('SpreadSheet').children
@@ -75,6 +77,9 @@ const SpreadSheet = (props) => {
                     grammarlyPlugin.disconnect()
                 }
             })
+            hot.main.addHook('afterCreateRow', (index) => {
+                cellData[index]['text'] = ''
+            })
         }
         if (containerGrammarly.current && cellData.length) {
             //rendering twice
@@ -109,6 +114,12 @@ const SpreadSheet = (props) => {
                         },
                     )
                     const textarea = document.getElementById('GrammarlySheet').querySelector('grammarly-editor-plugin').querySelector('textarea')
+                    let curText = ''
+                    cellData.map((v, index) => curText += 'Index:' + (index + 1) + '\n' + v.text + '\n')
+                    if (grammarlyText !== curText){
+                        textarea.value = curText
+                        grammarlyText = curText
+                    }
                     const updateGrammarlyData = () => {
                         grammarlyColPos = textarea.selectionStart
                         const textareaValue = textarea.value
