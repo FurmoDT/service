@@ -6,10 +6,12 @@ export const tcValidator = (r, c, v, td, instance, cellData) => {
 
 
 export const textValidator = (r, c, v, td, instance, cellData) => {
-    if (!v) {
+    if (!v) { // null cell
         cellData[r]['text'] = ''
         td.style.backgroundColor = 'red';
-    } else if (v.includes('  ')) {
+    } else if (v.includes('  ')) { // multiple spaces
         td.style.backgroundColor = 'red';
-    }
+    } else if (/(^|[^.])\.{2}(?!\.)/.test(v) || /(^|[^.])\.{4,}(?!\.)/.test(v)) { // 2 or 4+ dots
+        td.style.backgroundColor = 'red'
+    } //
 }
