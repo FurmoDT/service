@@ -128,7 +128,6 @@ const SpreadSheet = (props) => {
                 maxRows: 1,
                 licenseKey: 'non-commercial-and-evaluation'
             })
-            let grammarlyText = ''
             let grammarlyColPos = 0
             let grammarlyPlugin = null
             const updateIndex = new Set()
@@ -144,9 +143,8 @@ const SpreadSheet = (props) => {
                     const textarea = document.getElementById('GrammarlySheet').querySelector('grammarly-editor-plugin').querySelector('textarea')
                     let curText = ''
                     cellData.map((v, index) => curText += 'Index:' + (index + 1) + '\n' + v.text + '\n')
-                    if (grammarlyText !== curText) {
+                    if (textarea.value !== curText) {
                         textarea.value = curText
-                        grammarlyText = curText
                     }
                     const updateGrammarlyData = () => {
                         grammarlyColPos = textarea.selectionStart
@@ -168,7 +166,6 @@ const SpreadSheet = (props) => {
                 });
             })
             hot.grammarly.addHook('afterChange', (changes) => {
-                grammarlyText = changes[0][3]
                 if (grammarlyPlugin) {
                     grammarlyPlugin.disconnect()
                 }
@@ -186,9 +183,11 @@ const SpreadSheet = (props) => {
             hot.grammarly.addHook('afterSelection', (row, column, row2, column2, preventScrolling, selectionLayerLevel) => {
                 preventScrolling.value = true
             })
-
-            cellData.map((v, index) => grammarlyText += 'Index:' + (index + 1) + '\n' + v.text + '\n')
-            hot.grammarly.setDataAtCell(0, 0, grammarlyText)
+            hot.grammarly.setDataAtCell(0, 0, (() => {
+                let grammarlyText = ''
+                cellData.map((v, index) => grammarlyText += 'Index:' + (index + 1) + '\n' + v.text + '\n')
+                return grammarlyText
+            })())
         }
     }, [props]);
 
