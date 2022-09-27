@@ -168,6 +168,7 @@ const SpreadSheet = (props) => {
                 });
             })
             hot.grammarly.addHook('afterChange', (changes) => {
+                grammarlyText = changes[0][3]
                 if (grammarlyPlugin) {
                     grammarlyPlugin.disconnect()
                 }
