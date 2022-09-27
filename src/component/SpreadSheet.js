@@ -158,7 +158,7 @@ const SpreadSheet = (props) => {
                                 curLine = textareaValue.slice(textareaValue.lastIndexOf('\n', lastLineBreak - 1) + 1, lastLineBreak)
                                 lastLineBreak = textareaValue.lastIndexOf('\n', lastLineBreak - 1)
                             }
-                            updateIndex.add(curLine.split('Index:')[1])
+                            updateIndex.add(Number(curLine.split('Index:')[1]))
                         }
                     }
                     document.getElementById('GrammarlySheet').querySelector('grammarly-editor-plugin').addEventListener('click', updateGrammarlyData)
@@ -176,7 +176,8 @@ const SpreadSheet = (props) => {
                     const text = changes[0][3]
                     hot.main.batchRender(() => {
                         updateIndex.forEach((value) => {
-                            hot.main.setDataAtCell(Number(value) - 1, 2, text.slice(text.indexOf('\n', text.indexOf(`Index:${value}`)) + 1, text.indexOf(`Index:${Number(value) + 1}`) - 1))
+                            hot.main.setDataAtCell(value - 1, 2, text.slice(text.indexOf('\n', text.indexOf(`Index:${value}`)) + 1, text.indexOf(`Index:${value + 1}`) - 1))
+                            delete cellData[value - 1]['validated']
                         })
                     })
                     updateIndex.clear()
