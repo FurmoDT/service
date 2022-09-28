@@ -97,9 +97,6 @@ const SpreadSheet = (props) => {
                     grammarlyPlugin.disconnect()
                 }
             })
-            hot.main.addHook('afterCreateRow', (index) => {
-                cellData[index]['text'] = ''
-            })
             hot.main.addHook('afterGetRowHeader', (row) => {
                 if (cellData[row]['validated'] === undefined) {
                     cellData[row]['validated'] = new Set()
@@ -131,7 +128,25 @@ const SpreadSheet = (props) => {
             let grammarlyPlugin = null
             let grammarlyColPos = 0
             let curIndex = 1
-
+            const updateMainText = (text, forceUpdate = false) => {
+                let lastLineBreak = text.lastIndexOf('\n', grammarlyColPos - 1)
+                let curLine = text.slice(lastLineBreak + 1, text.indexOf('\n', grammarlyColPos))
+                if (!curLine.startsWith('Index:')) {
+                    while (!curLine.startsWith('Index:')) {
+                        curLine = text.slice(text.lastIndexOf('\n', lastLineBreak - 1) + 1, lastLineBreak)
+                        lastLineBreak = text.lastIndexOf('\n', lastLineBreak - 1)
+                    }
+                    const idx = Number(curLine.split('Index:')[1])
+                    if (forceUpdate || curIndex !== idx) {
+                        const targetText = text.slice(text.indexOf('\n', text.indexOf(`Index:${curIndex}`)) + 1, text.indexOf(`Index:${curIndex + 1}`) - 1)
+                        if (cellData[curIndex - 1]['text'] !== targetText) {
+                            hot.main.setDataAtCell(curIndex - 1, 2, text.slice(text.indexOf('\n', text.indexOf(`Index:${curIndex}`)) + 1, text.indexOf(`Index:${curIndex + 1}`) - 1))
+                            hot.main.scrollViewportTo(curIndex - 1)
+                        }
+                        curIndex = idx
+                    }
+                }
+            }
             hot.grammarly.addHook('afterBeginEditing', (row, column) => {
                 grammarly.then(r => {
                     grammarlyPlugin = r.addPlugin(
@@ -148,24 +163,7 @@ const SpreadSheet = (props) => {
                     }
                     const updateGrammarlyData = () => {
                         grammarlyColPos = textarea.selectionStart
-                        const textareaValue = textarea.value
-                        let lastLineBreak = textareaValue.lastIndexOf('\n', grammarlyColPos - 1)
-                        let curLine = textareaValue.slice(lastLineBreak + 1, textareaValue.indexOf('\n', grammarlyColPos))
-                        if (!curLine.startsWith('Index:')) {
-                            while (!curLine.startsWith('Index:')) {
-                                curLine = textareaValue.slice(textareaValue.lastIndexOf('\n', lastLineBreak - 1) + 1, lastLineBreak)
-                                lastLineBreak = textareaValue.lastIndexOf('\n', lastLineBreak - 1)
-                            }
-                            const idx = Number(curLine.split('Index:')[1])
-                            if (curIndex !== idx){
-                                const targetText = textareaValue.slice(textareaValue.indexOf('\n', textareaValue.indexOf(`Index:${curIndex}`)) + 1, textareaValue.indexOf(`Index:${curIndex + 1}`) - 1)
-                                if (cellData[curIndex - 1]['text'] !== targetText){
-                                    hot.main.setDataAtCell(curIndex - 1, 2, textareaValue.slice(textareaValue.indexOf('\n', textareaValue.indexOf(`Index:${curIndex}`)) + 1, textareaValue.indexOf(`Index:${curIndex + 1}`) - 1))
-                                    hot.main.scrollViewportTo(curIndex - 1)
-                                }
-                                curIndex = idx
-                            }
-                        }
+                        updateMainText(textarea.value)
                     }
                     document.getElementById('GrammarlySheet').querySelector('grammarly-editor-plugin').addEventListener('click', updateGrammarlyData)
                     document.getElementById('GrammarlySheet').querySelector('grammarly-editor-plugin').addEventListener('keyup', updateGrammarlyData)
@@ -177,6 +175,7 @@ const SpreadSheet = (props) => {
                 if (grammarlyPlugin) {
                     grammarlyPlugin.disconnect()
                 }
+                updateMainText(changes[0][3], true)
             })
             hot.grammarly.addHook('afterSelection', (row, column, row2, column2, preventScrolling, selectionLayerLevel) => {
                 preventScrolling.value = true
