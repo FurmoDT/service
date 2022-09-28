@@ -170,6 +170,7 @@ const SpreadSheet = (props) => {
                     textarea.setSelectionRange(grammarlyColPos, grammarlyColPos)
                     textarea.focus()
                 });
+                document.getElementById('GrammarlySheet').getElementsByClassName('ht_master')[0].getElementsByClassName('wtHolder')[0].style.overflowY = 'hidden'
             })
             hot.grammarly.addHook('afterChange', (changes) => {
                 if (grammarlyPlugin) {
