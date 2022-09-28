@@ -55,9 +55,9 @@ const SpreadSheet = (props) => {
                 child[i].remove()
             }
             hot.main = new Handsontable(containerMain.current, {
-                colHeaders: ['TC_IN', 'TC_OUT', 'TEXT', 'ERROR'],
+                colHeaders: ['TC_IN', 'TC_OUT', 'TEXT', 'CPS', 'ERROR'],
                 data: cellData,
-                colWidths: [100, 100, 500, 200],
+                colWidths: [100, 100, 500, 50, 200],
                 rowHeaders: true,
                 rowHeights: 30,
                 width: '70%',
@@ -67,6 +67,7 @@ const SpreadSheet = (props) => {
                     {data: 'start', className: 'htCenter', renderer: tcRenderer},
                     {data: 'end', className: 'htCenter', renderer: tcRenderer},
                     {data: 'text', renderer: textRenderer},
+                    {data: 'cps', className: 'htCenter'},
                     {data: 'error', className: 'htCenter'},
                 ],
                 contextMenu: {
