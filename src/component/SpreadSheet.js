@@ -5,6 +5,7 @@ import {parse} from "../utils/srtParser";
 import {tcValidator, textValidator} from "../utils/validator";
 import {fileDownload} from "../utils/fileDownload";
 import * as Grammarly from "@grammarly/editor-sdk";
+import {TCtoSec} from "../utils/calculator";
 
 let cellData = []
 
@@ -16,6 +17,20 @@ function tcRenderer(instance, td) {
 function textRenderer(instance, td) {
     Handsontable.renderers.TextRenderer.apply(this, arguments);
     textValidator(arguments[2], arguments[3], arguments[5], td, instance, cellData)
+}
+
+function cpsRenderer(instance, td) {
+    Handsontable.renderers.TextRenderer.apply(this, arguments);
+    const curRowData = cellData[arguments[2]]
+    const textCount = curRowData['text'].replaceAll(/<(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+>/g, '').match(/[^\s!\"#\＄%&\'\(\)\*\+,-\./:;<=>\?@\[\\\]\^_`{\|}~]/g).length // remove tag and puncs
+    try {
+        td.innerText = Math.ceil(textCount / (TCtoSec(curRowData['end']) - TCtoSec(curRowData['start'])))
+    } catch (error){
+        td.innerText = 0
+    }
+    if (td.innerText >= 17) {
+        td.style.backgroundColor = 'yellow'
+    }
 }
 
 const SpreadSheet = (props) => {
@@ -67,7 +82,7 @@ const SpreadSheet = (props) => {
                     {data: 'start', className: 'htCenter', renderer: tcRenderer},
                     {data: 'end', className: 'htCenter', renderer: tcRenderer},
                     {data: 'text', renderer: textRenderer},
-                    {data: 'cps', className: 'htCenter'},
+                    {data: 'cps', className: 'htCenter', renderer: cpsRenderer},
                     {data: 'error', className: 'htCenter'},
                 ],
                 contextMenu: {
