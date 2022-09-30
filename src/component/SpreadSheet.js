@@ -73,7 +73,7 @@ const SpreadSheet = (props) => {
         }
         if (containerMain.current && cellData.length) {
             //rendering twice
-            const child = document.getElementById('SpreadSheet').children
+            const child = document.getElementById('hot-main').children
             for (let i = 0; i < child.length; i++) {
                 child[i].remove()
             }
@@ -108,12 +108,12 @@ const SpreadSheet = (props) => {
             hot.main.addHook('afterBeginEditing', (row, column) => {
                 grammarly.then(r => {
                     grammarlyPlugin = r.addPlugin(
-                        document.getElementById('SpreadSheet').querySelector("textarea"),
+                        document.getElementById('hot-main').querySelector("textarea"),
                         {
                             documentDialect: "american",
                         },
                     )
-                    const textarea = document.getElementById('SpreadSheet').querySelector('grammarly-editor-plugin').querySelector('textarea')
+                    const textarea = document.getElementById('hot-main').querySelector('grammarly-editor-plugin').querySelector('textarea')
                     textarea.focus()
                 });
             })
@@ -133,7 +133,7 @@ const SpreadSheet = (props) => {
         }
         if (containerGrammarly.current && cellData.length) {
             //rendering twice
-            const child = document.getElementById('GrammarlySheet').children
+            const child = document.getElementById('hot-grammarly').children
             for (let i = 0; i < child.length; i++) {
                 child[i].remove()
             }
@@ -176,12 +176,12 @@ const SpreadSheet = (props) => {
             hot.grammarly.addHook('afterBeginEditing', (row, column) => {
                 grammarly.then(r => {
                     grammarlyPlugin = r.addPlugin(
-                        document.getElementById('GrammarlySheet').querySelector("textarea"),
+                        document.getElementById('hot-grammarly').querySelector("textarea"),
                         {
                             documentDialect: "american",
                         },
                     )
-                    const textarea = document.getElementById('GrammarlySheet').querySelector('grammarly-editor-plugin').querySelector('textarea')
+                    const textarea = document.getElementById('hot-grammarly').querySelector('grammarly-editor-plugin').querySelector('textarea')
                     let curText = ''
                     cellData.map((v, index) => curText += 'Index:' + (index + 1) + '\n' + v.text + '\n')
                     if (textarea.value !== curText) {
@@ -191,12 +191,12 @@ const SpreadSheet = (props) => {
                         grammarlyColPos = textarea.selectionStart
                         updateMainText(textarea.value)
                     }
-                    document.getElementById('GrammarlySheet').querySelector('grammarly-editor-plugin').addEventListener('click', updateGrammarlyData)
-                    document.getElementById('GrammarlySheet').querySelector('grammarly-editor-plugin').addEventListener('keyup', updateGrammarlyData)
+                    document.getElementById('hot-grammarly').querySelector('grammarly-editor-plugin').addEventListener('click', updateGrammarlyData)
+                    document.getElementById('hot-grammarly').querySelector('grammarly-editor-plugin').addEventListener('keyup', updateGrammarlyData)
                     textarea.setSelectionRange(grammarlyColPos, grammarlyColPos)
                     textarea.focus()
                 });
-                document.getElementById('GrammarlySheet').getElementsByClassName('ht_master')[0].getElementsByClassName('wtHolder')[0].style.overflowY = 'hidden'
+                document.getElementById('hot-grammarly').getElementsByClassName('ht_master')[0].getElementsByClassName('wtHolder')[0].style.overflowY = 'hidden'
             })
             hot.grammarly.addHook('afterChange', (changes) => {
                 if (grammarlyPlugin) {
@@ -216,13 +216,13 @@ const SpreadSheet = (props) => {
     }, [props]);
 
     return <div id={'spreadSheets'} style={{flexDirection: "row", display: "flex", height: 400}}>
-        <div id={"GrammarlySheet"} ref={containerGrammarly} style={{borderStyle: 'solid', borderWidth: 'thin'}}
+        <div id={"hot-grammarly"} ref={containerGrammarly} style={{borderStyle: 'solid', borderWidth: 'thin'}}
              onFocus={() => {
                  if (document.getElementById('trigger').parentElement.classList[1] === 'is-open') {
                      document.getElementById('trigger').click()
                  }
              }}/>
-        <div id={"SpreadSheet"} ref={containerMain} style={{borderStyle: 'solid', borderWidth: 'thin'}}
+        <div id={"hot-main"} ref={containerMain} style={{borderStyle: 'solid', borderWidth: 'thin'}}
              onFocus={() => {
                  if (document.getElementById('trigger').parentElement.classList[1] === 'is-open') {
                      document.getElementById('trigger').click()
