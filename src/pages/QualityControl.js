@@ -3,7 +3,7 @@ import FileUpload from "../component/FileUpload";
 import SpreadSheet from "../component/SpreadSheet";
 import Collapsible from 'react-collapsible';
 import Guideline from "../component/Guideline";
-import {MDBBtn} from 'mdb-react-ui-kit';
+import {MDBBtn, MDBIcon} from 'mdb-react-ui-kit';
 
 
 const QualityControl = () => {
@@ -18,6 +18,10 @@ const QualityControl = () => {
             <MDBBtn id={'btn-download'} size='sm' ref={buttonDownload} rounded={true} style={{margin: 10}}>DOWNLOAD</MDBBtn>
         </Collapsible>
         <SpreadSheet buttonDownload={buttonDownload} file={file}/>
+        <MDBBtn id={'btn-resize'} color={'none'} floating tag='a'>
+            <MDBIcon fas icon="chevron-down" size={'2x'} color={'dark'}/>
+            <MDBIcon fas icon="chevron-up" size={'2x'} color={'dark'} style={{display: 'none'}}/>
+        </MDBBtn>
     </Fragment>
 };
 
