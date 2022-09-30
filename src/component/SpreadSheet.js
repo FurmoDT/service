@@ -6,6 +6,7 @@ import {tcValidator, textValidator} from "../utils/validator";
 import {fileDownload} from "../utils/fileDownload";
 import * as Grammarly from "@grammarly/editor-sdk";
 import {TCtoSec} from "../utils/calculator";
+import {MDBBtn} from "mdb-react-ui-kit";
 
 let cellData = []
 
@@ -25,7 +26,7 @@ function cpsRenderer(instance, td) {
     const textCount = curRowData['text'].replaceAll(/<(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+>/g, '').match(/[^\s!\"#\＄%&\'\(\)\*\+,-\./:;<=>\?@\[\\\]\^_`{\|}~]/g).length // remove tag and puncs
     try {
         td.innerText = Math.ceil(textCount / (TCtoSec(curRowData['end']) - TCtoSec(curRowData['start'])))
-    } catch (error){
+    } catch (error) {
         td.innerText = 0
     }
     if (td.innerText >= 17) {
@@ -76,7 +77,7 @@ const SpreadSheet = (props) => {
                 rowHeaders: true,
                 rowHeights: 30,
                 width: '70%',
-                height: 800,
+                height: '100%',
                 className: 'htLeft',
                 columns: [
                     {data: 'start', className: 'htCenter', renderer: tcRenderer},
@@ -133,7 +134,7 @@ const SpreadSheet = (props) => {
                 colWidths: 500,
                 rowHeights: 30,
                 width: '30%',
-                height: 800,
+                height: '100%',
                 className: 'htLeft',
                 columns: [
                     {data: 'grammarly'},
@@ -205,19 +206,22 @@ const SpreadSheet = (props) => {
         }
     }, [props]);
 
-    return <div style={{flexDirection: "row", display: "flex"}}>
-        <div id={"GrammarlySheet"} ref={containerGrammarly} style={{borderStyle: 'solid', borderWidth: 'thin'}}
-             onFocus={() => {
-                 if (document.getElementById('trigger').parentElement.classList[1] === 'is-open') {
-                     document.getElementById('trigger').click()
-                 }
-             }}/>
-        <div id={"SpreadSheet"} ref={containerMain} style={{borderStyle: 'solid', borderWidth: 'thin'}}
-             onFocus={() => {
-                 if (document.getElementById('trigger').parentElement.classList[1] === 'is-open') {
-                     document.getElementById('trigger').click()
-                 }
-             }}/>
+    return <div>
+        <div style={{flexDirection: "row", display: "flex", height: 400}}>
+            <div id={"GrammarlySheet"} ref={containerGrammarly} style={{borderStyle: 'solid', borderWidth: 'thin'}}
+                 onFocus={() => {
+                     if (document.getElementById('trigger').parentElement.classList[1] === 'is-open') {
+                         document.getElementById('trigger').click()
+                     }
+                 }}/>
+            <div id={"SpreadSheet"} ref={containerMain} style={{borderStyle: 'solid', borderWidth: 'thin'}}
+                 onFocus={() => {
+                     if (document.getElementById('trigger').parentElement.classList[1] === 'is-open') {
+                         document.getElementById('trigger').click()
+                     }
+                 }}/>
+        </div>
+        <MDBBtn id={'btn-resize'} size='sm' rounded={true} style={{margin: 10}}/>
     </div>
 }
 
