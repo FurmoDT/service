@@ -79,6 +79,7 @@ const SpreadSheet = (props) => {
                 width: '70%',
                 height: '100%',
                 className: 'htLeft',
+                stretchH: 'all',
                 columns: [
                     {data: 'start', className: 'htCenter', renderer: tcRenderer},
                     {data: 'end', className: 'htCenter', renderer: tcRenderer},
@@ -135,6 +136,7 @@ const SpreadSheet = (props) => {
                 rowHeights: 30,
                 width: '30%',
                 height: '100%',
+                stretchH: 'all',
                 className: 'htLeft',
                 columns: [
                     {data: 'grammarly'},
