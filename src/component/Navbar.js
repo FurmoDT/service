@@ -9,7 +9,6 @@ import {
     MDBNavbarNav,
     MDBNavbarToggler,
 } from 'mdb-react-ui-kit';
-import 'mdb-react-ui-kit/dist/css/mdb.min.css'
 import {FaBars} from "react-icons/fa";
 
 export default function Navbar() {
