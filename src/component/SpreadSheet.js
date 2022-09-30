@@ -47,7 +47,7 @@ const SpreadSheet = (props) => {
         resizeBtn.style.display = props.file.data ? '' : 'none'
         resizeBtn.onclick = (e) => {
             [resizeBtn.children[0].style.display, resizeBtn.children[1].style.display] = [resizeBtn.children[1].style.display, resizeBtn.children[0].style.display];
-            document.getElementById('spreadSheets').style.height = document.getElementById('spreadSheets').style.height === '400px'?'800px':'400px'
+            document.getElementById('spreadSheets').style.height = document.getElementById('spreadSheets').style.height === '500px'?'800px':'500px'
             hot.main.render()
             hot.grammarly.render()
         }
@@ -215,7 +215,7 @@ const SpreadSheet = (props) => {
         }
     }, [props]);
 
-    return <div id={'spreadSheets'} style={{flexDirection: "row", display: "flex", height: 400}}>
+    return <div id={'spreadSheets'} style={{flexDirection: "row", display: "flex", height: 500}}>
         <div id={"hot-grammarly"} ref={containerGrammarly} style={{borderStyle: 'solid', borderWidth: 'thin'}}
              onFocus={() => {
                  if (document.getElementById('trigger').parentElement.classList[1] === 'is-open') {
