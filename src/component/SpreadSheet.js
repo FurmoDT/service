@@ -22,8 +22,8 @@ function textRenderer(instance, td) {
 function cpsRenderer(instance, td) {
     Handsontable.renderers.TextRenderer.apply(this, arguments);
     const curRowData = cellData[arguments[2]]
-    const textCount = curRowData['text'].replaceAll(/<(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+>/g, '').match(/[^\s!"#$%&'()*+,-./:;<=>?@[\\\]^_`{|}~]/g).length // remove tag and puncs
     try {
+        const textCount = curRowData['text'].replaceAll(/<(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+>/g, '').match(/[^\s!"#$%&'()*+,-./:;<=>?@[\\\]^_`{|}~]/g).length // remove tag and puncs
         td.innerText = Math.ceil(textCount / (TCtoSec(curRowData['end']) - TCtoSec(curRowData['start'])))
     } catch (error) {
         td.innerText = 0
