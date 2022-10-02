@@ -47,10 +47,11 @@ const SpreadSheet = (props) => {
         resizeBtn.style.display = props.file.data ? '' : 'none'
         resizeBtn.onclick = (e) => {
             [resizeBtn.children[0].style.display, resizeBtn.children[1].style.display] = [resizeBtn.children[1].style.display, resizeBtn.children[0].style.display];
-            document.getElementById('spreadSheets').style.height = document.getElementById('spreadSheets').style.height === '500px'?'800px':'500px'
+            document.getElementById('spreadSheets').style.height = document.getElementById('spreadSheets').style.height === '500px' ? '800px' : '500px'
             hot.main.render()
             hot.grammarly.render()
         }
+        document.getElementById('spreadSheets').style.display = props.file.data ? 'flex' : 'none'
         props.buttonDownload.current.style.display = props.file.data ? '' : 'none'
         props.buttonDownload.current.onclick = () => {
             const Unchecked = []
@@ -215,14 +216,14 @@ const SpreadSheet = (props) => {
         }
     }, [props]);
 
-    return <div id={'spreadSheets'} style={{flexDirection: "row", display: "flex", height: 500}}>
-        <div id={"hot-grammarly"} ref={containerGrammarly} style={{borderStyle: 'solid', borderWidth: 'thin'}}
+    return <div id={'spreadSheets'} style={{flexDirection: "row", display: "none", height: 500, borderStyle: 'solid', borderWidth: 'thin'}}>
+        <div id={"hot-grammarly"} ref={containerGrammarly}
              onFocus={() => {
                  if (document.getElementById('trigger').parentElement.classList[1] === 'is-open') {
                      document.getElementById('trigger').click()
                  }
              }}/>
-        <div id={"hot-main"} ref={containerMain} style={{borderStyle: 'solid', borderWidth: 'thin'}}
+        <div id={"hot-main"} ref={containerMain}
              onFocus={() => {
                  if (document.getElementById('trigger').parentElement.classList[1] === 'is-open') {
                      document.getElementById('trigger').click()
