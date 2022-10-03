@@ -30,6 +30,12 @@ function cpsRenderer(instance, td) {
     }
 }
 
+function errorRenderer(instance, td) {
+    Handsontable.renderers.TextRenderer.apply(this, arguments);
+    td.innerText = [...cellData[arguments[2]]['error']].join('\n')
+}
+
+
 const SpreadSheet = (props) => {
     const containerMain = useRef(null);
     const containerGrammarly = useRef(null);
@@ -45,6 +51,7 @@ const SpreadSheet = (props) => {
         const grammarly = setGrammarly()
         if (fileData !== props.file.data){
             cellData = props.file.data ? parse(props.file.data) : []
+            cellData.forEach((value) => {value['error'] = new Set()})
             fileData = props.file.data
         }
         const resizeBtn = document.getElementById('btn-resize')
@@ -96,8 +103,8 @@ const SpreadSheet = (props) => {
                     {data: 'start', className: 'htCenter', renderer: tcRenderer},
                     {data: 'end', className: 'htCenter', renderer: tcRenderer},
                     {data: 'text', renderer: textRenderer},
-                    {data: 'cps', className: 'htCenter', renderer: cpsRenderer},
-                    {data: 'error', className: 'htCenter'},
+                    {data: 'cps', className: 'htCenter', renderer: cpsRenderer, disableVisualSelection: true, editor: null},
+                    {data: 'error', className: 'htCenter', renderer: errorRenderer, disableVisualSelection: true, editor: null},
                 ],
                 contextMenu: {
                     items: {
@@ -127,14 +134,6 @@ const SpreadSheet = (props) => {
                     grammarlyPlugin.disconnect()
                 }
             })
-            hot.main.addHook('afterGetRowHeader', (row) => {
-                if (cellData[row]['validated'] === undefined) {
-                    cellData[row]['validated'] = new Set()
-                }
-            })
-            for (let i = 0; i < hot.main.countRenderedRows() - 2; i++) { // default rendered rows
-                cellData[i]['validated'] = new Set()
-            }
         }
         if (containerGrammarly.current && cellData.length) {
             //rendering twice
