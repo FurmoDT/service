@@ -11,22 +11,23 @@ export const textValidator = (r, c, v, td, instance, cellData, guideline) => {
         cellData[r]['text'] = ''
         td.style.backgroundColor = 'red'
         errors.add('Empty Cell')
-    }
-    if (v.split('\n').length > guideline['inputMaxLine']) {
-        td.style.backgroundColor = 'red'
-        errors.add('MaxLine Exceeded')
-    }
-    if (v.length > guideline['inputWordCount']) {
-        td.style.backgroundColor = 'red'
-        errors.add('WordCount Exceeded')
-    }
-    if (v.includes('  ')) { // multiple spaces
-        td.style.backgroundColor = 'red'
-        errors.add('Multiple Spaces')
-    }
-    if (/(^|[^.])\.{2}(?!\.)/.test(v) || /(^|[^.])\.{4,}(?!\.)/.test(v)) { // 2 or 4+ dots
-        td.style.backgroundColor = 'red'
-        errors.add('2 or 4+ dots')
+    } else {
+        if (v.split('\n').length > guideline['inputMaxLine']) {
+            td.style.backgroundColor = 'red'
+            errors.add('MaxLine Exceeded')
+        }
+        if (v.length > guideline['inputWordCount']) {
+            td.style.backgroundColor = 'red'
+            errors.add('WordCount Exceeded')
+        }
+        if (v.includes('  ')) { // multiple spaces
+            td.style.backgroundColor = 'red'
+            errors.add('Multiple Spaces')
+        }
+        if (/(^|[^.])\.{2}(?!\.)/.test(v) || /(^|[^.])\.{4,}(?!\.)/.test(v)) { // 2 or 4+ dots
+            td.style.backgroundColor = 'red'
+            errors.add('2 or 4+ dots')
+        }
     }
     cellData[r]['error'] = errors
 }
