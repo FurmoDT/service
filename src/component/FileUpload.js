@@ -33,6 +33,7 @@ const FileUpload = (props) => {
             if (file.name.endsWith('.srt')) {
                 const reader = new FileReader()
 
+                props.setFile({...{}})
                 reader.onabort = () => console.log('file reading was aborted')
                 reader.onerror = () => console.log('file reading has failed')
                 reader.onload = () => {
