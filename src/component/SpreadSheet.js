@@ -8,15 +8,12 @@ import * as Grammarly from "@grammarly/editor-sdk";
 import {TCtoSec} from "../utils/calculator";
 
 let cellData = []
+let fileData = null
+
 
 function tcRenderer(instance, td) {
     Handsontable.renderers.TextRenderer.apply(this, arguments);
     tcValidator(arguments[2], arguments[3], arguments[5], td, instance, cellData)
-}
-
-function textRenderer(instance, td) {
-    Handsontable.renderers.TextRenderer.apply(this, arguments);
-    textValidator(arguments[2], arguments[3], arguments[5], td, instance, cellData)
 }
 
 function cpsRenderer(instance, td) {
@@ -37,12 +34,19 @@ const SpreadSheet = (props) => {
     const containerMain = useRef(null);
     const containerGrammarly = useRef(null);
     useEffect(() => {
+        function textRenderer(instance, td) {
+            Handsontable.renderers.TextRenderer.apply(this, arguments);
+            textValidator(arguments[2], arguments[3], arguments[5], td, instance, cellData, props.guideline)
+        }
         const hot = {main: null, grammarly: null}
         const setGrammarly = async () => {
             return await Grammarly.init("client_3a8upV1a1GuH7TqFpd98Sn");
         }
         const grammarly = setGrammarly()
-        cellData = props.file.data ? parse(props.file.data) : []
+        if (fileData !== props.file.data){
+            cellData = props.file.data ? parse(props.file.data) : []
+            fileData = props.file.data
+        }
         const resizeBtn = document.getElementById('btn-resize')
         resizeBtn.style.display = props.file.data ? '' : 'none'
         resizeBtn.onclick = (e) => {
