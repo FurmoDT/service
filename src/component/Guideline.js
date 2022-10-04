@@ -32,7 +32,7 @@ const Guideline = (props) => {
             ...prevState, ...{[e.target.id]: Number(e.target.value)}
         }))
     }
-    return <MDBContainer fluid={true} style={{marginTop: 10}}>
+    return <MDBContainer fluid={true} style={{marginTop: 10, marginBottom: 10}}>
         <MDBCheckbox onClick={(e) => checkBoxEvent(e)} name='inlineCheck' id='kbsWorld' label='KBS World' inline/>
         <MDBCheckbox onClick={(e) => checkBoxEvent(e)} name='inlineCheck' id='sample' label='sample' inline/>
         <MDBCheckbox onClick={(e) => checkBoxEvent(e)} name='inlineCheck' id='sample2' label='sample2' inline/>

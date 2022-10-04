@@ -44,14 +44,18 @@ const SpreadSheet = (props) => {
             Handsontable.renderers.TextRenderer.apply(this, arguments);
             textValidator(arguments[2], arguments[3], arguments[5], td, instance, cellData, props.guideline)
         }
+
         const hot = {main: null, grammarly: null}
         const setGrammarly = async () => {
             return await Grammarly.init("client_3a8upV1a1GuH7TqFpd98Sn");
         }
         const grammarly = setGrammarly()
-        if (fileData !== props.file.data){
+        if (fileData !== props.file.data) {
             cellData = props.file.data ? parse(props.file.data) : []
-            cellData.forEach((value) => {value['error'] = new Set()})
+            cellData.forEach((value) => {
+                value['error'] = new Set()
+                value['checked'] = false
+            })
             fileData = props.file.data
         }
         const resizeBtn = document.getElementById('btn-resize')
@@ -66,19 +70,14 @@ const SpreadSheet = (props) => {
         props.buttonDownload.current.style.display = props.file.data ? '' : 'none'
         props.buttonDownload.current.onclick = () => {
             const Unchecked = []
-            const Violated = []
             cellData.forEach((value, index) => {
                 cellData[index]['index'] = index + 1
-                if (value['validated'] === undefined) {
+                if (value['checked'] === false) {
                     Unchecked.push(index + 1)
-                } else if (value['validated'].size) {
-                    Violated.push(index + 1)
                 }
             })
             if (Unchecked.length) {
-                alert('Line Unchecked: ' + Unchecked.toString())
-            } else if (Violated.length) {
-                alert('QC Violation: ' + Violated.toString())
+                alert('Line Unchecked: ' + Unchecked.join('\n'))
             } else {
                 fileDownload(cellData, props.file.filename)
             }
@@ -134,6 +133,14 @@ const SpreadSheet = (props) => {
                     grammarlyPlugin.disconnect()
                 }
             })
+            hot.main.addHook('afterGetRowHeader', (row) => {
+                if (cellData[row]['checked'] === false) {
+                    cellData[row]['checked'] = true
+                }
+            })
+            for (let i = 0; i < hot.main.countRenderedRows() - 2; i++) { // default rendered rows
+                cellData[i]['checked'] = true
+            }
         }
         if (containerGrammarly.current && cellData.length) {
             //rendering twice

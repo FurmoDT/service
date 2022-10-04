@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {
+    MDBBtn,
     MDBCollapse,
     MDBContainer,
     MDBNavbar,
@@ -11,7 +12,7 @@ import {
 } from 'mdb-react-ui-kit';
 import {FaBars} from "react-icons/fa";
 
-export default function Navbar() {
+export default function Navbar(props) {
     const [showBasic, setShowBasic] = useState(false);
 
     return <MDBNavbar expand='lg' light bgColor='light'>
@@ -34,6 +35,7 @@ export default function Navbar() {
                         </MDBNavbarLink>
                     </MDBNavbarItem>
                 </MDBNavbarNav>
+                <MDBBtn id={'btn-download'} className={'flex-shrink-0'} size='sm' ref={props.buttonDownload} rounded={true}>DOWNLOAD</MDBBtn>
             </MDBCollapse>
         </MDBContainer>
     </MDBNavbar>
