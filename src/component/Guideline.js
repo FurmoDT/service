@@ -8,8 +8,8 @@ const Guideline = (props) => {
             else {
                 if (e.target.checked) {
                     if (e.target.id === 'kbsWorld') {
-                        document.getElementById('inputMaxLine').value = 2
-                        document.getElementById('inputWordCount').value = 60
+                        document.getElementById('inputMaxLine').value = 1
+                        document.getElementById('inputWordCount').value = 55
                     } else if (e.target.id === 'sample') {
                         document.getElementById('inputMaxLine').value = 3
                         document.getElementById('inputWordCount').value = 60
