@@ -88,12 +88,14 @@ const SpreadSheet = (props) => {
             cellData.map((v, index) => text += v.text)
             if (text.match(/"/g).length % 2 !== 0) {
                 props.buttonDownload.current.classList.replace('btn-primary', 'btn-danger')
-                props.buttonDownload.current.innerHTML = 'DOUBLE QUOTATION MARKS DO NOT PAIR'
+                document.getElementById('txt-downloadError').style.display = ''
+                document.getElementById('txt-downloadError').innerHTML = 'DOUBLE QUOTATION MARKS DO NOT PAIR'
             }
         }
-        props.buttonDownload.current.onmouseout = () => {
+        props.buttonDownload.current.onmouseleave = () => {
             props.buttonDownload.current.classList.replace('btn-danger', 'btn-primary')
-            props.buttonDownload.current.innerHTML = 'DOWNLOAD'
+            document.getElementById('txt-downloadError').style.display = 'none'
+            document.getElementById('txt-downloadError').innerHTML = ''
         }
 
         if (containerMain.current && cellData.length) {

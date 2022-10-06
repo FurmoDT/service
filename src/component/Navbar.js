@@ -1,4 +1,3 @@
-import React, {useState} from 'react';
 import {
     MDBBtn,
     MDBCollapse,
@@ -10,18 +9,12 @@ import {
     MDBNavbarNav,
     MDBNavbarToggler,
 } from 'mdb-react-ui-kit';
-import {FaBars} from "react-icons/fa";
 
 export default function Navbar(props) {
-    const [showBasic, setShowBasic] = useState(false);
-
     return <MDBNavbar expand='lg' light bgColor='light'>
         <MDBContainer fluid>
             <MDBNavbarBrand>FurmoDT</MDBNavbarBrand>
-            <MDBNavbarToggler type='button' onClick={() => setShowBasic(!showBasic)}>
-                <FaBars/>
-            </MDBNavbarToggler>
-            <MDBCollapse navbar show={showBasic}>
+            <MDBCollapse navbar>
                 <MDBNavbarNav className='mr-auto mb-2 mb-lg-0'>
                     <MDBNavbarItem>
                         <MDBNavbarLink active={true}>
@@ -35,6 +28,7 @@ export default function Navbar(props) {
                         </MDBNavbarLink>
                     </MDBNavbarItem>
                 </MDBNavbarNav>
+                <span id={'txt-downloadError'} style={{display: 'none', width: 400, fontSize: 12, color: "red", fontWeight: 500}}/>
                 <MDBBtn id={'btn-download'} className={'flex-shrink-0'} size='sm' ref={props.buttonDownload} rounded={true}>DOWNLOAD</MDBBtn>
             </MDBCollapse>
         </MDBContainer>
