@@ -82,6 +82,18 @@ const SpreadSheet = (props) => {
                 fileDownload(cellData, props.file.filename)
             }
         }
+        document.getElementById('btn-download').addEventListener('mouseover', () => {
+            let text = ''
+            cellData.map((v, index) => text += v.text)
+            if (text.match(/"/g).length % 2 !== 0){
+                document.getElementById('btn-download').classList.replace('btn-primary', 'btn-danger')
+                document.getElementById('btn-download').innerText = 'DOUBLE QUOTATION MARKS DO NOT PAIR'
+            }
+            else {
+                document.getElementById('btn-download').classList.replace('btn-danger', 'btn-primary')
+                document.getElementById('btn-download').innerText = 'DOWNLOAD'
+            }
+        })
         if (containerMain.current && cellData.length) {
             //rendering twice
             const child = document.getElementById('hot-main').children
