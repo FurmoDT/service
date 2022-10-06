@@ -78,7 +78,7 @@ const SpreadSheet = (props) => {
                 }
             })
             if (Unchecked.length) {
-                alert('Line Unchecked: ' + Unchecked.join('\n'))
+                alert('Line Unchecked\n' + Unchecked.join('\n'))
             } else {
                 fileDownload(cellData, props.file.filename)
             }
