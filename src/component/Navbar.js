@@ -7,7 +7,6 @@ import {
     MDBNavbarItem,
     MDBNavbarLink,
     MDBNavbarNav,
-    MDBNavbarToggler,
 } from 'mdb-react-ui-kit';
 
 export default function Navbar(props) {
