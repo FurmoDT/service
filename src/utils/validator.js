@@ -16,9 +16,9 @@ export const textValidator = (r, c, v, td, instance, cellData, guideline) => {
             td.style.backgroundColor = 'red'
             errors.add('MaxLine Exceeded')
         }
-        if (v.length > guideline['inputWordCount']) {
+        if (v.length > guideline['inputMaxCharacter']) {
             td.style.backgroundColor = 'red'
-            errors.add('WordCount Exceeded')
+            errors.add('MaxCharacter Exceeded')
         }
         if (v.includes('  ')) { // multiple spaces
             td.style.backgroundColor = 'red'

@@ -16,19 +16,6 @@ function tcRenderer(instance, td) {
     tcValidator(arguments[2], arguments[3], arguments[5], td, instance, cellData)
 }
 
-function cpsRenderer(instance, td) {
-    Handsontable.renderers.TextRenderer.apply(this, arguments);
-    const curRowData = cellData[arguments[2]]
-    try {
-        const textCount = curRowData['text'].replaceAll(/<(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+>/g, '').match(/[^\s!"#$%&'()*+,-./:;<=>?@[\\\]^_`{|}~]/g).length // remove tag and puncs
-        td.innerText = Math.ceil(textCount / (TCtoSec(curRowData['end']) - TCtoSec(curRowData['start'])))
-    } catch (error) {
-        td.innerText = 0
-    }
-    if (td.innerText >= 17) {
-        td.style.backgroundColor = 'yellow'
-    }
-}
 
 function errorRenderer(instance, td) {
     Handsontable.renderers.TextRenderer.apply(this, arguments);
@@ -43,6 +30,19 @@ const SpreadSheet = (props) => {
         function textRenderer(instance, td) {
             Handsontable.renderers.TextRenderer.apply(this, arguments);
             textValidator(arguments[2], arguments[3], arguments[5], td, instance, cellData, props.guideline)
+        }
+        function cpsRenderer(instance, td) {
+            Handsontable.renderers.TextRenderer.apply(this, arguments);
+            const curRowData = cellData[arguments[2]]
+            try {
+                const textCount = curRowData['text'].replaceAll(/<(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+>/g, '').match(/[^\s!"#$%&'()*+,-./:;<=>?@[\\\]^_`{|}~]/g).length // remove tag and puncs
+                td.innerText = Math.ceil(textCount / (TCtoSec(curRowData['end']) - TCtoSec(curRowData['start'])))
+            } catch (error) {
+                td.innerText = 0
+            }
+            if (td.innerText >= props.guideline['inputCPS']) {
+                td.style.backgroundColor = 'yellow'
+            }
         }
 
         const hot = {main: null, grammarly: null}

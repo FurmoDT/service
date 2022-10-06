@@ -9,18 +9,22 @@ const Guideline = (props) => {
                 if (e.target.checked) {
                     if (e.target.id === 'kbsWorld') {
                         document.getElementById('inputMaxLine').value = 1
-                        document.getElementById('inputWordCount').value = 55
+                        document.getElementById('inputMaxCharacter').value = 55
+                        document.getElementById('inputCPS').value = 30
                     } else if (e.target.id === 'sample') {
                         document.getElementById('inputMaxLine').value = 3
-                        document.getElementById('inputWordCount').value = 60
+                        document.getElementById('inputMaxCharacter').value = 60
+                        document.getElementById('inputCPS').value = 17
                     } else if (e.target.id === 'sample2') {
                         document.getElementById('inputMaxLine').value = 1
-                        document.getElementById('inputWordCount').value = 60
+                        document.getElementById('inputMaxCharacter').value = 60
+                        document.getElementById('inputCPS').value = 25
                     }
                     props.setGuideline((prevState) => ({
                         ...prevState, ...{
                             inputMaxLine: Number(document.getElementById('inputMaxLine').value),
-                            inputWordCount: Number(document.getElementById('inputWordCount').value)
+                            inputMaxCharacter: Number(document.getElementById('inputMaxCharacter').value),
+                            inputCPS: Number(document.getElementById('inputCPS').value)
                         }
                     }))
                 }
@@ -40,12 +44,17 @@ const Guideline = (props) => {
             <MDBCol size={1}>
                 <MDBInput onChange={(e) => {
                     numberInputEvent(e)
-                }} label='Max Line' id='inputMaxLine' type='number' defaultValue={0}/>
+                }} label='MaxLine' id='inputMaxLine' type='number' defaultValue={0}/>
             </MDBCol>
             <MDBCol size={1}>
                 <MDBInput onChange={(e) => {
                     numberInputEvent(e)
-                }} label='Word Count' id='inputWordCount' type='number' defaultValue={0}/>
+                }} label='MaxCharacter' id='inputMaxCharacter' type='number' defaultValue={0}/>
+            </MDBCol>
+            <MDBCol size={1}>
+                <MDBInput onChange={(e) => {
+                    numberInputEvent(e)
+                }} label='CPS' id='inputCPS' type='number' defaultValue={0}/>
             </MDBCol>
         </MDBRow>
     </MDBContainer>
