@@ -12,6 +12,17 @@ export const textValidator = (r, c, v, td, instance, cellData, guideline) => {
         td.style.backgroundColor = 'red'
         errors.add('Empty Cell')
     } else {
+        if (v.match(/[.?!][^a-zA-z]*[a-z]/g)) {
+            td.style.backgroundColor = 'yellow'
+            errors.add('Possible Uppercase')
+        }
+        if (cellData[r - 1] && cellData[r - 1]['text'].match(/[.?!]$/g)){
+            const char = v.match(/[a-zA-Z]/g)
+            if (char && char[0] !== char[0].toUpperCase()){
+                td.style.backgroundColor = 'yellow'
+                errors.add('Possible Uppercase')
+            }
+        }
         if (v.split('\n').length > guideline['inputMaxLine']) {
             td.style.backgroundColor = 'red'
             errors.add('MaxLine Exceeded')
