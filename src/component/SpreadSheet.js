@@ -165,7 +165,7 @@ const SpreadSheet = (props) => {
                 child[i].remove()
             }
             hot.grammarly = new Handsontable(containerGrammarly.current, {
-                colHeaders: ['Grammarly'],
+                colHeaders: ['Grammar Check'],
                 colWidths: 500,
                 rowHeights: 30,
                 width: '30%',
