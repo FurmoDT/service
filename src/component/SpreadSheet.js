@@ -242,7 +242,7 @@ const SpreadSheet = (props) => {
         }
     }, [props]);
 
-    return <div id={'spreadSheets'} style={{flexDirection: "row", display: "none", height: 500, borderStyle: 'solid', borderWidth: 'thin'}}>
+    return <div id={'spreadSheets'} style={{flexDirection: "row", display: "none", width: '100%', height: 500, borderStyle: 'solid', borderWidth: 'thin'}}>
         <div id={"hot-grammarly"} ref={containerGrammarly}
              onFocus={() => {
                  if (document.getElementById('trigger').parentElement.classList[1] === 'is-open') {
