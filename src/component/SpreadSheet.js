@@ -68,7 +68,6 @@ const SpreadSheet = (props) => {
             hot.grammarly.render()
         }
         document.getElementById('spreadSheets').style.display = props.file.data ? 'flex' : 'none'
-        props.buttonDownload.current.style.display = props.file.data ? '' : 'none'
         props.buttonDownload.current.onclick = () => {
             const Unchecked = []
             cellData.forEach((value, index) => {
