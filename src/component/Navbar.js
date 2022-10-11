@@ -27,12 +27,6 @@ export default function Navbar(props) {
             <MDBCollapse navbar>
                 <MDBNavbarNav className='mr-auto mb-2 mb-lg-0'>
                     <MDBNavbarItem>
-                        <MDBNavbarLink style={{cursor: "pointer"}}
-                                       onClick={() => document.getElementById('trigger').click()}>
-                            Setting
-                        </MDBNavbarLink>
-                    </MDBNavbarItem>
-                    <MDBNavbarItem>
                         <MDBNavbarLink style={{cursor: "pointer"}} onClick={toggleShow}>
                             Manual
                         </MDBNavbarLink>
@@ -94,6 +88,12 @@ export default function Navbar(props) {
                                 </MDBModalContent>
                             </MDBModalDialog>
                         </MDBModal>
+                    </MDBNavbarItem>
+                    <MDBNavbarItem>
+                        <MDBNavbarLink style={{cursor: "pointer"}}
+                                       onClick={() => document.getElementById('trigger').click()}>
+                            Setting
+                        </MDBNavbarLink>
                     </MDBNavbarItem>
                 </MDBNavbarNav>
                 <span id={'txt-downloadError'} style={{display: 'none', width: 400, fontSize: 12, color: "red", fontWeight: 500}}/>
