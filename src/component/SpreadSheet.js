@@ -68,7 +68,7 @@ const SpreadSheet = (props) => {
             hot.grammarly.render()
         }
         document.getElementById('spreadSheets').style.display = props.file.data ? 'flex' : 'none'
-        props.buttonDownload.current.onclick = () => {
+        props.buttonDownload.current.onclick = async () => {
             const Unchecked = []
             cellData.forEach((value, index) => {
                 cellData[index]['index'] = index + 1
@@ -79,6 +79,10 @@ const SpreadSheet = (props) => {
             if (Unchecked.length) {
                 alert('Line Unchecked\n' + Unchecked.join('\n'))
             } else {
+                const ipData = await fetch('https://geolocation-db.com/json/');
+                const locationIp = await ipData.json();
+                const curr = new Date()
+                console.log(new Date(curr.getTime() + curr.getTimezoneOffset() * 60 * 1000 + 9 * 60 * 60 * 1000) , locationIp.IPv4, props.file.filename);
                 fileDownload(cellData, props.file.filename)
             }
         }
