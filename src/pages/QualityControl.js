@@ -1,4 +1,4 @@
-import {Fragment, useEffect, useState} from "react";
+import {Fragment, useEffect, useRef, useState} from "react";
 import FileUpload from "../component/FileUpload";
 import SpreadSheet from "../component/SpreadSheet";
 import Collapsible from 'react-collapsible';
@@ -10,9 +10,11 @@ import VideoPlayer from "../component/VideoPlayer";
 const QualityControl = (props) => {
     const [file, setFile] = useState({})
     const [guideline, setGuideline] = useState({})
+    const videoMode = useRef(null)
     useEffect(() => {
         if (file) {
             props.buttonDownload.current.style.display = file.data ? '' : 'none'
+            videoMode.current.style.display = file.data ? '' : 'none'
         }
     }, [props.buttonDownload, file])
     return <Fragment>
@@ -21,7 +23,7 @@ const QualityControl = (props) => {
                 setFile(value)
             }}/>
             <Guideline guideline={guideline} setGuideline={setGuideline}/>
-            <MDBBtn style={{marginBottom: 10}} onClick={() => {
+            <MDBBtn ref={videoMode} style={{marginBottom: 10}} onClick={() => {
                 if (document.getElementById('hot-grammarly').style.display === '') {
                     document.getElementById('content-videoPlayer').style.display = ''
                     document.getElementById('hot-grammarly').style.display = 'none'
