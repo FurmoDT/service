@@ -30,11 +30,13 @@ const QualityControl = (props) => {
                     document.getElementById('hot-grammarly').style.display = 'none'
                     document.getElementById('spreadSheets').style.width = '70%'
                     document.getElementById('hot-main').style.width = '100%'
+                    videoMode.current.innerHTML = 'Grammar Check Mode'
                 } else {
                     document.getElementById('content-videoPlayer').style.display = 'none'
                     document.getElementById('hot-grammarly').style.display = ''
                     document.getElementById('spreadSheets').style.width = '100%'
                     document.getElementById('hot-main').style.width = '70%'
+                    videoMode.current.innerHTML = 'Video Mode'
                 }
             }}>Video Mode</MDBBtn>
         </Collapsible>
