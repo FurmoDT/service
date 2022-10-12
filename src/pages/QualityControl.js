@@ -9,7 +9,7 @@ import VideoPlayer from "../component/VideoPlayer";
 
 const QualityControl = (props) => {
     const [file, setFile] = useState({})
-    const [videoUrl, setVideoUrl] = useState('')
+    const [videoUrl, setVideoUrl] = useState(null)
     const [guideline, setGuideline] = useState({})
     const videoMode = useRef(null)
     const player = useRef(null)
