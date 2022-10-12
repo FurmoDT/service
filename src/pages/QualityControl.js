@@ -11,6 +11,7 @@ const QualityControl = (props) => {
     const [file, setFile] = useState({})
     const [guideline, setGuideline] = useState({})
     const videoMode = useRef(null)
+    const player = useRef(null)
     useEffect(() => {
         if (file) {
             props.buttonDownload.current.style.display = file.data ? '' : 'none'
@@ -38,8 +39,8 @@ const QualityControl = (props) => {
             }}>Video Mode</MDBBtn>
         </Collapsible>
         <div style={{flexDirection: 'row', display: 'flex'}}>
-            <VideoPlayer/>
-            <SpreadSheet buttonDownload={props.buttonDownload} file={file} guideline={guideline}/>
+            <VideoPlayer player={player}/>
+            <SpreadSheet player={player} buttonDownload={props.buttonDownload} file={file} guideline={guideline}/>
         </div>
         <MDBBtn id={'btn-resize'} color={'none'} floating tag='a'>
             <MDBIcon fas icon="chevron-down" size={'2x'} color={'dark'}/>

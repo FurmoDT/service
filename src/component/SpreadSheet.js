@@ -146,6 +146,7 @@ const SpreadSheet = (props) => {
                     const textarea = document.getElementById('hot-main').querySelector('grammarly-editor-plugin').querySelector('textarea')
                     textarea.focus()
                 });
+                props.player.current.seekTo(TCtoSec(cellData[row]['start']))
             })
             hot.main.addHook('afterChange', (changes) => {
                 if (grammarlyPlugin) {
