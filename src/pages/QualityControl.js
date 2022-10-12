@@ -3,12 +3,13 @@ import FileUpload from "../component/FileUpload";
 import SpreadSheet from "../component/SpreadSheet";
 import Collapsible from 'react-collapsible';
 import Guideline from "../component/Guideline";
-import {MDBBtn, MDBIcon} from 'mdb-react-ui-kit';
+import {MDBBtn, MDBBtnGroup, MDBIcon, MDBRadio} from 'mdb-react-ui-kit';
 import VideoPlayer from "../component/VideoPlayer";
 
 
 const QualityControl = (props) => {
     const [file, setFile] = useState({})
+    const [videoUrl, setVideoUrl] = useState('')
     const [guideline, setGuideline] = useState({})
     const videoMode = useRef(null)
     const player = useRef(null)
@@ -24,24 +25,25 @@ const QualityControl = (props) => {
                 setFile(value)
             }}/>
             <Guideline guideline={guideline} setGuideline={setGuideline}/>
-            <MDBBtn ref={videoMode} style={{marginBottom: 10}} onClick={() => {
-                if (document.getElementById('hot-grammarly').style.display === '') {
-                    document.getElementById('content-videoPlayer').style.display = ''
-                    document.getElementById('hot-grammarly').style.display = 'none'
-                    document.getElementById('spreadSheets').style.width = '70%'
-                    document.getElementById('hot-main').style.width = '100%'
-                    videoMode.current.innerHTML = 'Grammar Check Mode'
-                } else {
-                    document.getElementById('content-videoPlayer').style.display = 'none'
-                    document.getElementById('hot-grammarly').style.display = ''
-                    document.getElementById('spreadSheets').style.width = '100%'
-                    document.getElementById('hot-main').style.width = '70%'
-                    videoMode.current.innerHTML = 'Video Mode'
-                }
-            }}>Video Mode</MDBBtn>
+            <MDBBtnGroup ref={videoMode} style={{marginBottom: 10}}>
+                <MDBRadio btn btnColor='secondary' id='btn-radio' name='options' wrapperTag='span' label='Grammar Check'
+                          onClick={() => {
+                              document.getElementById('content-videoPlayer').style.display = 'none'
+                              document.getElementById('hot-grammarly').style.display = ''
+                              document.getElementById('spreadSheets').style.width = '100%'
+                              document.getElementById('hot-main').style.width = '70%'
+                          }} defaultChecked/>
+                <MDBRadio btn btnColor='secondary' id='btn-radio2' name='options' wrapperTag='span' label='Video'
+                          onClick={() => {
+                              document.getElementById('content-videoPlayer').style.display = ''
+                              document.getElementById('hot-grammarly').style.display = 'none'
+                              document.getElementById('spreadSheets').style.width = '70%'
+                              document.getElementById('hot-main').style.width = '100%'
+                          }}/>
+            </MDBBtnGroup>
         </Collapsible>
         <div style={{flexDirection: 'row', display: 'flex'}}>
-            <VideoPlayer player={player}/>
+            <VideoPlayer videoUrl={videoUrl} player={player}/>
             <SpreadSheet player={player} buttonDownload={props.buttonDownload} file={file} guideline={guideline}/>
         </div>
         <MDBBtn id={'btn-resize'} color={'none'} floating tag='a'>
