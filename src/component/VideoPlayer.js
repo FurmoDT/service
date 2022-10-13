@@ -2,7 +2,7 @@ import ReactPlayer from "react-player";
 
 const VideoPlayer = (props) => {
     return <div id={'content-videoPlayer'} style={{width: '30%', display: 'none'}}>
-        <ReactPlayer ref={props.player} playing={true} controls={true} width={'100%'} height={'100%'} url='https://www.youtube.com/watch?v=ysz5S6PUM-U'/>
+        <ReactPlayer ref={props.player} playing={true} controls={true} width={'100%'} height={'100%'} url={props.videoUrl}/>
     </div>
 };
 
