@@ -27,6 +27,15 @@ const SpreadSheet = (props) => {
     const containerMain = useRef(null);
     const containerGrammarly = useRef(null);
     useEffect(() => {
+        function clearChild(element) {
+            while (element.firstChild) {
+                clearChild(element.firstChild)
+            }
+            if (!element.id || !element.id.startsWith('hot-')) {
+                element.remove()
+            }
+        }
+
         function textRenderer(instance, td) {
             Handsontable.renderers.TextRenderer.apply(this, arguments);
             textValidator(arguments[2], arguments[3], arguments[5], td, instance, cellData, props.guideline)
@@ -82,7 +91,7 @@ const SpreadSheet = (props) => {
                 const ipData = await fetch('https://geolocation-db.com/json/');
                 const locationIp = await ipData.json();
                 const curr = new Date()
-                console.log(new Date(curr.getTime() + curr.getTimezoneOffset() * 60 * 1000 + 9 * 60 * 60 * 1000) , locationIp.IPv4, props.file.filename);
+                console.log(new Date(curr.getTime() + curr.getTimezoneOffset() * 60 * 1000 + 9 * 60 * 60 * 1000), locationIp.IPv4, props.file.filename);
                 fileDownload(cellData, props.file.filename)
             }
         }
@@ -102,11 +111,7 @@ const SpreadSheet = (props) => {
         }
 
         if (containerMain.current && cellData.length) {
-            //rendering twice
-            const child = document.getElementById('hot-main').children
-            for (let i = 0; i < child.length; i++) {
-                child[i].remove()
-            }
+            clearChild(containerMain.current)
             hot.main = new Handsontable(containerMain.current, {
                 colHeaders: ['TC_IN', 'TC_OUT', 'TEXT', 'CPS', 'ERROR'],
                 data: cellData,
@@ -163,11 +168,7 @@ const SpreadSheet = (props) => {
             }
         }
         if (containerGrammarly.current && cellData.length) {
-            //rendering twice
-            const child = document.getElementById('hot-grammarly').children
-            for (let i = 0; i < child.length; i++) {
-                child[i].remove()
-            }
+            clearChild(containerGrammarly.current)
             hot.grammarly = new Handsontable(containerGrammarly.current, {
                 colHeaders: ['Grammar Check'],
                 colWidths: 500,
