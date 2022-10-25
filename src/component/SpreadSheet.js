@@ -98,7 +98,7 @@ const SpreadSheet = (props) => {
         props.buttonDownload.current.onmouseover = () => {
             let text = ''
             cellData.map((v, index) => text += v.text)
-            if (text.match(/"/g).length % 2 !== 0) {
+            if (text.match(/"/g) && text.match(/"/g).length % 2 !== 0) {
                 props.buttonDownload.current.classList.replace('btn-primary', 'btn-danger')
                 document.getElementById('txt-downloadError').style.display = ''
                 document.getElementById('txt-downloadError').innerHTML = 'DOUBLE QUOTATION MARKS DO NOT PAIR'
@@ -115,25 +115,39 @@ const SpreadSheet = (props) => {
             hot.main = new Handsontable(containerMain.current, {
                 colHeaders: ['TC_IN', 'TC_OUT', 'TEXT', 'CPS', 'ERROR'],
                 data: cellData,
-                colWidths: [100, 100, 500, 50, 200],
                 rowHeaders: true,
                 rowHeights: 30,
                 width: '70%',
                 height: '100%',
                 className: 'htLeft',
-                stretchH: 'all',
+                hiddenColumns: {indicators: true},
+                stretchH: 'last',
                 columns: [
                     {data: 'start', className: 'htCenter', renderer: tcRenderer},
                     {data: 'end', className: 'htCenter', renderer: tcRenderer},
                     {data: 'text', renderer: textRenderer},
-                    {data: 'cps', className: 'htCenter', renderer: cpsRenderer, disableVisualSelection: true, editor: null},
-                    {data: 'error', className: 'htCenter', renderer: errorRenderer, disableVisualSelection: true, editor: null},
+                    {
+                        data: 'cps',
+                        className: 'htCenter',
+                        renderer: cpsRenderer,
+                        disableVisualSelection: true,
+                        editor: null
+                    },
+                    {
+                        data: 'error',
+                        className: 'htCenter',
+                        renderer: errorRenderer,
+                        disableVisualSelection: true,
+                        editor: null
+                    },
                 ],
                 contextMenu: {
                     items: {
                         'row_above': {},
                         'row_below': {},
                         'remove_row': {},
+                        'hidden_columns_hide': {},
+                        'hidden_columns_show': {},
                     }
                 },
                 licenseKey: 'non-commercial-and-evaluation'
@@ -247,7 +261,14 @@ const SpreadSheet = (props) => {
         }
     }, [props]);
 
-    return <div id={'spreadSheets'} style={{flexDirection: "row", display: "none", width: '100%', height: 500, borderStyle: 'solid', borderWidth: 'thin'}}>
+    return <div id={'spreadSheets'} style={{
+        flexDirection: "row",
+        display: "none",
+        width: '100%',
+        height: 500,
+        borderStyle: 'solid',
+        borderWidth: 'thin'
+    }}>
         <div id={"hot-grammarly"} ref={containerGrammarly}
              onFocus={() => {
                  if (document.getElementById('trigger').parentElement.classList[1] === 'is-open') {
