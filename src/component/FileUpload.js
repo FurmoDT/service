@@ -1,6 +1,7 @@
 import {Fragment, useCallback, useMemo} from 'react'
 import {useDropzone} from 'react-dropzone'
 import languageEncoding from "detect-file-encoding-and-language";
+import {xml2json} from "xml-js";
 
 
 const baseStyle = {
@@ -30,7 +31,7 @@ const activeStyle = {
 const FileUpload = (props) => {
     const onDrop = useCallback((acceptedFiles) => {
         acceptedFiles.forEach((file) => {
-            if (file.name.endsWith('.srt')) {
+            if (file.name.endsWith('.fsp') || file.name.endsWith('.srt')) {
                 const reader = new FileReader()
 
                 props.setFile({...{}})
@@ -41,9 +42,33 @@ const FileUpload = (props) => {
                     let binaryStr = new ArrayBuffer(0)
                     binaryStr = reader.result
                     languageEncoding(file).then((fileInfo) => {
-                        const decoder = new TextDecoder(fileInfo.encoding);
+                        const decoder = new TextDecoder(fileInfo.encoding || 'UTF-8');
                         const str = decoder.decode(binaryStr)
-                        props.setFile({'filename': file.name, 'data': str})
+                        if (file.name.endsWith('.fsp')) {
+                            const data = JSON.parse(xml2json(str, {compact: false}))
+                            props.setFile({
+                                'filename': file.name,
+                                'data': JSON.parse(xml2json(str, {compact: false})),
+                                'language': (() => {
+                                    let lang
+                                    let counter = {}
+                                    lang = data.elements[0].elements[4].elements.map((v) => v.attributes.code)
+                                    lang.forEach((value) => counter[value] = (counter[value] || 0) + 1)
+                                    lang = lang.map((value, index, array) => {
+                                        const reversedValue = array[array.length - 1 - index]
+                                        if (counter[reversedValue] !== 1) {
+                                            counter[reversedValue] -= 1
+                                            return `${reversedValue}_${counter[value] + 1}`
+                                        } else return reversedValue
+                                    })
+                                    return lang.reverse()
+                                })()
+                            })
+                        } else if (file.name.endsWith('.srt')) props.setFile({
+                            'filename': file.name,
+                            'data': str,
+                            'language': ['TEXT']
+                        })
                     });
                 }
                 reader.readAsArrayBuffer(file)
@@ -51,7 +76,7 @@ const FileUpload = (props) => {
         })
     }, [props])
     const {getRootProps, getInputProps, isFocused, isDragActive} = useDropzone({
-        onDrop, accept: {'text/plain': ['.srt']}, multiple: false
+        onDrop, accept: {'text/plain': ['.fsp', '.srt']}, multiple: false
     })
     const style = useMemo(() => ({
         ...baseStyle, ...(isFocused ? focusedStyle : {}), ...(isDragActive ? activeStyle : {}),
@@ -60,7 +85,7 @@ const FileUpload = (props) => {
         <input {...getInputProps()} />
         {isDragActive ? <p>Drop the file here ...</p> : <Fragment>
             <p>Drag & Drop here, or click to select file</p>
-            <em>(Only .srt will be accepted)</em>
+            <em>(.fsp, .srt will be accepted)</em>
         </Fragment>}
         {props.file ? <h3>uploaded file<br/>{props.file.filename}</h3> : null}
     </div>

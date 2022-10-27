@@ -1,5 +1,5 @@
-export const tcValidator = (r, c, v, td, instance, cellData) => {
-    if (!v || !/^(\d{2}:\d{2}:\d{2},\d{3})$/.test(v) || (c === 0 && instance.getDataAtCell(r - 1, c + 1) > v) || (c === 1 && instance.getDataAtCell(r, c - 1) > v)) {
+export const tcValidator = (r, c, v, td, instance, cellData, sep) => {
+    if (!v || !new RegExp(`^(\\d{2}:\\d{2}:\\d{2}\\${sep}\\d{3})`).test(v) || (c === 0 && instance.getDataAtCell(r - 1, c + 1) > v) || (c === 1 && instance.getDataAtCell(r, c - 1) > v)) {
         td.style.backgroundColor = 'red'
     }
 }

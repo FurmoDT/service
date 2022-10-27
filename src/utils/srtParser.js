@@ -30,6 +30,25 @@ export const parse = (srtText) => {
     return items;
 }
 
+export const parseFsp = (fspJson, language) => {
+    window.Buffer = window.Buffer || require("buffer").Buffer;
+    const items = []
+    const subtitle = fspJson.elements[0].elements[5].elements
+    for (let i = 0; i < subtitle.length; i++) {
+        const line = {}
+        line.start = subtitle[i].attributes.i ? `0${subtitle[i].attributes.i}` : ''
+        line.end = subtitle[i].attributes.o ? `0${subtitle[i].attributes.o}` : ''
+        subtitle[i].elements.forEach((v, i) => {
+            if (v.elements) {
+                if (v.attributes.g === 'enUS' || v.attributes.g === 'enGB') line.text = v.elements[0].text.replace('|', '\n')
+                else line[`language_${language[i]}`] = v.elements[0].text.replace('|', '\n')
+            }
+        })
+        items.push(line)
+    }
+    return items
+}
+
 export function toSrt(array) {
     let res = "";
     for (let i = 0; i < array.length; i++) {

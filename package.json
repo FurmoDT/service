@@ -8,6 +8,7 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "buffer": "^6.0.3",
     "detect-file-encoding-and-language": "^2.3.0",
     "gh-pages": "^4.0.0",
     "handsontable": "^12.1.2",
@@ -19,7 +20,8 @@
     "react-icons": "^4.4.0",
     "react-player": "^2.11.0",
     "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "xml-js": "^1.6.11"
   },
   "scripts": {
     "start": "react-scripts start",
