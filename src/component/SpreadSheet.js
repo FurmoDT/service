@@ -121,6 +121,7 @@ const SpreadSheet = (props) => {
             clearChild(containerMain.current)
             hot.main = new Handsontable(containerMain.current, {
                 colHeaders: ['TC_IN', 'TC_OUT', ...props.file.language, 'CPS', 'ERROR'],
+                manualColumnResize: true,
                 data: cellData,
                 rowHeaders: true,
                 rowHeights: 30,
@@ -134,7 +135,7 @@ const SpreadSheet = (props) => {
                     {data: 'end', className: 'htCenter', renderer: tcRenderer},
                     ...props.file.language.map((value) => {
                         if (value === 'enUS' || value === 'enGB' || value === 'TEXT') return {data: 'text', renderer: textRenderer}
-                        else return {data: `language_${value}`}
+                        else return {data: `language_${value}`,  editor: null}
                     }),
                     {
                         data: 'cps',
@@ -222,7 +223,7 @@ const SpreadSheet = (props) => {
                     if (forceUpdate || curIndex !== idx) {
                         const targetText = text.slice(text.indexOf('\n', text.indexOf(`Index:${curIndex}`)) + 1, text.indexOf(`Index:${curIndex + 1}`) - 1)
                         if (cellData[curIndex - 1]['text'] !== targetText) {
-                            hot.main.setDataAtCell(curIndex - 1, 2, text.slice(text.indexOf('\n', text.indexOf(`Index:${curIndex}`)) + 1, text.indexOf(`Index:${curIndex + 1}`) - 1))
+                            hot.main.setDataAtCell(curIndex - 1, 2 + Math.max(...[props.file.language.indexOf('enUS'), props.file.language.indexOf('enGB'), props.file.language.indexOf('TEXT')]), text.slice(text.indexOf('\n', text.indexOf(`Index:${curIndex}`)) + 1, text.indexOf(`Index:${curIndex + 1}`) - 1))
                             hot.main.scrollViewportTo(curIndex - 1)
                         }
                         curIndex = idx
