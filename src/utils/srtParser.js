@@ -64,7 +64,11 @@ export function toSrt(array) {
 
 export function toFsp(array, file) {
     array.forEach((v, i) => {
-        const newLine = {type: 'element', name: 'N', attributes: {i: v.start.slice(1), o: v.end.slice(1)}}
+        const newLine = {
+            type: 'element',
+            name: 'N',
+            attributes: {i: v.start ? v.start.slice(1) : '', o: v.end ? v.end.slice(1) : ''}
+        }
         newLine.elements = []
         file.language.forEach((l) => {
             newLine.elements.push({
