@@ -120,7 +120,7 @@ const SpreadSheet = (props) => {
         if (containerMain.current && Object.keys(props.file).length !== 0) {
             clearChild(containerMain.current)
             hot.main = new Handsontable(containerMain.current, {
-                colHeaders: ['TC_IN', 'TC_OUT', ...props.file.language, 'CPS', 'ERROR'],
+                colHeaders: ['TC_IN', 'TC_OUT', ...props.file.language.map((v) => ['enUS', 'enGB', 'TEXT'].includes(v) ? `&#128274;${v}` : v), 'CPS', 'ERROR'],
                 manualColumnResize: true,
                 data: cellData,
                 rowHeaders: true,
@@ -134,8 +134,8 @@ const SpreadSheet = (props) => {
                     {data: 'start', className: 'htCenter', renderer: tcRenderer},
                     {data: 'end', className: 'htCenter', renderer: tcRenderer},
                     ...props.file.language.map((value) => {
-                        if (value === 'enUS' || value === 'enGB' || value === 'TEXT') return {data: 'text', renderer: textRenderer}
-                        else return {data: `language_${value}`,  editor: null}
+                        if (['enUS', 'enGB', 'TEXT'].includes(value)) return {data: 'text', renderer: textRenderer}
+                        else return {data: `language_${value}`, editor: null}
                     }),
                     {
                         data: 'cps',
