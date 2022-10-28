@@ -1,3 +1,5 @@
+import {json2xml} from "xml-js";
+
 export const parse = (srtText) => {
     const normalizedSrtData = srtText.replace(/\r\n/g, '\n');
     const lines = normalizedSrtData.split('\n');
@@ -58,4 +60,27 @@ export function toSrt(array) {
         res += s.text.replace("\n", "\r\n") + "\r\n\r\n";
     }
     return res;
+}
+
+export function toFsp(array, file) {
+    array.forEach((v, i) => {
+        const newLine = {type: 'element', name: 'N', attributes: {i: v.start.slice(1), o: v.end.slice(1)}}
+        newLine.elements = []
+        file.language.forEach((l) => {
+            newLine.elements.push({
+                type: 'element',
+                name: 'T',
+                attributes: {g: l.split('_')[0]},
+                elements: [{
+                    type: 'text', text: (() => {
+                        if (l === 'enUS' || l === 'enGB') return v['text']
+                        else return v[`language_${l}`] || ''
+                    })()
+                }]
+            })
+
+        })
+        file.data.elements[0].elements[5].elements[i] = newLine
+    })
+    return '\ufeff' + json2xml(file.data, {spaces: 2})
 }
