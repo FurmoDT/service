@@ -77,8 +77,8 @@ export function toFsp(array, file) {
                 attributes: {g: l.split('_')[0]},
                 elements: [{
                     type: 'text', text: (() => {
-                        if (l === 'enUS' || l === 'enGB') return v['text']
-                        else return v[`language_${l}`] || ''
+                        if (l === 'enUS' || l === 'enGB') return v['text'].replace('\n', '|')
+                        else return (v[`language_${l}`] || '').replace('\n', '|')
                     })()
                 }]
             })
