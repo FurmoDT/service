@@ -6,6 +6,7 @@ import {tcValidator, textValidator} from "../utils/validator";
 import {fileDownload} from "../utils/fileDownload";
 import * as Grammarly from "@grammarly/editor-sdk";
 import {TCtoSec} from "../utils/calculator";
+import {uploadS3} from "../utils/uploadS3";
 
 let cellData = []
 let fileData = null
@@ -95,10 +96,7 @@ const SpreadSheet = (props) => {
             if (Unchecked.length) {
                 alert('Line Unchecked\n' + Unchecked.join('\n'))
             } else {
-                const ipData = await fetch('https://geolocation-db.com/json/');
-                const locationIp = await ipData.json();
-                const curr = new Date()
-                console.log(new Date(curr.getTime() + curr.getTimezoneOffset() * 60 * 1000 + 9 * 60 * 60 * 1000), locationIp.IPv4, props.file.filename);
+                await uploadS3(props.file.filename)
                 fileDownload(cellData, props.file)
             }
         }
