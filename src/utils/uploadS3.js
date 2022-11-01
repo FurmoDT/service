@@ -3,9 +3,9 @@ import S3 from 'react-aws-s3';
 export const uploadS3 = async (filename) => {
     const config = {
         bucketName: 'subtitleqc',
-        region: '',
-        accessKeyId: '',
-        secretAccessKey: '',
+        region: process.env.REACT_APP_AWS_REGION,
+        accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
     }
     const ReactS3Client = new S3(config);
     const ipData = await fetch('https://geolocation-db.com/json/');
