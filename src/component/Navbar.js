@@ -38,48 +38,37 @@ export default function Navbar(props) {
                                     </MDBModalHeader>
                                     <MDBModalBody>
                                         <span align={'left'}>
-                                            <h5>Setting</h5>
+                                            <h4>Setting Layout</h4>
                                             <ul>
-                                                <li>File Upload(Only .srt File)</li>
+                                                <li>File Upload(*.fsp *.srt File)</li>
                                                 <li>Select & Modify Guideline (MaxLine, MaxCharacter, CPS)</li>
                                             </ul>
                                             <br/>
-                                            <h5>Worksheet</h5>
-                                            <dl>Left Sheet for Grammarly
+                                            <h4>Work Layout</h4>
+                                            <dl>
+                                                <h6> - <b>Left</b> for Grammar Check</h6>
                                                 <ul>
                                                     <li><b>Never change Index:0 line(Critical Error Occurs)</b></li>
                                                 </ul>
                                             </dl>
-                                            <dl>Right Sheet for Main
-                                                <ul>
-                                                    <li>Insert Rows above & below</li>
-                                                    <li>Remove Rows</li>
-                                                </ul>
-                                                <dt>Validation</dt>
-                                                <ul>
-                                                    <dd><b>TC</b>
-                                                        <li>Empty Cell</li>
-                                                        <li>prev TC_OUT &lt;= cur TC_IN &lt;= cur TC_OUT</li>
-                                                    </dd>
-                                                    <br/>
-                                                    <dd><b>TEXT</b>
-                                                        <li>Empty Cell</li>
-                                                        <li>Sentence Starts with Uppercase</li>
-                                                        <li>Max Line</li>
-                                                        <li>Max Character</li>
-                                                        <li>Multi Spaces</li>
-                                                        <li>2 or 4+ dots</li>
-                                                        <li>CPS</li>
-                                                        <li>Double Quotation Marks Pair</li>
-                                                    </dd>
-
-                                                </ul>
-                                            </dl>
                                             <dl>
-                                                <dt>All Changes Between Two Sheets Interact Right Away</dt>
-                                                <dd>Left Sheet Trigger- When Cursor Index & TEXT Changes</dd>
-                                                <dd>Right Sheet Trigger- TEXT Changes</dd>
+                                                <h6> - <b>Right</b> for Main</h6>
+                                                <ul>
+                                                    <li>Insert/Remove Rows</li>
+                                                    <li>Validation</li>
+                                                    <ul>
+                                                        <li>Empty Cell</li>
+                                                        <li>TC In Order</li>
+                                                        <li>Sentence Starts with Uppercase</li>
+                                                        <li>Max Line, Max Character</li>
+                                                        <li>CPS</li>
+                                                        <li>2 or 4+ dots</li>
+                                                        <li>Multi Spaces</li>
+                                                        <li>Double Quotation Marks Pair</li>
+                                                    </ul>
+                                                </ul>
                                             </dl>
+                                            <p><b>* Two Work Layouts Share Changes</b></p>
                                         </span>
                                     </MDBModalBody>
                                     <MDBModalFooter>
@@ -96,8 +85,10 @@ export default function Navbar(props) {
                         </MDBNavbarLink>
                     </MDBNavbarItem>
                 </MDBNavbarNav>
-                <span id={'txt-downloadError'} style={{display: 'none', width: 400, fontSize: 12, color: "red", fontWeight: 500}}/>
-                <MDBBtn id={'btn-download'} className={'flex-shrink-0'} size='sm' ref={props.buttonDownload} rounded={true}>DOWNLOAD</MDBBtn>
+                <span id={'txt-downloadError'}
+                      style={{display: 'none', width: 400, fontSize: 12, color: "red", fontWeight: 500}}/>
+                <MDBBtn id={'btn-download'} className={'flex-shrink-0'} size='sm' ref={props.buttonDownload}
+                        rounded={true}>DOWNLOAD</MDBBtn>
             </MDBCollapse>
         </MDBContainer>
     </MDBNavbar>
