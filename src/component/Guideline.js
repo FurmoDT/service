@@ -11,14 +11,14 @@ const Guideline = (props) => {
                         document.getElementById('inputMaxLine').value = 1
                         document.getElementById('inputMaxCharacter').value = 55
                         document.getElementById('inputCPS').value = 30
+                    } else if (e.target.id === 'kcp') {
+                        document.getElementById('inputMaxLine').value = 2
+                        document.getElementById('inputMaxCharacter').value = 42
+                        document.getElementById('inputCPS').value = 30
                     } else if (e.target.id === 'sample') {
-                        document.getElementById('inputMaxLine').value = 3
+                        document.getElementById('inputMaxLine').value = 5
                         document.getElementById('inputMaxCharacter').value = 60
-                        document.getElementById('inputCPS').value = 17
-                    } else if (e.target.id === 'sample2') {
-                        document.getElementById('inputMaxLine').value = 1
-                        document.getElementById('inputMaxCharacter').value = 60
-                        document.getElementById('inputCPS').value = 25
+                        document.getElementById('inputCPS').value = 50
                     }
                     props.setGuideline((prevState) => ({
                         ...prevState, ...{
@@ -38,8 +38,8 @@ const Guideline = (props) => {
     }
     return <MDBContainer fluid={true} style={{marginTop: 10, marginBottom: 10}}>
         <MDBCheckbox onClick={(e) => checkBoxEvent(e)} name='inlineCheck' id='kbsWorld' label='KBS World' inline/>
+        <MDBCheckbox onClick={(e) => checkBoxEvent(e)} name='inlineCheck' id='kcp' label='KCP' inline/>
         <MDBCheckbox onClick={(e) => checkBoxEvent(e)} name='inlineCheck' id='sample' label='sample' inline/>
-        <MDBCheckbox onClick={(e) => checkBoxEvent(e)} name='inlineCheck' id='sample2' label='sample2' inline/>
         <MDBRow center={true} style={{marginTop: 10}}>
             <MDBCol size={1}>
                 <MDBInput onChange={(e) => {
