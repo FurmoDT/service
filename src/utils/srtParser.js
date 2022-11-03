@@ -42,8 +42,8 @@ export const parseFsp = (fspJson, language) => {
         line.end = subtitle[i].attributes.o ? `0${subtitle[i].attributes.o}` : ''
         subtitle[i].elements.forEach((v, i) => {
             if (v.elements) {
-                if (v.attributes.g === 'enUS' || v.attributes.g === 'enGB') line.text = v.elements[0].text.replace('|', '\n')
-                else line[`language_${language[i]}`] = v.elements[0].text.replace('|', '\n')
+                if (v.attributes.g === 'enUS' || v.attributes.g === 'enGB') line.text = v.elements[0].text.replaceAll('|', '\n')
+                else line[`language_${language[i]}`] = v.elements[0].text.replaceAll('|', '\n')
             }
         })
         items.push(line)
