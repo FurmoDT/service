@@ -16,7 +16,7 @@ export const textValidator = (r, c, v, td, instance, cellData, guideline) => {
             td.style.backgroundColor = 'yellow'
             errors.add('Possible Uppercase')
         }
-        if (cellData[r - 1] && cellData[r - 1]['text'].match(/[.?!]$/g)){
+        if (cellData[r - 1]['text'] && cellData[r - 1]['text'].match(/[.?!]$/g)){
             const char = v.match(/[a-zA-Z]/g)
             if (char && char[0] !== char[0].toUpperCase()){
                 td.style.backgroundColor = 'yellow'
