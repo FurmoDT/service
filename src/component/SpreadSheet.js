@@ -219,9 +219,9 @@ const SpreadSheet = (props) => {
                     }
                     const idx = Number(curLine.split('Index:')[1])
                     if (forceUpdate || curIndex !== idx) {
-                        const targetText = text.slice(text.indexOf('\n', text.indexOf(`Index:${curIndex}`)) + 1, text.indexOf(`Index:${curIndex + 1}`) - 1)
+                        const targetText = text.slice(text.indexOf('\n', text.indexOf(`Index:${curIndex}`)) + 1, cellData.length === curIndex ? text.length :text.indexOf(`Index:${curIndex + 1}`) - 1)
                         if (cellData[curIndex - 1]['text'] !== targetText) {
-                            hot.main.setDataAtCell(curIndex - 1, 2 + Math.max(...[props.file.language.indexOf('enUS'), props.file.language.indexOf('enGB'), props.file.language.indexOf('TEXT')]), text.slice(text.indexOf('\n', text.indexOf(`Index:${curIndex}`)) + 1, text.indexOf(`Index:${curIndex + 1}`) - 1))
+                            hot.main.setDataAtCell(curIndex - 1, 2 + Math.max(...[props.file.language.indexOf('enUS'), props.file.language.indexOf('enGB'), props.file.language.indexOf('TEXT')]), targetText)
                             hot.main.scrollViewportTo(curIndex - 1)
                         }
                         curIndex = idx
@@ -240,7 +240,7 @@ const SpreadSheet = (props) => {
                     let curText = ''
                     cellData.map((v, index) => curText += 'Index:' + (index + 1) + '\n' + v.text + '\n')
                     if (textarea.value !== curText) {
-                        textarea.value = curText
+                        textarea.value = curText.slice(0, -1)
                     }
                     const updateGrammarlyData = () => {
                         grammarlyColPos = textarea.selectionStart
@@ -265,7 +265,7 @@ const SpreadSheet = (props) => {
             hot.grammarly.setDataAtCell(0, 0, (() => {
                 let grammarlyText = ''
                 cellData.map((v, index) => grammarlyText += 'Index:' + (index + 1) + '\n' + v.text + '\n')
-                return grammarlyText
+                return grammarlyText.slice(0, -1)
             })())
         }
     }, [props]);
