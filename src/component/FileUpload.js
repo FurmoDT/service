@@ -76,7 +76,7 @@ const FileUpload = (props) => {
         })
     }, [props])
     const {getRootProps, getInputProps, isFocused, isDragActive} = useDropzone({
-        onDrop, accept: {'text/plain': ['.fsp']}, multiple: false
+        onDrop, accept: {'text/plain': ['.fsp', '.srt']}, multiple: false
     })
     const style = useMemo(() => ({
         ...baseStyle, ...(isFocused ? focusedStyle : {}), ...(isDragActive ? activeStyle : {}),
@@ -85,7 +85,7 @@ const FileUpload = (props) => {
         <input {...getInputProps()} />
         {isDragActive ? <p>Drop the file here ...</p> : <Fragment>
             <p>Drag & Drop here, or click to select file</p>
-            <em>(Only .fsp will be accepted)</em>
+            <em>(.fsp, .srt will be accepted)</em>
         </Fragment>}
         {props.file ? <h3>uploaded file<br/>{props.file.filename}</h3> : null}
     </div>
