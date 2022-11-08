@@ -115,7 +115,7 @@ const SpreadSheet = (props) => {
             document.getElementById('txt-downloadError').innerHTML = ''
         }
 
-        if (containerMain.current && Object.keys(props.file).length !== 0) {
+        if (containerMain.current && Object.keys(props.file).length) {
             clearChild(containerMain.current)
             hot.main = new Handsontable(containerMain.current, {
                 colHeaders: ['TC_IN', 'TC_OUT', ...props.file.language.map((v) => ['enUS', 'enGB', 'TEXT'].includes(v) ? v : `&#128274;${v}`), 'CPS', 'ERROR'],
@@ -190,7 +190,7 @@ const SpreadSheet = (props) => {
                 cellData[i]['checked'] = true
             }
         }
-        if (containerGrammarly.current && Object.keys(props.file).length !== 0) {
+        if (containerGrammarly.current && Object.keys(props.file).length) {
             clearChild(containerGrammarly.current)
             hot.grammarly = new Handsontable(containerGrammarly.current, {
                 colHeaders: ['Grammar Check'],
@@ -268,7 +268,7 @@ const SpreadSheet = (props) => {
                 return grammarlyText.slice(0, -1)
             })())
         }
-    }, [props]);
+    }, [props.file, props.guideline, props.buttonDownload, props.player]);
 
     return <div id={'spreadSheets'} style={{
         flexDirection: "row",
