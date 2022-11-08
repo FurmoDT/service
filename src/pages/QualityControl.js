@@ -10,7 +10,7 @@ import VideoPlayer from "../component/VideoPlayer";
 const QualityControl = (props) => {
     const [file, setFile] = useState({})
     const [videoUrl, setVideoUrl] = useState(null)
-    const [guideline, setGuideline] = useState({})
+    const [guideline, setGuideline] = useState({inputMaxLine: 0, inputMaxCharacter: 0, inputCPS: 0})
     const videoMode = useRef(null)
     const player = useRef(null)
     useEffect(() => {
