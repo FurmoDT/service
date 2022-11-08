@@ -1,6 +1,11 @@
 import {MDBCheckbox, MDBCol, MDBContainer, MDBInput, MDBRow} from 'mdb-react-ui-kit';
 
 const Guideline = (props) => {
+    const setInputValue = (maxLine, maxCharacter, cps) => {
+        document.getElementById('inputMaxLine').value = maxLine
+        document.getElementById('inputMaxCharacter').value = maxCharacter
+        document.getElementById('inputCPS').value = cps
+    }
     const checkBoxEvent = (e) => {
         const samples = document.getElementsByClassName('form-check-input')
         for (let i = 0; i < samples.length; i++) {
@@ -8,17 +13,11 @@ const Guideline = (props) => {
             else {
                 if (e.target.checked) {
                     if (e.target.id === 'kbsWorld') {
-                        document.getElementById('inputMaxLine').value = 1
-                        document.getElementById('inputMaxCharacter').value = 55
-                        document.getElementById('inputCPS').value = 30
+                        setInputValue(1, 55, 30)
                     } else if (e.target.id === 'kcp') {
-                        document.getElementById('inputMaxLine').value = 2
-                        document.getElementById('inputMaxCharacter').value = 42
-                        document.getElementById('inputCPS').value = 30
+                        setInputValue(2, 42, 30)
                     } else if (e.target.id === 'sample') {
-                        document.getElementById('inputMaxLine').value = 5
-                        document.getElementById('inputMaxCharacter').value = 60
-                        document.getElementById('inputCPS').value = 50
+                        setInputValue(5, 60, 50)
                     }
                     props.setGuideline((prevState) => ({
                         ...prevState, ...{
@@ -27,6 +26,13 @@ const Guideline = (props) => {
                             inputCPS: Number(document.getElementById('inputCPS').value)
                         }
                     }))
+                } else {
+                    setInputValue(0, 0, 0)
+                    props.setGuideline({
+                        inputMaxLine: 0,
+                        inputMaxCharacter: 0,
+                        inputCPS: 0
+                    })
                 }
             }
         }
