@@ -45,7 +45,10 @@ const SpreadSheet = (props) => {
             Handsontable.renderers.TextRenderer.apply(this, arguments);
             const curRowData = cellData[arguments[2]]
             try {
-                const textCount = curRowData['text'].replaceAll(/<(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+>/g, '').match(/[^\s!"#$%&'()*+,-./:;<=>?@[\\\]^_`{|}~]/g).length // remove tag and puncs
+                let textCount
+                const text = curRowData['text'].replaceAll(/<(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+>/g, '').replaceAll(/{(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+}/g, '') // remove tag
+                if (targetLanguage.includes('koKR')) textCount = 0.5 * (text.match(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g).length + text.length) // 1 * koKR + 0.5 (eng & punc)
+                else textCount = text.match(/[^\s!"#$%&'()*+,-./:;<=>?@[\\\]^_`{|}~]/g).length // remove punc
                 td.innerText = Math.ceil(textCount / (TCtoSec(curRowData['end']) - TCtoSec(curRowData['start'])))
             } catch (error) {
                 td.innerText = 0
