@@ -12,6 +12,7 @@ export const textValidator = (r, c, v, td, instance, cellData, guideline) => {
         td.style.backgroundColor = 'red'
         errors.add('Empty Cell')
     } else {
+        v = v.replaceAll(/<(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+>/g, '').replaceAll(/{(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+}/g, '')
         if (v.match(/[.?!][^a-zA-z]*[a-z]/g)) {
             td.style.backgroundColor = 'yellow'
             errors.add('Possible Uppercase')
