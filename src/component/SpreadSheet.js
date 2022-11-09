@@ -9,26 +9,22 @@ import {TCtoSec} from "../utils/calculator";
 import {uploadS3} from "../utils/uploadS3";
 
 let cellData = []
-let fileData = null
-
-
-function errorRenderer(instance, td) {
-    Handsontable.renderers.TextRenderer.apply(this, arguments);
-    td.innerText = [...cellData[arguments[2]]['error']].join('\n')
-}
+const hot = {main: null, grammarly: null}
 
 
 const SpreadSheet = (props) => {
     const containerMain = useRef(null);
     const containerGrammarly = useRef(null);
     useEffect(() => {
-        function clearChild(element) {
-            while (element.firstChild) {
-                clearChild(element.firstChild)
-            }
-            if (!element.id || !element.id.startsWith('hot-')) {
-                element.remove()
-            }
+        const targetLanguage = (() => {
+            if (props.file.filename && props.file.filename.endsWith('.srt')) return ['TEXT']
+            if (!props.guideline.name) return []
+            else return ['paramount'].includes(props.guideline.name) ? ['koKR'] : ['enUS', 'enGB']
+        })()
+
+        function errorRenderer(instance, td) {
+            Handsontable.renderers.TextRenderer.apply(this, arguments);
+            td.innerText = [...cellData[arguments[2]]['error']].join('\n')
         }
 
         function tcRenderer(instance, td) {
@@ -59,14 +55,14 @@ const SpreadSheet = (props) => {
             }
         }
 
-        const hot = {main: null, grammarly: null}
         const setGrammarly = async () => {
             return await Grammarly.init("client_3a8upV1a1GuH7TqFpd98Sn");
         }
         const grammarly = setGrammarly()
-        if (props.file.data && props.file.data !== fileData) {
+
+        if (props.file.data) {
             if (props.file.filename.endsWith('.fsp')) {
-                cellData = props.file.data ? parseFsp(props.file.data, props.file.language) : []
+                cellData = props.file.data ? parseFsp(props.file.data, props.file.language, targetLanguage) : []
             } else if (props.file.filename.endsWith('.srt')) {
                 cellData = props.file.data ? parse(props.file.data) : []
             }
@@ -74,7 +70,6 @@ const SpreadSheet = (props) => {
                 value['error'] = new Set()
                 value['checked'] = false
             })
-            fileData = props.file.data
         }
         const resizeBtn = document.getElementById('btn-resize')
         resizeBtn.style.display = props.file.data ? '' : 'none'
@@ -116,9 +111,12 @@ const SpreadSheet = (props) => {
         }
 
         if (containerMain.current && Object.keys(props.file).length) {
-            clearChild(containerMain.current)
+            if (hot.main && !hot.main.isDestroyed) hot.main.destroy()
             hot.main = new Handsontable(containerMain.current, {
-                colHeaders: ['TC_IN', 'TC_OUT', ...props.file.language.map((v) => ['enUS', 'enGB', 'TEXT'].includes(v) ? v : `&#128274;${v}`), 'CPS', 'ERROR'],
+                colHeaders: ['TC_IN', 'TC_OUT', ...props.file.language.map((v) => {
+                    if (props.guideline.name) return (targetLanguage.includes(v)) ? v : `&#128274;${v}`
+                    else return `&#128274;${v}`
+                }), 'CPS', 'ERROR'],
                 manualColumnResize: true,
                 data: cellData,
                 rowHeaders: true,
@@ -132,7 +130,7 @@ const SpreadSheet = (props) => {
                     {data: 'start', className: 'htCenter', renderer: tcRenderer},
                     {data: 'end', className: 'htCenter', renderer: tcRenderer},
                     ...props.file.language.map((value) => {
-                        if (['enUS', 'enGB', 'TEXT'].includes(value)) return {data: 'text', renderer: textRenderer}
+                        if (targetLanguage.includes(value)) return {data: 'text', renderer: textRenderer}
                         else return {data: `language_${value}`, editor: null, disableVisualSelection: true}
                     }),
                     {
@@ -191,7 +189,7 @@ const SpreadSheet = (props) => {
             }
         }
         if (containerGrammarly.current && Object.keys(props.file).length) {
-            clearChild(containerGrammarly.current)
+            if (hot.grammarly && !hot.grammarly.isDestroyed) hot.grammarly.destroy()
             hot.grammarly = new Handsontable(containerGrammarly.current, {
                 colHeaders: ['Grammar Check'],
                 colWidths: 500,
@@ -206,6 +204,10 @@ const SpreadSheet = (props) => {
                 maxRows: 1,
                 licenseKey: 'non-commercial-and-evaluation'
             })
+            if (!props.guideline.name || props.guideline.name === 'paramount') {
+                hot.grammarly.destroy()
+                return
+            }
             let grammarlyPlugin = null
             let grammarlyColPos = 0
             let curIndex = 1
@@ -219,7 +221,7 @@ const SpreadSheet = (props) => {
                     }
                     const idx = Number(curLine.split('Index:')[1])
                     if (forceUpdate || curIndex !== idx) {
-                        const targetText = text.slice(text.indexOf('\n', text.indexOf(`Index:${curIndex}`)) + 1, cellData.length === curIndex ? text.length :text.indexOf(`Index:${curIndex + 1}`) - 1)
+                        const targetText = text.slice(text.indexOf('\n', text.indexOf(`Index:${curIndex}`)) + 1, cellData.length === curIndex ? text.length : text.indexOf(`Index:${curIndex + 1}`) - 1)
                         if (cellData[curIndex - 1]['text'] !== targetText) {
                             hot.main.setDataAtCell(curIndex - 1, 2 + Math.max(...[props.file.language.indexOf('enUS'), props.file.language.indexOf('enGB'), props.file.language.indexOf('TEXT')]), targetText)
                             hot.main.scrollViewportTo(curIndex - 1)

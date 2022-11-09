@@ -32,7 +32,7 @@ export const parse = (srtText) => {
     return items;
 }
 
-export const parseFsp = (fspJson, language) => {
+export const parseFsp = (fspJson, language, targetLanguage) => {
     window.Buffer = window.Buffer || require("buffer").Buffer;
     const items = []
     const subtitle = fspJson.elements[0].elements[5].elements
@@ -42,8 +42,9 @@ export const parseFsp = (fspJson, language) => {
         line.end = subtitle[i].attributes.o ? `0${subtitle[i].attributes.o}` : ''
         subtitle[i].elements.forEach((v, i) => {
             if (v.elements) {
-                if (v.attributes.g === 'enUS' || v.attributes.g === 'enGB') line.text = v.elements[0].text.replaceAll('|', '\n')
-                else line[`language_${language[i]}`] = v.elements[0].text.replaceAll('|', '\n')
+                const text = v.elements[0].text.replaceAll('|', '\n').split('\n').map(v => v.trim()).join('\n')
+                if (targetLanguage.includes(v.attributes.g)) line.text = text
+                else line[`language_${language[i]}`] = text
             }
         })
         items.push(line)
