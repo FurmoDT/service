@@ -133,7 +133,7 @@ const SpreadSheet = (props) => {
                     {data: 'start', className: 'htCenter', renderer: tcRenderer},
                     {data: 'end', className: 'htCenter', renderer: tcRenderer},
                     ...props.file.language.map((value) => {
-                        if (targetLanguage.includes(value)) return {data: 'text', renderer: textRenderer}
+                        if (targetLanguage.includes(value)) return props.guideline.name ? {data: 'text', renderer: textRenderer} : {data: 'text', editor: null, disableVisualSelection: true}
                         else return {data: `language_${value}`, editor: null, disableVisualSelection: true}
                     }),
                     {
