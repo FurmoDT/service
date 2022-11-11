@@ -6,6 +6,11 @@ const Guideline = (props) => {
         document.getElementById('inputMaxCharacter').value = maxCharacter
         document.getElementById('inputCPS').value = cps
     }
+    const setReadOnly = (bool) => {
+        document.getElementById('inputMaxLine').readOnly = bool
+        document.getElementById('inputMaxCharacter').readOnly = bool
+        document.getElementById('inputCPS').readOnly = bool
+    }
     const checkBoxEvent = (e) => {
         const samples = document.getElementsByClassName('form-check-input')
         for (let i = 0; i < samples.length; i++) {
@@ -14,10 +19,16 @@ const Guideline = (props) => {
                 if (e.target.checked) {
                     if (e.target.id === 'kbsWorld') {
                         setInputValue(1, 55, 30)
+                        setReadOnly(true)
                     } else if (e.target.id === 'kcp') {
                         setInputValue(2, 42, 30)
+                        setReadOnly(true)
                     } else if (e.target.id === 'paramount') {
                         setInputValue(2, 16, 12)
+                        setReadOnly(true)
+                    } else if (e.target.id === 'custom') {
+                        setInputValue(0, 0, 0)
+                        setReadOnly(false)
                     }
                     props.setGuideline((prevState) => ({
                         ...prevState, ...{
@@ -48,6 +59,7 @@ const Guideline = (props) => {
         <MDBCheckbox onClick={(e) => checkBoxEvent(e)} name='inlineCheck' id='kbsWorld' label='KBS World' inline/>
         <MDBCheckbox onClick={(e) => checkBoxEvent(e)} name='inlineCheck' id='kcp' label='KCP' inline/>
         <MDBCheckbox onClick={(e) => checkBoxEvent(e)} name='inlineCheck' id='paramount' label='Paramount' inline/>
+        <MDBCheckbox onClick={(e) => checkBoxEvent(e)} name='inlineCheck' id='custom' label='Custom' inline/>
         <MDBRow center={true} style={{marginTop: 10}}>
             <MDBCol size={1}>
                 <MDBInput onChange={(e) => {
