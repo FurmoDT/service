@@ -33,7 +33,6 @@ export const parse = (srtText) => {
 }
 
 export const parseFsp = (fspJson, language, targetLanguage) => {
-    window.Buffer = window.Buffer || require("buffer").Buffer;
     const items = []
     const subtitle = fspJson.elements[0].elements[5].elements
     for (let i = 0; i < subtitle.length; i++) {

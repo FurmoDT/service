@@ -13,6 +13,7 @@ const QualityControl = (props) => {
     const [guideline, setGuideline] = useState({name: null, inputMaxLine: 0, inputMaxCharacter: 0, inputCPS: 0})
     const videoMode = useRef(null)
     const player = useRef(null)
+    window.Buffer = window.Buffer || require("buffer").Buffer;
     useEffect(() => {
         if (file) {
             props.buttonDownload.current.style.display = file.data ? '' : 'none'
