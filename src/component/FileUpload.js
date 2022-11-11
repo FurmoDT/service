@@ -29,54 +29,68 @@ const activeStyle = {
 };
 
 const FileUpload = (props) => {
+    const subtitleFormat = ['.fsp', '.srt']
+    const videoFormat = ['.mp4']
+    const termBaseFormat = ['.xls']
     const onDrop = useCallback((acceptedFiles) => {
         acceptedFiles.forEach((file) => {
-            if (file.name.endsWith('.fsp') || file.name.endsWith('.srt')) {
+            const fileFormat = file.name.substring(file.name.lastIndexOf('.'))
+            if (Array.prototype.concat(subtitleFormat, videoFormat, termBaseFormat).includes(fileFormat)) {
                 const reader = new FileReader()
-
                 props.setFile({...{}})
                 reader.onabort = () => console.log('file reading was aborted')
                 reader.onerror = () => console.log('file reading has failed')
                 reader.onload = () => {
-                    // Do whatever you want with the file contents
                     let binaryStr = new ArrayBuffer(0)
                     binaryStr = reader.result
-                    languageEncoding(file).then((fileInfo) => {
-                        const decoder = new TextDecoder(fileInfo.encoding || 'UTF-8');
-                        const str = decoder.decode(binaryStr)
-                        if (file.name.endsWith('.fsp')) {
-                            const data = JSON.parse(xml2json(str, {compact: false}))
-                            props.setFile({
+                    if (subtitleFormat.includes(fileFormat)) {
+                        languageEncoding(file).then((fileInfo) => {
+                            const decoder = new TextDecoder(fileInfo.encoding || 'UTF-8');
+                            const str = decoder.decode(binaryStr)
+                            if (file.name.endsWith('.fsp')) {
+                                const data = JSON.parse(xml2json(str, {compact: false}))
+                                props.setFile({
+                                    'filename': file.name,
+                                    'data': JSON.parse(xml2json(str, {compact: false})),
+                                    'language': (() => {
+                                        let lang
+                                        let counter = {}
+                                        lang = data.elements[0].elements[4].elements.map((v) => v.attributes.code)
+                                        lang.forEach((value) => counter[value] = (counter[value] || 0) + 1)
+                                        lang = lang.map((value, index, array) => {
+                                            const reversedValue = array[array.length - 1 - index]
+                                            if (counter[reversedValue] !== 1) {
+                                                counter[reversedValue] -= 1
+                                                return `${reversedValue}_${counter[value] + 1}`
+                                            } else return reversedValue
+                                        })
+                                        return lang.reverse()
+                                    })()
+                                })
+                            } else if (file.name.endsWith('.srt')) props.setFile({
                                 'filename': file.name,
-                                'data': JSON.parse(xml2json(str, {compact: false})),
-                                'language': (() => {
-                                    let lang
-                                    let counter = {}
-                                    lang = data.elements[0].elements[4].elements.map((v) => v.attributes.code)
-                                    lang.forEach((value) => counter[value] = (counter[value] || 0) + 1)
-                                    lang = lang.map((value, index, array) => {
-                                        const reversedValue = array[array.length - 1 - index]
-                                        if (counter[reversedValue] !== 1) {
-                                            counter[reversedValue] -= 1
-                                            return `${reversedValue}_${counter[value] + 1}`
-                                        } else return reversedValue
-                                    })
-                                    return lang.reverse()
-                                })()
+                                'data': str,
+                                'language': ['TEXT']
                             })
-                        } else if (file.name.endsWith('.srt')) props.setFile({
-                            'filename': file.name,
-                            'data': str,
-                            'language': ['TEXT']
-                        })
-                    });
+                        });
+                    } else if (videoFormat.includes(fileFormat)){
+                        console.log('2')
+                        return
+                    } else if (termBaseFormat.includes(fileFormat)){
+                        console.log('3')
+                        return
+                    }
                 }
                 reader.readAsArrayBuffer(file)
             }
         })
     }, [props])
     const {getRootProps, getInputProps, isFocused, isDragActive} = useDropzone({
-        onDrop, accept: {'text/plain': ['.fsp', '.srt']}, multiple: false
+        onDrop, accept: (() => {
+            if (props.fileType === 'subtitle') return {'text/plain': subtitleFormat}
+            else if (props.fileType === 'video') return {'text/plain': videoFormat}
+            else if (props.fileType === 'termBase') return {'text/plain': termBaseFormat}
+        })(), multiple: false
     })
     const style = useMemo(() => ({
         ...baseStyle, ...(isFocused ? focusedStyle : {}), ...(isDragActive ? activeStyle : {}),
@@ -85,7 +99,11 @@ const FileUpload = (props) => {
         <input {...getInputProps()} />
         {isDragActive ? <p>Drop the file here ...</p> : <Fragment>
             <p>Drag & Drop here, or click to select file</p>
-            <em>(.fsp, .srt will be accepted)</em>
+            <em>{(() => {
+                if (props.fileType === 'subtitle') return `(${subtitleFormat.join(', ')} will be accepted)`
+                else if (props.fileType === 'video') return `(${videoFormat.join(', ')} will be accepted)`
+                else if (props.fileType === 'termBase') return `(${termBaseFormat.join(', ')} will be accepted)`
+            })()}</em>
         </Fragment>}
         {props.file ? <h3>uploaded file<br/>{props.file.filename}</h3> : null}
     </div>

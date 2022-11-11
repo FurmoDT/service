@@ -18,9 +18,17 @@ const QualityControl = (props) => {
     }, [props.buttonDownload, file, guideline])
     return <Fragment>
         <Collapsible open={true} trigger={<div id={'trigger'}/>}>
-            <FileUpload file={file} setFile={(value) => {
-                setFile(value)
-            }}/>
+            <div style={{flexDirection: "row", display: "flex"}}>
+                <FileUpload fileType={'subtitle'} file={file} setFile={(value) => {
+                    setFile(value)
+                }}/>
+                <FileUpload fileType={'video'} file={file} setFile={(value) => {
+                    setFile(value)
+                }}/>
+                <FileUpload fileType={'termBase'} file={file} setFile={(value) => {
+                    setFile(value)
+                }}/>
+            </div>
             <Guideline guideline={guideline} setGuideline={setGuideline}/>
         </Collapsible>
         <div style={{flexDirection: 'row', display: 'flex'}}>
