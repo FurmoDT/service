@@ -29,9 +29,9 @@ const activeStyle = {
 };
 
 const FileUpload = (props) => {
-    const subtitleFormat = ['.fsp', '.srt']
-    const videoFormat = ['.mp4']
-    const termBaseFormat = ['.xls']
+    const subtitleFormat = useMemo(() => (['.fsp', '.srt']), [])
+    const videoFormat = useMemo(() => (['.mp4']), [])
+    const termBaseFormat = useMemo(() => (['.xls']), [])
     const onDrop = useCallback((acceptedFiles) => {
         acceptedFiles.forEach((file) => {
             const fileFormat = file.name.substring(file.name.lastIndexOf('.'))
@@ -84,12 +84,12 @@ const FileUpload = (props) => {
                 reader.readAsArrayBuffer(file)
             }
         })
-    }, [props])
+    }, [props, subtitleFormat, videoFormat, termBaseFormat])
     const {getRootProps, getInputProps, isFocused, isDragActive} = useDropzone({
         onDrop, accept: (() => {
             if (props.fileType === 'subtitle') return {'text/plain': subtitleFormat}
-            else if (props.fileType === 'video') return {'text/plain': videoFormat}
-            else if (props.fileType === 'termBase') return {'text/plain': termBaseFormat}
+            else if (props.fileType === 'video') return {'video/mp4': videoFormat}
+            else if (props.fileType === 'termBase') return {'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': termBaseFormat}
         })(), multiple: false
     })
     const style = useMemo(() => ({
