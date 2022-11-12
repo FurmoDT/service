@@ -201,16 +201,13 @@ const SpreadSheet = (props) => {
                 height: '100%',
                 stretchH: 'all',
                 className: 'htLeft',
+                readOnly: !props.guideline.name || props.guideline.name === 'paramount',
                 columns: [
                     {data: 'grammarly'},
                 ],
                 maxRows: 1,
                 licenseKey: 'non-commercial-and-evaluation'
             })
-            if (!props.guideline.name || props.guideline.name === 'paramount') {
-                hot.grammarly.destroy()
-                return
-            }
             let grammarlyPlugin = null
             let grammarlyColPos = 0
             let curIndex = 1
