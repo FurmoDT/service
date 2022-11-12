@@ -1,4 +1,4 @@
-import {Fragment, useCallback, useMemo} from 'react'
+import {Fragment, useCallback, useMemo, useState} from 'react'
 import {useDropzone} from 'react-dropzone'
 import languageEncoding from "detect-file-encoding-and-language";
 import {xml2json} from "xml-js";
@@ -32,6 +32,7 @@ const FileUpload = (props) => {
     const subtitleFormat = useMemo(() => (['.fsp', '.srt']), [])
     const videoFormat = useMemo(() => (['.mp4']), [])
     const termBaseFormat = useMemo(() => (['.xls']), [])
+    const [uploadedFile, setUploadedFile] = useState(null)
     const onDrop = useCallback((acceptedFiles) => {
         acceptedFiles.forEach((file) => {
             const fileFormat = file.name.substring(file.name.lastIndexOf('.'))
@@ -41,6 +42,7 @@ const FileUpload = (props) => {
                 reader.onabort = () => console.log('file reading was aborted')
                 reader.onerror = () => console.log('file reading has failed')
                 reader.onload = () => {
+                    setUploadedFile(file)
                     let binaryStr = new ArrayBuffer(0)
                     binaryStr = reader.result
                     if (subtitleFormat.includes(fileFormat)) {
@@ -73,12 +75,12 @@ const FileUpload = (props) => {
                                 'language': ['TEXT']
                             })
                         });
-                    } else if (videoFormat.includes(fileFormat)){
+                    } else if (videoFormat.includes(fileFormat)) {
                         console.log('2')
-                        return
-                    } else if (termBaseFormat.includes(fileFormat)){
+
+                    } else if (termBaseFormat.includes(fileFormat)) {
                         console.log('3')
-                        return
+
                     }
                 }
                 reader.readAsArrayBuffer(file)
@@ -105,7 +107,8 @@ const FileUpload = (props) => {
                 else if (props.fileType === 'termBase') return `(${termBaseFormat.join(', ')} will be accepted)`
             })()}</em>
         </Fragment>}
-        {props.file ? <h3>uploaded file<br/>{props.file.filename}</h3> : null}
+        {uploadedFile ? <h3>uploaded file<br/>{uploadedFile.name}</h3> :
+            <h3>Upload {props.fileType.charAt(0).toUpperCase() + props.fileType.slice(1).toLowerCase()}</h3>}
     </div>
 };
 
