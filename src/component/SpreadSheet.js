@@ -7,12 +7,14 @@ import {fileDownload} from "../utils/fileDownload";
 import * as Grammarly from "@grammarly/editor-sdk";
 import {TCtoSec} from "../utils/calculator";
 import {uploadS3} from "../utils/uploadS3";
+import VideoPlayer from "./VideoPlayer";
 
 let cellData = []
 const hot = {main: null, grammarly: null}
 
 
 const SpreadSheet = (props) => {
+    const player = useRef(null)
     const containerMain = useRef(null);
     const containerGrammarly = useRef(null);
     useEffect(() => {
@@ -197,7 +199,7 @@ const SpreadSheet = (props) => {
                 colHeaders: ['Grammar Check'],
                 colWidths: 500,
                 rowHeights: 30,
-                width: '30%',
+                width: '100%',
                 height: '100%',
                 stretchH: 'all',
                 className: 'htLeft',
@@ -270,7 +272,7 @@ const SpreadSheet = (props) => {
                 return grammarlyText.slice(0, -1)
             })())
         }
-    }, [props.file, props.guideline, props.buttonDownload, props.player]);
+    }, [props.file, props.guideline, props.buttonDownload, props.videoUrl, props.player]);
 
     return <div id={'spreadSheets'} style={{
         flexDirection: "row",
@@ -279,19 +281,16 @@ const SpreadSheet = (props) => {
         height: 500,
         borderStyle: 'solid',
         borderWidth: 'thin'
+    }} onClick={() => {
+        if (document.getElementById('trigger').parentElement.classList[1] === 'is-open') {
+            document.getElementById('trigger').click()
+        }
     }}>
-        <div id={"hot-grammarly"} ref={containerGrammarly}
-             onFocus={() => {
-                 if (document.getElementById('trigger').parentElement.classList[1] === 'is-open') {
-                     document.getElementById('trigger').click()
-                 }
-             }}/>
-        <div id={"hot-main"} ref={containerMain}
-             onFocus={() => {
-                 if (document.getElementById('trigger').parentElement.classList[1] === 'is-open') {
-                     document.getElementById('trigger').click()
-                 }
-             }}/>
+        <div style={{flexDirection: 'column', display: 'flex', width: '30%'}}>
+            <VideoPlayer videoUrl={props.videoUrl} player={player}/>
+            <div id={"hot-grammarly"} ref={containerGrammarly}/>
+        </div>
+        <div id={"hot-main"} ref={containerMain}/>
     </div>
 }
 
