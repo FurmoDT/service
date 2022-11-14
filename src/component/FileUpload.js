@@ -38,7 +38,6 @@ const FileUpload = (props) => {
             const fileFormat = file.name.substring(file.name.lastIndexOf('.'))
             if (Array.prototype.concat(subtitleFormat, videoFormat, termBaseFormat).includes(fileFormat)) {
                 const reader = new FileReader()
-                props.setFile({...{}})
                 reader.onabort = () => console.log('file reading was aborted')
                 reader.onerror = () => console.log('file reading has failed')
                 reader.onload = () => {
@@ -46,6 +45,7 @@ const FileUpload = (props) => {
                     let binaryStr = new ArrayBuffer(0)
                     binaryStr = reader.result
                     if (subtitleFormat.includes(fileFormat)) {
+                        props.setFile({...{}})
                         languageEncoding(file).then((fileInfo) => {
                             const decoder = new TextDecoder(fileInfo.encoding || 'UTF-8');
                             const str = decoder.decode(binaryStr)
@@ -76,11 +76,9 @@ const FileUpload = (props) => {
                             })
                         });
                     } else if (videoFormat.includes(fileFormat)) {
-                        console.log('2')
-
+                        props.setVideoUrl(URL.createObjectURL(file))
                     } else if (termBaseFormat.includes(fileFormat)) {
                         console.log('3')
-
                     }
                 }
                 reader.readAsArrayBuffer(file)
