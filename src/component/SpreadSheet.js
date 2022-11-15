@@ -277,7 +277,7 @@ const SpreadSheet = (props) => {
 
     return <div id={'spreadSheets'} style={{
         flexDirection: "row",
-        display: props.file.data ? 'flex' : 'none',
+        display: 'flex',
         width: '100%',
         height: 500,
         borderStyle: 'solid',

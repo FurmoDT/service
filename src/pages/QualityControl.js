@@ -27,11 +27,13 @@ const QualityControl = (props) => {
             </div>
             <Guideline guideline={guideline} setGuideline={setGuideline}/>
         </Collapsible>
-        <SpreadSheet buttonDownload={props.buttonDownload} file={file} videoUrl={videoUrl} guideline={guideline}/>
-        <MDBBtn id={'btn-resize'} color={'none'} floating tag='a' style={{display: file.data ? '' : 'none'}}>
-            <MDBIcon fas icon="chevron-down" size={'2x'} color={'dark'}/>
-            <MDBIcon fas icon="chevron-up" size={'2x'} color={'dark'} style={{display: 'none'}}/>
-        </MDBBtn>
+        <div style={{display: file.data ? '' : 'none'}}>
+            <SpreadSheet buttonDownload={props.buttonDownload} file={file} videoUrl={videoUrl} guideline={guideline}/>
+            <MDBBtn id={'btn-resize'} color={'none'} floating tag='a'>
+                <MDBIcon fas icon="chevron-down" size={'2x'} color={'dark'}/>
+                <MDBIcon fas icon="chevron-up" size={'2x'} color={'dark'} style={{display: 'none'}}/>
+            </MDBBtn>
+        </div>
     </Fragment>
 };
 
