@@ -288,7 +288,7 @@ const SpreadSheet = (props) => {
         }
     }}>
         <div style={{flexDirection: 'column', display: 'flex', width: '30%'}}>
-            <VideoPlayer videoUrl={props.videoUrl} player={player}/>
+            <VideoPlayer play={!!props.file.data} videoUrl={props.videoUrl} player={player}/>
             <div id={"hot-grammarly"} ref={containerGrammarly}/>
         </div>
         <div id={"hot-main"} ref={containerMain}/>
