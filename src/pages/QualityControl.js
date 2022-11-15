@@ -4,6 +4,7 @@ import SpreadSheet from "../component/SpreadSheet";
 import Collapsible from 'react-collapsible';
 import Guideline from "../component/Guideline";
 import {MDBBtn, MDBIcon} from 'mdb-react-ui-kit';
+import Finder from "../component/Finder";
 
 
 const QualityControl = (props) => {
@@ -33,6 +34,7 @@ const QualityControl = (props) => {
                 <MDBIcon fas icon="chevron-down" size={'2x'} color={'dark'}/>
                 <MDBIcon fas icon="chevron-up" size={'2x'} color={'dark'} style={{display: 'none'}}/>
             </MDBBtn>
+            <Finder/>
         </div>
     </Fragment>
 };
