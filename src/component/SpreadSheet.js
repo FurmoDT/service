@@ -8,6 +8,7 @@ import * as Grammarly from "@grammarly/editor-sdk";
 import {TCtoSec} from "../utils/calculator";
 import {uploadS3} from "../utils/uploadS3";
 import VideoPlayer from "./VideoPlayer";
+import {MDBBtn, MDBIcon} from "mdb-react-ui-kit";
 
 let cellData = []
 const hot = {main: null, grammarly: null}
@@ -15,6 +16,8 @@ const hot = {main: null, grammarly: null}
 
 const SpreadSheet = (props) => {
     const player = useRef(null)
+    const resizeBtn = useRef(null)
+    const spreadSheets = useRef(null)
     const containerMain = useRef(null);
     const containerGrammarly = useRef(null);
     useEffect(() => {
@@ -76,10 +79,9 @@ const SpreadSheet = (props) => {
                 value['checked'] = false
             })
         }
-        const resizeBtn = document.getElementById('btn-resize')
-        resizeBtn.onclick = (e) => {
-            [resizeBtn.children[0].style.display, resizeBtn.children[1].style.display] = [resizeBtn.children[1].style.display, resizeBtn.children[0].style.display];
-            document.getElementById('spreadSheets').style.height = document.getElementById('spreadSheets').style.height === '500px' ? '800px' : '500px'
+        resizeBtn.current.onclick = (e) => {
+            [resizeBtn.current.children[0].style.display, resizeBtn.current.children[1].style.display] = [resizeBtn.current.children[1].style.display, resizeBtn.current.children[0].style.display];
+            spreadSheets.current.style.height = spreadSheets.current.style.height === '500px' ? '800px' : '500px'
             hot.main.render()
             hot.grammarly.render()
         }
@@ -275,23 +277,29 @@ const SpreadSheet = (props) => {
         }
     }, [props.file, props.guideline, props.buttonDownload, props.videoUrl, props.player]);
 
-    return <div id={'spreadSheets'} style={{
-        flexDirection: "row",
-        display: 'flex',
-        width: '100%',
-        height: 500,
-        borderStyle: 'solid',
-        borderWidth: 'thin'
-    }} onClick={() => {
-        if (document.getElementById('trigger').parentElement.classList[1] === 'is-open') {
-            document.getElementById('trigger').click()
-        }
-    }}>
-        <div style={{flexDirection: 'column', display: 'flex', width: '30%'}}>
-            <VideoPlayer play={!!props.file.data} videoUrl={props.videoUrl} player={player}/>
-            <div id={"hot-grammarly"} ref={containerGrammarly}/>
+    return <div>
+        <div ref={spreadSheets} style={{
+            flexDirection: "row",
+            display: 'flex',
+            width: '100%',
+            height: 500,
+            borderStyle: 'solid',
+            borderWidth: 'thin'
+        }} onClick={() => {
+            if (document.getElementById('trigger').parentElement.classList[1] === 'is-open') {
+                document.getElementById('trigger').click()
+            }
+        }}>
+            <div style={{flexDirection: 'column', display: 'flex', width: '30%'}}>
+                <VideoPlayer play={!!props.file.data} videoUrl={props.videoUrl} player={player}/>
+                <div id={"hot-grammarly"} ref={containerGrammarly}/>
+            </div>
+            <div id={"hot-main"} ref={containerMain}/>
         </div>
-        <div id={"hot-main"} ref={containerMain}/>
+        <MDBBtn ref={resizeBtn} color={'none'} floating tag='a'>
+            <MDBIcon fas icon="chevron-down" size={'2x'} color={'dark'}/>
+            <MDBIcon fas icon="chevron-up" size={'2x'} color={'dark'} style={{display: 'none'}}/>
+        </MDBBtn>
     </div>
 }
 

@@ -30,10 +30,6 @@ const QualityControl = (props) => {
         </Collapsible>
         <div style={{display: file.data ? '' : 'none'}}>
             <SpreadSheet buttonDownload={props.buttonDownload} file={file} videoUrl={videoUrl} guideline={guideline}/>
-            <MDBBtn id={'btn-resize'} color={'none'} floating tag='a'>
-                <MDBIcon fas icon="chevron-down" size={'2x'} color={'dark'}/>
-                <MDBIcon fas icon="chevron-up" size={'2x'} color={'dark'} style={{display: 'none'}}/>
-            </MDBBtn>
             <Finder/>
         </div>
     </Fragment>
