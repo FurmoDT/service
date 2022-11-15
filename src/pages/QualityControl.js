@@ -28,7 +28,7 @@ const QualityControl = (props) => {
             <Guideline guideline={guideline} setGuideline={setGuideline}/>
         </Collapsible>
         <SpreadSheet buttonDownload={props.buttonDownload} file={file} videoUrl={videoUrl} guideline={guideline}/>
-        <MDBBtn id={'btn-resize'} color={'none'} floating tag='a'>
+        <MDBBtn id={'btn-resize'} color={'none'} floating tag='a' style={{display: file.data ? '' : 'none'}}>
             <MDBIcon fas icon="chevron-down" size={'2x'} color={'dark'}/>
             <MDBIcon fas icon="chevron-up" size={'2x'} color={'dark'} style={{display: 'none'}}/>
         </MDBBtn>

@@ -77,14 +77,12 @@ const SpreadSheet = (props) => {
             })
         }
         const resizeBtn = document.getElementById('btn-resize')
-        resizeBtn.style.display = props.file.data ? '' : 'none'
         resizeBtn.onclick = (e) => {
             [resizeBtn.children[0].style.display, resizeBtn.children[1].style.display] = [resizeBtn.children[1].style.display, resizeBtn.children[0].style.display];
             document.getElementById('spreadSheets').style.height = document.getElementById('spreadSheets').style.height === '500px' ? '800px' : '500px'
             hot.main.render()
             hot.grammarly.render()
         }
-        document.getElementById('spreadSheets').style.display = props.file.data ? 'flex' : 'none'
         props.buttonDownload.current.onclick = async () => {
             const Unchecked = []
             cellData.forEach((value, index) => {
@@ -135,7 +133,10 @@ const SpreadSheet = (props) => {
                     {data: 'start', className: 'htCenter', renderer: tcRenderer},
                     {data: 'end', className: 'htCenter', renderer: tcRenderer},
                     ...props.file.language.map((value) => {
-                        if (targetLanguage.includes(value)) return props.guideline.name ? {data: 'text', renderer: textRenderer} : {data: 'text', editor: null, disableVisualSelection: true}
+                        if (targetLanguage.includes(value)) return props.guideline.name ? {
+                            data: 'text',
+                            renderer: textRenderer
+                        } : {data: 'text', editor: null, disableVisualSelection: true}
                         else return {data: `language_${value}`, editor: null, disableVisualSelection: true}
                     }),
                     {
@@ -276,7 +277,7 @@ const SpreadSheet = (props) => {
 
     return <div id={'spreadSheets'} style={{
         flexDirection: "row",
-        display: "none",
+        display: props.file.data ? 'flex' : 'none',
         width: '100%',
         height: 500,
         borderStyle: 'solid',
