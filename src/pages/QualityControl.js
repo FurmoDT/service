@@ -4,7 +4,7 @@ import SpreadSheet from "../component/SpreadSheet";
 import Collapsible from 'react-collapsible';
 import Guideline from "../component/Guideline";
 import {MDBBtn, MDBIcon} from 'mdb-react-ui-kit';
-import Finder from "../component/Finder";
+import AddOn from "../component/AddOn";
 
 
 const QualityControl = (props) => {
@@ -30,7 +30,7 @@ const QualityControl = (props) => {
         </Collapsible>
         <div style={{display: file.data ? '' : 'none'}}>
             <SpreadSheet buttonDownload={props.buttonDownload} file={file} videoUrl={videoUrl} guideline={guideline}/>
-            <Finder/>
+            <AddOn/>
         </div>
     </Fragment>
 };
