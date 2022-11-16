@@ -9,6 +9,7 @@ import {TCtoSec} from "../utils/calculator";
 import {uploadS3} from "../utils/uploadS3";
 import VideoPlayer from "./VideoPlayer";
 import {MDBBtn, MDBIcon} from "mdb-react-ui-kit";
+import AddOn from "./AddOn";
 
 let cellData = []
 const hot = {main: null, grammarly: null}
@@ -17,6 +18,7 @@ const hot = {main: null, grammarly: null}
 const SpreadSheet = (props) => {
     const player = useRef(null)
     const resizeBtn = useRef(null)
+    const downloadBtn = useRef(null)
     const spreadSheets = useRef(null)
     const containerMain = useRef(null);
     const containerGrammarly = useRef(null);
@@ -85,36 +87,34 @@ const SpreadSheet = (props) => {
             hot.main.render()
             hot.grammarly.render()
         }
-        if (props.buttonDownload.current) {
-            props.buttonDownload.current.onclick = async () => {
-                const Unchecked = []
-                cellData.forEach((value, index) => {
-                    cellData[index]['index'] = index + 1
-                    if (value['checked'] === false) {
-                        Unchecked.push(index + 1)
-                    }
-                })
-                if (Unchecked.length) {
-                    alert('Line Unchecked\n' + Unchecked.join('\n'))
-                } else {
-                    await uploadS3(props.file.filename)
-                    fileDownload(cellData, props.file)
+        downloadBtn.current.onclick = async () => {
+            const Unchecked = []
+            cellData.forEach((value, index) => {
+                cellData[index]['index'] = index + 1
+                if (value['checked'] === false) {
+                    Unchecked.push(index + 1)
                 }
+            })
+            if (Unchecked.length) {
+                alert('Line Unchecked\n' + Unchecked.join('\n'))
+            } else {
+                await uploadS3(props.file.filename)
+                fileDownload(cellData, props.file)
             }
-            props.buttonDownload.current.onmouseover = () => {
-                let text = ''
-                cellData.map((v, index) => text += v.text)
-                if (text.match(/"/g) && text.match(/"/g).length % 2 !== 0) {
-                    props.buttonDownload.current.classList.replace('btn-primary', 'btn-danger')
-                    document.getElementById('txt-downloadError').style.display = ''
-                    document.getElementById('txt-downloadError').innerHTML = 'DOUBLE QUOTATION MARKS DO NOT PAIR'
-                }
+        }
+        downloadBtn.current.onmouseover = () => {
+            let text = ''
+            cellData.map((v, index) => text += v.text)
+            if (text.match(/"/g) && text.match(/"/g).length % 2 !== 0) {
+                downloadBtn.current.classList.replace('btn-primary', 'btn-danger')
+                document.getElementById('txt-downloadError').style.display = ''
+                document.getElementById('txt-downloadError').innerHTML = 'DOUBLE QUOTATION MARKS DO NOT PAIR'
             }
-            props.buttonDownload.current.onmouseleave = () => {
-                props.buttonDownload.current.classList.replace('btn-danger', 'btn-primary')
-                document.getElementById('txt-downloadError').style.display = 'none'
-                document.getElementById('txt-downloadError').innerHTML = ''
-            }
+        }
+        downloadBtn.current.onmouseleave = () => {
+            downloadBtn.current.classList.replace('btn-danger', 'btn-primary')
+            document.getElementById('txt-downloadError').style.display = 'none'
+            document.getElementById('txt-downloadError').innerHTML = ''
         }
 
         if (containerMain.current && Object.keys(props.file).length) {
@@ -277,7 +277,7 @@ const SpreadSheet = (props) => {
                 return grammarlyText.slice(0, -1)
             })())
         }
-    }, [props.file, props.guideline, props.buttonDownload, props.videoUrl, props.player]);
+    }, [props.file, props.guideline, props.videoUrl, props.player]);
 
     return <div>
         <div ref={spreadSheets} style={{
@@ -302,6 +302,7 @@ const SpreadSheet = (props) => {
             <MDBIcon fas icon="chevron-down" size={'2x'} color={'dark'}/>
             <MDBIcon fas icon="chevron-up" size={'2x'} color={'dark'} style={{display: 'none'}}/>
         </MDBBtn>
+        <AddOn display={Boolean(props.file.data && props.guideline.name)} downloadBtn={downloadBtn}/>
     </div>
 }
 
