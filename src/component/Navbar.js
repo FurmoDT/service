@@ -1,5 +1,4 @@
 import {
-    MDBBtn,
     MDBCollapse,
     MDBContainer,
     MDBNavbar,
