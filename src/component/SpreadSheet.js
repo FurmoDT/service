@@ -19,6 +19,7 @@ const SpreadSheet = (props) => {
     const player = useRef(null)
     const resizeBtn = useRef(null)
     const downloadBtn = useRef(null)
+    const warningMsg = useRef(null)
     const spreadSheets = useRef(null)
     const containerMain = useRef(null);
     const containerGrammarly = useRef(null);
@@ -107,14 +108,12 @@ const SpreadSheet = (props) => {
             cellData.map((v, index) => text += v.text)
             if (text.match(/"/g) && text.match(/"/g).length % 2 !== 0) {
                 downloadBtn.current.classList.replace('btn-primary', 'btn-danger')
-                document.getElementById('txt-downloadError').style.display = ''
-                document.getElementById('txt-downloadError').innerHTML = 'DOUBLE QUOTATION MARKS DO NOT PAIR'
+                warningMsg.current.innerHTML = 'DOUBLE QUOTATION MARKS DO NOT PAIR'
             }
         }
         downloadBtn.current.onmouseleave = () => {
             downloadBtn.current.classList.replace('btn-danger', 'btn-primary')
-            document.getElementById('txt-downloadError').style.display = 'none'
-            document.getElementById('txt-downloadError').innerHTML = ''
+            warningMsg.current.innerHTML = '&#10240;'
         }
 
         if (containerMain.current && Object.keys(props.file).length) {
@@ -302,7 +301,7 @@ const SpreadSheet = (props) => {
             <MDBIcon fas icon="chevron-down" size={'2x'} color={'dark'}/>
             <MDBIcon fas icon="chevron-up" size={'2x'} color={'dark'} style={{display: 'none'}}/>
         </MDBBtn>
-        <AddOn display={Boolean(props.file.data && props.guideline.name)} downloadBtn={downloadBtn}/>
+        <AddOn display={!!(props.file.data && props.guideline.name)} warningMsg={warningMsg} downloadBtn={downloadBtn}/>
     </div>
 }
 

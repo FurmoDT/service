@@ -1,5 +1,4 @@
 import {MDBBtn, MDBIcon} from "mdb-react-ui-kit";
-import {useEffect} from "react";
 
 const AddOn = (props) => {
     return <div style={{
@@ -31,11 +30,12 @@ const AddOn = (props) => {
                 </MDBBtn>
             </div>
         </div>
-        <span id={'txt-downloadError'}
-              style={{display: 'none', width: 400, fontSize: 12, color: "red", fontWeight: 500}}/>
-        <div style={{alignItems: 'center', display: 'flex'}}>
-            <MDBBtn style={{height: '50px', width: '150px'}} className={'flex-shrink-0'} size='sm'
-                    ref={props.downloadBtn} rounded={true}>DOWNLOAD</MDBBtn>
+        <div>
+            <span ref={props.warningMsg} style={{fontSize: 12, color: "red", fontWeight: 500}}>&#10240;</span>
+            <div style={{justifyContent: 'center', alignItems: 'center', display: 'flex', width: '300px'}}>
+                <MDBBtn style={{height: '50px', width: '150px'}} className={'flex-shrink-0'} size='sm'
+                        ref={props.downloadBtn} rounded={true}>DOWNLOAD</MDBBtn>
+            </div>
         </div>
     </div>
 };
