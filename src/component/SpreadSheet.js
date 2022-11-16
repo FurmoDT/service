@@ -85,7 +85,7 @@ const SpreadSheet = (props) => {
             hot.main.render()
             hot.grammarly.render()
         }
-        if (props.buttonDownload.current){
+        if (props.buttonDownload.current) {
             props.buttonDownload.current.onclick = async () => {
                 const Unchecked = []
                 cellData.forEach((value, index) => {
@@ -278,7 +278,6 @@ const SpreadSheet = (props) => {
             })())
         }
     }, [props.file, props.guideline, props.buttonDownload, props.videoUrl, props.player]);
-    // }, [props.file, props.guideline, props.buttonDownload, props.videoUrl, props.player]);
 
     return <div>
         <div ref={spreadSheets} style={{

@@ -27,7 +27,7 @@ const QualityControl = (props) => {
         </Collapsible>
         <div style={{display: file.data ? '' : 'none'}}>
             <SpreadSheet buttonDownload={buttonDownload} file={file} videoUrl={videoUrl} guideline={guideline}/>
-            <AddOn buttonDownload={buttonDownload}/>
+            {(file.data && guideline.name) ? <AddOn buttonDownload={buttonDownload}/> : null}
         </div>
     </Fragment>
 };
