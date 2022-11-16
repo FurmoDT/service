@@ -117,16 +117,26 @@ const SpreadSheet = (props) => {
             downloadBtn.current.classList.replace('btn-danger', 'btn-primary')
             warningMsg.current.innerHTML = '&#10240;<br>\&#10240;'
         }
-        doubleQuotationMarksPrevNext.current.children[0].onclick = () =>{
-            console.log('doubleQuotationMarksPrev')
+        const findDoubleQuotationMarks = () => {
+            const indexes = []
+            cellData.map((value, index) => {
+                if (value.text.includes('"')) indexes.push(index)
+            })
+            return indexes
         }
-        doubleQuotationMarksPrevNext.current.children[1].onclick = () =>{
-            console.log('doubleQuotationMarksNext')
+        let finderPosition = 0
+        doubleQuotationMarksPrevNext.current.children[0].onclick = () => {
+            hot.main.scrollViewportTo(findDoubleQuotationMarks()[finderPosition])
+            finderPosition -= 1
         }
-        termBasePrevNext.current.children[0].onclick = () =>{
+        doubleQuotationMarksPrevNext.current.children[1].onclick = () => {
+            hot.main.scrollViewportTo(findDoubleQuotationMarks()[finderPosition])
+            finderPosition += 1
+        }
+        termBasePrevNext.current.children[0].onclick = () => {
             console.log('termBasePrev')
         }
-        termBasePrevNext.current.children[1].onclick = () =>{
+        termBasePrevNext.current.children[1].onclick = () => {
             console.log('termBaseNext')
         }
         if (containerMain.current && Object.keys(props.file).length) {
@@ -314,11 +324,8 @@ const SpreadSheet = (props) => {
             <MDBIcon fas icon="chevron-down" size={'2x'} color={'dark'}/>
             <MDBIcon fas icon="chevron-up" size={'2x'} color={'dark'} style={{display: 'none'}}/>
         </MDBBtn>
-        <AddOn display={!!(props.file.data && props.guideline.name)} doubleQuotationMarksCount={(() => {
-            return '0/0'
-        })()} termBaseCount={(() => {
-            return '0/0'
-        })()} doubleQuotationMarksPrevNext={doubleQuotationMarksPrevNext} termBasePrevNext={termBasePrevNext}
+        <AddOn display={!!(props.file.data && props.guideline.name)}
+               doubleQuotationMarksPrevNext={doubleQuotationMarksPrevNext} termBasePrevNext={termBasePrevNext}
                warningMsg={warningMsg} downloadBtn={downloadBtn}/>
     </div>
 }
