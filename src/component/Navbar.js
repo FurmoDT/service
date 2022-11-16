@@ -9,7 +9,7 @@ import {
     MDBNavbarNav,
 } from 'mdb-react-ui-kit';
 
-export default function Navbar(props) {
+export default function Navbar() {
     return <MDBNavbar expand='lg' light bgColor='light'>
         <MDBContainer fluid>
             <MDBNavbarBrand>FurmoDT-QC</MDBNavbarBrand>
@@ -29,10 +29,6 @@ export default function Navbar(props) {
                         </MDBNavbarLink>
                     </MDBNavbarItem>
                 </MDBNavbarNav>
-                <span id={'txt-downloadError'}
-                      style={{display: 'none', width: 400, fontSize: 12, color: "red", fontWeight: 500}}/>
-                <MDBBtn id={'btn-download'} className={'flex-shrink-0'} size='sm' ref={props.buttonDownload}
-                        rounded={true}>DOWNLOAD</MDBBtn>
             </MDBCollapse>
         </MDBContainer>
     </MDBNavbar>

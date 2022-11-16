@@ -1,4 +1,4 @@
-import {Fragment, useEffect, useState} from "react";
+import {Fragment, useRef, useState} from "react";
 import FileUpload from "../component/FileUpload";
 import SpreadSheet from "../component/SpreadSheet";
 import Collapsible from 'react-collapsible';
@@ -7,13 +7,11 @@ import AddOn from "../component/AddOn";
 
 
 const QualityControl = (props) => {
+    const buttonDownload = useRef(null)
     const [file, setFile] = useState({})
     const [videoUrl, setVideoUrl] = useState('blob')
     const [guideline, setGuideline] = useState({name: null, inputMaxLine: 0, inputMaxCharacter: 0, inputCPS: 0})
     window.Buffer = window.Buffer || require("buffer").Buffer;
-    useEffect(() => {
-        props.buttonDownload.current.style.display = file.data && guideline.name ? '' : 'none'
-    }, [props.buttonDownload, file, guideline])
     return <Fragment>
         <Collapsible open={true} trigger={<div id={'trigger'}/>}>
             <div style={{flexDirection: "row", display: "flex"}}>
@@ -28,8 +26,8 @@ const QualityControl = (props) => {
             <Guideline guideline={guideline} setGuideline={setGuideline}/>
         </Collapsible>
         <div style={{display: file.data ? '' : 'none'}}>
-            <SpreadSheet buttonDownload={props.buttonDownload} file={file} videoUrl={videoUrl} guideline={guideline}/>
-            <AddOn/>
+            <SpreadSheet buttonDownload={buttonDownload} file={file} videoUrl={videoUrl} guideline={guideline}/>
+            <AddOn buttonDownload={buttonDownload}/>
         </div>
     </Fragment>
 };

@@ -85,34 +85,36 @@ const SpreadSheet = (props) => {
             hot.main.render()
             hot.grammarly.render()
         }
-        props.buttonDownload.current.onclick = async () => {
-            const Unchecked = []
-            cellData.forEach((value, index) => {
-                cellData[index]['index'] = index + 1
-                if (value['checked'] === false) {
-                    Unchecked.push(index + 1)
+        if (props.buttonDownload.current){
+            props.buttonDownload.current.onclick = async () => {
+                const Unchecked = []
+                cellData.forEach((value, index) => {
+                    cellData[index]['index'] = index + 1
+                    if (value['checked'] === false) {
+                        Unchecked.push(index + 1)
+                    }
+                })
+                if (Unchecked.length) {
+                    alert('Line Unchecked\n' + Unchecked.join('\n'))
+                } else {
+                    await uploadS3(props.file.filename)
+                    fileDownload(cellData, props.file)
                 }
-            })
-            if (Unchecked.length) {
-                alert('Line Unchecked\n' + Unchecked.join('\n'))
-            } else {
-                await uploadS3(props.file.filename)
-                fileDownload(cellData, props.file)
             }
-        }
-        props.buttonDownload.current.onmouseover = () => {
-            let text = ''
-            cellData.map((v, index) => text += v.text)
-            if (text.match(/"/g) && text.match(/"/g).length % 2 !== 0) {
-                props.buttonDownload.current.classList.replace('btn-primary', 'btn-danger')
-                document.getElementById('txt-downloadError').style.display = ''
-                document.getElementById('txt-downloadError').innerHTML = 'DOUBLE QUOTATION MARKS DO NOT PAIR'
+            props.buttonDownload.current.onmouseover = () => {
+                let text = ''
+                cellData.map((v, index) => text += v.text)
+                if (text.match(/"/g) && text.match(/"/g).length % 2 !== 0) {
+                    props.buttonDownload.current.classList.replace('btn-primary', 'btn-danger')
+                    document.getElementById('txt-downloadError').style.display = ''
+                    document.getElementById('txt-downloadError').innerHTML = 'DOUBLE QUOTATION MARKS DO NOT PAIR'
+                }
             }
-        }
-        props.buttonDownload.current.onmouseleave = () => {
-            props.buttonDownload.current.classList.replace('btn-danger', 'btn-primary')
-            document.getElementById('txt-downloadError').style.display = 'none'
-            document.getElementById('txt-downloadError').innerHTML = ''
+            props.buttonDownload.current.onmouseleave = () => {
+                props.buttonDownload.current.classList.replace('btn-danger', 'btn-primary')
+                document.getElementById('txt-downloadError').style.display = 'none'
+                document.getElementById('txt-downloadError').innerHTML = ''
+            }
         }
 
         if (containerMain.current && Object.keys(props.file).length) {
@@ -276,6 +278,7 @@ const SpreadSheet = (props) => {
             })())
         }
     }, [props.file, props.guideline, props.buttonDownload, props.videoUrl, props.player]);
+    // }, [props.file, props.guideline, props.buttonDownload, props.videoUrl, props.player]);
 
     return <div>
         <div ref={spreadSheets} style={{
