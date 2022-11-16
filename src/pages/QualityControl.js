@@ -3,7 +3,6 @@ import FileUpload from "../component/FileUpload";
 import SpreadSheet from "../component/SpreadSheet";
 import Collapsible from 'react-collapsible';
 import Guideline from "../component/Guideline";
-import {MDBBtn, MDBIcon} from 'mdb-react-ui-kit';
 import AddOn from "../component/AddOn";
 
 
