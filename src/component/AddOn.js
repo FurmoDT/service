@@ -4,9 +4,9 @@ const AddOn = (props) => {
     return <div style={{
         flexDirection: 'row',
         display: props.display ? 'flex' : 'none',
-        height: '100px',
+        height: '150px',
         justifyContent: 'end',
-        margin: '0px 10px 0px 10px',
+        margin: '0px 10px 0px 10px'
     }}>
         <div style={{width: '200px', flexDirection: 'column', display: 'flex'}}>
             <p><b>Double Quotation Marks</b></p>
@@ -31,8 +31,8 @@ const AddOn = (props) => {
             </div>
         </div>
         <div>
-            <span ref={props.warningMsg} style={{fontSize: 12, color: "red", fontWeight: 500}}>&#10240;</span>
-            <div style={{justifyContent: 'center', alignItems: 'center', display: 'flex', width: '300px'}}>
+            <span ref={props.warningMsg} style={{fontSize: 12, color: "red", fontWeight: 500}}>&#10240;<br/>&#10240;</span>
+            <div style={{justifyContent: 'center', alignItems: 'center', display: 'flex', width: '200px'}}>
                 <MDBBtn style={{height: '50px', width: '150px'}} className={'flex-shrink-0'} size='sm'
                         ref={props.downloadBtn} rounded={true}>DOWNLOAD</MDBBtn>
             </div>

@@ -108,12 +108,12 @@ const SpreadSheet = (props) => {
             cellData.map((v, index) => text += v.text)
             if (text.match(/"/g) && text.match(/"/g).length % 2 !== 0) {
                 downloadBtn.current.classList.replace('btn-primary', 'btn-danger')
-                warningMsg.current.innerHTML = 'DOUBLE QUOTATION MARKS DO NOT PAIR'
+                warningMsg.current.innerHTML = 'DOUBLE QUOTATION MARKS<br>\DO NOT PAIR'
             }
         }
         downloadBtn.current.onmouseleave = () => {
             downloadBtn.current.classList.replace('btn-danger', 'btn-primary')
-            warningMsg.current.innerHTML = '&#10240;'
+            warningMsg.current.innerHTML = '&#10240;<br>\&#10240;'
         }
 
         if (containerMain.current && Object.keys(props.file).length) {
