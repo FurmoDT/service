@@ -10,7 +10,8 @@ const AddOn = (props) => {
     }}>
         <div style={{width: '200px', flexDirection: 'column', display: 'flex'}}>
             <p><b>Double Quotation Marks</b></p>
-            <div>
+            <span>{props.doubleQuotationMarksCount}</span>
+            <div ref={props.doubleQuotationMarksPrevNext}>
                 <MDBBtn color={'none'} floating tag='a'>
                     <MDBIcon fas icon="angle-left" size={'2x'} color={'dark'}/>
                 </MDBBtn>
@@ -21,7 +22,8 @@ const AddOn = (props) => {
         </div>
         <div style={{width: '200px', flexDirection: 'column', display: 'flex'}}>
             <p><b>Termbase</b></p>
-            <div>
+            <span>{props.termBaseCount}</span>
+            <div ref={props.termBasePrevNext}>
                 <MDBBtn color={'none'} floating tag='a'>
                     <MDBIcon fas icon="angle-left" size={'2x'} color={'dark'}/>
                 </MDBBtn>

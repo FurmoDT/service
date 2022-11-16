@@ -5,7 +5,7 @@ import Collapsible from 'react-collapsible';
 import Guideline from "../component/Guideline";
 
 
-const QualityControl = (props) => {
+const QualityControl = () => {
     const [file, setFile] = useState({})
     const [videoUrl, setVideoUrl] = useState('blob')
     const [guideline, setGuideline] = useState({name: null, inputMaxLine: 0, inputMaxCharacter: 0, inputCPS: 0})

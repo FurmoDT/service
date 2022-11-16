@@ -19,6 +19,8 @@ const SpreadSheet = (props) => {
     const player = useRef(null)
     const resizeBtn = useRef(null)
     const downloadBtn = useRef(null)
+    const doubleQuotationMarksPrevNext = useRef(null)
+    const termBasePrevNext = useRef(null)
     const warningMsg = useRef(null)
     const spreadSheets = useRef(null)
     const containerMain = useRef(null);
@@ -115,7 +117,18 @@ const SpreadSheet = (props) => {
             downloadBtn.current.classList.replace('btn-danger', 'btn-primary')
             warningMsg.current.innerHTML = '&#10240;<br>\&#10240;'
         }
-
+        doubleQuotationMarksPrevNext.current.children[0].onclick = () =>{
+            console.log('doubleQuotationMarksPrev')
+        }
+        doubleQuotationMarksPrevNext.current.children[1].onclick = () =>{
+            console.log('doubleQuotationMarksNext')
+        }
+        termBasePrevNext.current.children[0].onclick = () =>{
+            console.log('termBasePrev')
+        }
+        termBasePrevNext.current.children[1].onclick = () =>{
+            console.log('termBaseNext')
+        }
         if (containerMain.current && Object.keys(props.file).length) {
             if (hot.main && !hot.main.isDestroyed) hot.main.destroy()
             hot.main = new Handsontable(containerMain.current, {
@@ -301,7 +314,12 @@ const SpreadSheet = (props) => {
             <MDBIcon fas icon="chevron-down" size={'2x'} color={'dark'}/>
             <MDBIcon fas icon="chevron-up" size={'2x'} color={'dark'} style={{display: 'none'}}/>
         </MDBBtn>
-        <AddOn display={!!(props.file.data && props.guideline.name)} warningMsg={warningMsg} downloadBtn={downloadBtn}/>
+        <AddOn display={!!(props.file.data && props.guideline.name)} doubleQuotationMarksCount={(() => {
+            return '0/0'
+        })()} termBaseCount={(() => {
+            return '0/0'
+        })()} doubleQuotationMarksPrevNext={doubleQuotationMarksPrevNext} termBasePrevNext={termBasePrevNext}
+               warningMsg={warningMsg} downloadBtn={downloadBtn}/>
     </div>
 }
 
