@@ -122,14 +122,21 @@ const SpreadSheet = (props) => {
             cellData.map((value, index) => value.text.includes('"') ? indexes.push(index) : null)
             return indexes
         }
-        let finderPosition = 0
+        let doubleQuotationMarksCurPos = 0
+        let termBaseCurPos = 0
         doubleQuotationMarksPrevNext.current.children[0].onclick = () => {
-            hot.main.scrollViewportTo(findDoubleQuotationMarks()[finderPosition])
-            finderPosition -= 1
+            if (doubleQuotationMarksCurPos === 0) return
+            doubleQuotationMarksCurPos -= 1
+            const dqm = findDoubleQuotationMarks()
+            hot.main.scrollViewportTo(dqm[doubleQuotationMarksCurPos - 1])
+            document.getElementById('doubleQuotationMarksPosition').innerText = `${doubleQuotationMarksCurPos}/${dqm.length}`
         }
         doubleQuotationMarksPrevNext.current.children[1].onclick = () => {
-            hot.main.scrollViewportTo(findDoubleQuotationMarks()[finderPosition])
-            finderPosition += 1
+            const dqm = findDoubleQuotationMarks()
+            if (doubleQuotationMarksCurPos === dqm.length) return
+            doubleQuotationMarksCurPos += 1
+            hot.main.scrollViewportTo(dqm[doubleQuotationMarksCurPos - 1])
+            document.getElementById('doubleQuotationMarksPosition').innerText = `${doubleQuotationMarksCurPos}/${dqm.length}`
         }
         termBasePrevNext.current.children[0].onclick = () => {
             console.log('termBasePrev')
@@ -300,6 +307,9 @@ const SpreadSheet = (props) => {
     }, [props.file, props.guideline, props.videoUrl, props.player]);
 
     return <div>
+        <AddOn display={!!(props.file.data && props.guideline.name)}
+               doubleQuotationMarksPrevNext={doubleQuotationMarksPrevNext} termBasePrevNext={termBasePrevNext}
+               warningMsg={warningMsg} downloadBtn={downloadBtn}/>
         <div ref={spreadSheets} style={{
             flexDirection: "row",
             display: 'flex',
@@ -322,9 +332,6 @@ const SpreadSheet = (props) => {
             <MDBIcon fas icon="chevron-down" size={'2x'} color={'dark'}/>
             <MDBIcon fas icon="chevron-up" size={'2x'} color={'dark'} style={{display: 'none'}}/>
         </MDBBtn>
-        <AddOn display={!!(props.file.data && props.guideline.name)}
-               doubleQuotationMarksPrevNext={doubleQuotationMarksPrevNext} termBasePrevNext={termBasePrevNext}
-               warningMsg={warningMsg} downloadBtn={downloadBtn}/>
     </div>
 }
 
