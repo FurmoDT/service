@@ -19,7 +19,8 @@ const SpreadSheet = (props) => {
     const player = useRef(null)
     const resizeBtn = useRef(null)
     const downloadBtn = useRef(null)
-    const doubleQuotationMarksPrevNext = useRef(null)
+    const doubleQuotationMarksPositionLabel = useRef(null)
+    const doubleQuotationMarksPrevNextBtn = useRef(null)
     const termBasePrevNext = useRef(null)
     const warningMsg = useRef(null)
     const spreadSheets = useRef(null)
@@ -110,7 +111,7 @@ const SpreadSheet = (props) => {
             cellData.map((v, index) => text += v.text)
             if (text.match(/"/g) && text.match(/"/g).length % 2 !== 0) {
                 downloadBtn.current.classList.replace('btn-primary', 'btn-danger')
-                warningMsg.current.innerHTML = 'DOUBLE QUOTATION MARKS<br>DO NOT PAIR'
+                warningMsg.current.innerHTML = '<b>DOUBLE QUOTATION MARKS<br>DO NOT PAIR</b>'
             }
         }
         downloadBtn.current.onmouseleave = () => {
@@ -124,19 +125,19 @@ const SpreadSheet = (props) => {
         }
         let doubleQuotationMarksCurPos = 0
         let termBaseCurPos = 0
-        doubleQuotationMarksPrevNext.current.children[0].onclick = () => {
+        doubleQuotationMarksPrevNextBtn.current.children[0].onclick = () => {
             if (doubleQuotationMarksCurPos === 0) return
             doubleQuotationMarksCurPos -= 1
             const dqm = findDoubleQuotationMarks()
             hot.main.scrollViewportTo(dqm[doubleQuotationMarksCurPos - 1])
-            document.getElementById('doubleQuotationMarksPosition').innerText = `${doubleQuotationMarksCurPos}/${dqm.length}`
+            doubleQuotationMarksPositionLabel.current.innerText = `${doubleQuotationMarksCurPos}/${dqm.length}`
         }
-        doubleQuotationMarksPrevNext.current.children[1].onclick = () => {
+        doubleQuotationMarksPrevNextBtn.current.children[1].onclick = () => {
             const dqm = findDoubleQuotationMarks()
             if (doubleQuotationMarksCurPos === dqm.length) return
             doubleQuotationMarksCurPos += 1
             hot.main.scrollViewportTo(dqm[doubleQuotationMarksCurPos - 1])
-            document.getElementById('doubleQuotationMarksPosition').innerText = `${doubleQuotationMarksCurPos}/${dqm.length}`
+            doubleQuotationMarksPositionLabel.current.innerText = `${doubleQuotationMarksCurPos}/${dqm.length}`
         }
         termBasePrevNext.current.children[0].onclick = () => {
             console.log('termBasePrev')
@@ -308,7 +309,8 @@ const SpreadSheet = (props) => {
 
     return <div>
         <AddOn display={!!(props.file.data && props.guideline.name)}
-               doubleQuotationMarksPrevNext={doubleQuotationMarksPrevNext} termBasePrevNext={termBasePrevNext}
+               doubleQuotationMarksPositionLabel={doubleQuotationMarksPositionLabel}
+               doubleQuotationMarksPrevNextBtn={doubleQuotationMarksPrevNextBtn} termBasePrevNext={termBasePrevNext}
                warningMsg={warningMsg} downloadBtn={downloadBtn}/>
         <div ref={spreadSheets} style={{
             flexDirection: "row",
