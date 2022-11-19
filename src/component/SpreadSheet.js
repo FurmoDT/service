@@ -126,16 +126,16 @@ const SpreadSheet = (props) => {
         let doubleQuotationMarksCurPos = 0
         let termBaseCurPos = 0
         doubleQuotationMarksPrevNextBtn.current.children[0].onclick = () => {
-            if (doubleQuotationMarksCurPos === 0) return
-            doubleQuotationMarksCurPos -= 1
             const dqm = findDoubleQuotationMarks()
+            if (doubleQuotationMarksCurPos <= 1) doubleQuotationMarksCurPos = dqm.length
+            else doubleQuotationMarksCurPos -= 1
             hot.main.scrollViewportTo(dqm[doubleQuotationMarksCurPos - 1])
             doubleQuotationMarksPositionLabel.current.innerText = `${doubleQuotationMarksCurPos}/${dqm.length}`
         }
         doubleQuotationMarksPrevNextBtn.current.children[1].onclick = () => {
             const dqm = findDoubleQuotationMarks()
-            if (doubleQuotationMarksCurPos === dqm.length) return
-            doubleQuotationMarksCurPos += 1
+            if (doubleQuotationMarksCurPos >= dqm.length) doubleQuotationMarksCurPos = dqm.length ? 1 : 0
+            else doubleQuotationMarksCurPos += 1
             hot.main.scrollViewportTo(dqm[doubleQuotationMarksCurPos - 1])
             doubleQuotationMarksPositionLabel.current.innerText = `${doubleQuotationMarksCurPos}/${dqm.length}`
         }
