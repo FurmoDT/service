@@ -2,6 +2,7 @@ import {Fragment, useCallback, useMemo, useState} from 'react'
 import {useDropzone} from 'react-dropzone'
 import languageEncoding from "detect-file-encoding-and-language";
 import {xml2json} from "xml-js";
+import * as XLSX from 'xlsx';
 
 
 const baseStyle = {
@@ -31,7 +32,7 @@ const activeStyle = {
 const FileUpload = (props) => {
     const subtitleFormat = useMemo(() => (['.fsp', '.srt']), [])
     const videoFormat = useMemo(() => (['.mp4']), [])
-    const termBaseFormat = useMemo(() => (['.xls']), [])
+    const termBaseFormat = useMemo(() => (['.xls', '.xlsx']), [])
     const [uploadedFile, setUploadedFile] = useState(null)
     const onDrop = useCallback((acceptedFiles) => {
         acceptedFiles.forEach((file) => {
@@ -78,7 +79,13 @@ const FileUpload = (props) => {
                     } else if (videoFormat.includes(fileFormat)) {
                         props.setVideoUrl(URL.createObjectURL(file))
                     } else if (termBaseFormat.includes(fileFormat)) {
-                        console.log('3')
+                        const termBase = {}
+                        const wb = XLSX.read(binaryStr, {type: 'binary'})
+                        wb.SheetNames.forEach((value, index) => {
+                            const ws = wb.Sheets[value]
+                            termBase[index] = XLSX.utils.sheet_to_json(ws, {header: 1})
+                        })
+                        props.setTermBase(termBase)
                     }
                 }
                 reader.readAsArrayBuffer(file)

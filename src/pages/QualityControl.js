@@ -7,9 +7,10 @@ import Guideline from "../component/Guideline";
 
 const QualityControl = () => {
     const [file, setFile] = useState({})
+    const [termBase, setTermBase] = useState(null)
     const [videoUrl, setVideoUrl] = useState('blob')
     const [guideline, setGuideline] = useState({name: null, inputMaxLine: 0, inputMaxCharacter: 0, inputCPS: 0})
-    window.Buffer = window.Buffer || require("buffer").Buffer;
+    window.Buffer = window.Buffer || require("buffer").Buffer
     return <Fragment>
         <Collapsible open={true} trigger={<div id={'trigger'}/>}>
             <div style={{flexDirection: "row", display: "flex"}}>
@@ -19,12 +20,14 @@ const QualityControl = () => {
                 <FileUpload fileType={'video'} setVideoUrl={(value) => {
                     setVideoUrl(value)
                 }}/>
-                <FileUpload fileType={'termBase'}/>
+                <FileUpload fileType={'termBase'} setTermBase={(value) => {
+                    setTermBase(value)
+                }}/>
             </div>
             <Guideline guideline={guideline} setGuideline={setGuideline}/>
         </Collapsible>
         <div style={{display: file.data ? '' : 'none'}}>
-            <SpreadSheet file={file} videoUrl={videoUrl} guideline={guideline}/>
+            <SpreadSheet file={file} termBase={termBase} videoUrl={videoUrl} guideline={guideline}/>
         </div>
     </Fragment>
 };
