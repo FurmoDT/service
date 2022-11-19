@@ -127,7 +127,7 @@ const SpreadSheet = (props) => {
         let termBaseCurPos = 0
         doubleQuotationMarksPrevNextBtn.current.children[0].onclick = () => {
             const dqm = findDoubleQuotationMarks()
-            if (doubleQuotationMarksCurPos <= 1) doubleQuotationMarksCurPos = dqm.length
+            if (doubleQuotationMarksCurPos <= 1 || doubleQuotationMarksCurPos > dqm.length) doubleQuotationMarksCurPos = dqm.length
             else doubleQuotationMarksCurPos -= 1
             hot.main.scrollViewportTo(dqm[doubleQuotationMarksCurPos - 1])
             doubleQuotationMarksPositionLabel.current.innerText = `${doubleQuotationMarksCurPos}/${dqm.length}`
