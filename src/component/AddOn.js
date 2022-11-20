@@ -9,7 +9,7 @@ const AddOn = (props) => {
         margin: '10px 10px 10px 10px'
     }}>
         <a style={{width: '150px', justifyContent: 'center', alignItems: 'center', display: 'flex'}} target={'_blank'}
-           href={'https://docs.google.com/document'}>Google Docs</a>
+           rel={'noreferrer noopenner'} href={'https://docs.google.com/document'}>Google Docs</a>
         <div style={{width: '200px', flexDirection: 'column', display: 'flex'}}>
             <p><b>Double Quotation Marks</b></p>
             <label ref={props.doubleQuotationMarksPositionLabel}>0/0</label>
