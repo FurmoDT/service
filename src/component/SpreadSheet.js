@@ -112,6 +112,9 @@ const SpreadSheet = (props) => {
             if (text.match(/"/g) && text.match(/"/g).length % 2 !== 0) {
                 downloadBtn.current.classList.replace('btn-primary', 'btn-danger')
                 warningMsg.current.innerHTML = '<b>DOUBLE QUOTATION MARKS<br>DO NOT PAIR</b>'
+            } else if ('termBase error logic'){
+                downloadBtn.current.classList.replace('btn-primary', 'btn-danger')
+                warningMsg.current.innerHTML = '<b>TERMBASE<br>ERROR</b>'
             }
         }
         downloadBtn.current.onmouseleave = () => {
@@ -140,10 +143,10 @@ const SpreadSheet = (props) => {
             doubleQuotationMarksPositionLabel.current.innerText = `${doubleQuotationMarksCurPos}/${dqm.length}`
         }
         termBasePrevNext.current.children[0].onclick = () => {
-            console.log('termBasePrev')
+            console.log(props.termBase)
         }
         termBasePrevNext.current.children[1].onclick = () => {
-            console.log('termBaseNext')
+            console.log(props.termBase)
         }
         if (containerMain.current && Object.keys(props.file).length) {
             if (hot.main && !hot.main.isDestroyed) hot.main.destroy()
@@ -305,7 +308,7 @@ const SpreadSheet = (props) => {
                 return grammarlyText.slice(0, -1)
             })())
         }
-    }, [props.file, props.guideline, props.videoUrl, props.player]);
+    }, [props.file, props.guideline, props.termBase, props.videoUrl, props.player]);
 
     return <div>
         <AddOn display={!!(props.file.data && props.guideline.name)}
