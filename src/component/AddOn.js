@@ -34,9 +34,9 @@ const AddOn = (props) => {
                 </MDBBtn>
             </div>
         </div>
-        <div>
+        <div style={{width: '250px', justifyContent: 'center', flexDirection: 'column', display: 'flex'}}>
             <span ref={props.warningMsg} style={{fontSize: 12, color: "red"}}>&#10240;<br/>&#10240;</span>
-            <div style={{justifyContent: 'center', alignItems: 'center', display: 'flex', width: '200px'}}>
+            <div style={{justifyContent: 'center', alignItems: 'center', display: 'flex'}}>
                 <MDBBtn style={{height: '40px', width: '150px'}} className={'flex-shrink-0'} size='sm'
                         ref={props.downloadBtn} rounded={true}>DOWNLOAD</MDBBtn>
             </div>

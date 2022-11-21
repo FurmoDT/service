@@ -107,14 +107,14 @@ const SpreadSheet = (props) => {
             }
         }
         downloadBtn.current.onmouseover = () => {
+            const msg = []
             let text = ''
             cellData.map((v, index) => text += v.text)
-            if (text.match(/"/g) && text.match(/"/g).length % 2 !== 0) {
+            if (text.match(/"/g) && text.match(/"/g).length % 2 !== 0) msg.push('DOUBLE QUOTATION MARKS')
+            if ('termBase error logic' && false) msg.push('TERMBASE')
+            if (msg.length) {
                 downloadBtn.current.classList.replace('btn-primary', 'btn-danger')
-                warningMsg.current.innerHTML = '<b>DOUBLE QUOTATION MARKS<br>DO NOT PAIR</b>'
-            } else if ('termBase error logic'){
-                downloadBtn.current.classList.replace('btn-primary', 'btn-danger')
-                warningMsg.current.innerHTML = '<b>TERMBASE<br>ERROR</b>'
+                warningMsg.current.innerHTML = `<b>${msg.join(' & ')}<br>CHECK REQUIRED</b>`
             }
         }
         downloadBtn.current.onmouseleave = () => {
