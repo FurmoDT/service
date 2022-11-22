@@ -83,7 +83,20 @@ const FileUpload = (props) => {
                         const wb = XLSX.read(binaryStr, {type: 'binary'})
                         wb.SheetNames.forEach((value, index) => {
                             const ws = wb.Sheets[value]
-                            termBase[index] = XLSX.utils.sheet_to_json(ws, {header: 1})
+                            const sheetData = XLSX.utils.sheet_to_json(ws, {header: 1})
+                            if (index === 0) {
+                                const termBaseDictionary = {}
+                                sheetData.forEach((row) => {
+                                    let key = ''
+                                    row.forEach((value) => {
+                                        if (new RegExp(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g).test(value)) key = value
+                                        else termBaseDictionary[value] = key
+                                    })
+                                })
+                                termBase[index] = termBaseDictionary
+                            } else if (index === 1) {
+                                termBase[index] = sheetData
+                            }
                         })
                         props.setTermBase(termBase)
                     }

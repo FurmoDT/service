@@ -111,7 +111,18 @@ const SpreadSheet = (props) => {
             let text = ''
             cellData.map((v, index) => text += v.text)
             if (text.match(/"/g) && text.match(/"/g).length % 2 !== 0) msg.push('DOUBLE QUOTATION MARKS')
-            if ('termBase error logic' && false) msg.push('TERMBASE')
+            if (props.termBase[0]) {
+                const termBaseKeys = Object.values(props.termBase[0])
+                const termBaseError = []
+                const [koKR] = props.file.language.filter(v => v.startsWith('koKR')).map(v => `language_${v}`).slice(-1)
+                // eslint-disable-next-line
+                cellData.map((v, index) => {
+                    termBaseKeys.forEach((k) => {
+                        if (v[koKR].match(k) && !v['text'].match(Object.keys(props.termBase[0]).find(key => props.termBase[0][key] === k))) termBaseError.push(index)
+                    })
+                })
+                if (termBaseError.length) msg.push('TERMBASE')
+            }
             if (msg.length) {
                 downloadBtn.current.classList.replace('btn-primary', 'btn-danger')
                 warningMsg.current.innerHTML = `<b>${msg.join(' & ')}<br>CHECK REQUIRED</b>`
