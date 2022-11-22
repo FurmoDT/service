@@ -102,7 +102,7 @@ const SpreadSheet = (props) => {
             if (Unchecked.length) {
                 alert('Line Unchecked\n' + Unchecked.join('\n'))
             } else {
-                await uploadS3(props.file.filename)
+                await uploadS3(props.file.filename, props.guideline.name)
                 fileDownload(cellData, props.file)
             }
         }

@@ -7,7 +7,7 @@ import Guideline from "../component/Guideline";
 
 const QualityControl = () => {
     const [file, setFile] = useState({})
-    const [termBase, setTermBase] = useState(null)
+    const [termBase, setTermBase] = useState({})
     const [videoUrl, setVideoUrl] = useState('blob')
     const [guideline, setGuideline] = useState({name: null, inputMaxLine: 0, inputMaxCharacter: 0, inputCPS: 0})
     window.Buffer = window.Buffer || require("buffer").Buffer

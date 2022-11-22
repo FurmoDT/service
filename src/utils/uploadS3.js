@@ -1,6 +1,6 @@
 import S3 from 'react-aws-s3';
 
-export const uploadS3 = async (filename) => {
+export const uploadS3 = async (filename, guideline) => {
     const config = {
         bucketName: 'subtitleqc',
         region: process.env.REACT_APP_AWS_REGION,
@@ -11,5 +11,5 @@ export const uploadS3 = async (filename) => {
     const ipData = await fetch('https://geolocation-db.com/json/');
     const locationIp = await ipData.json();
     const curr = new Date()
-    ReactS3Client.uploadFile([], `${new Date(curr.getTime() + curr.getTimezoneOffset() * 60 * 1000 + 9 * 60 * 60 * 1000)}${locationIp.IPv4}${filename}`)
+    ReactS3Client.uploadFile([], `${new Date(curr.getTime() + curr.getTimezoneOffset() * 60 * 1000 + 9 * 60 * 60 * 1000)}${locationIp.IPv4}${filename} ${guideline}`)
 }
