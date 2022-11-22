@@ -44,7 +44,7 @@ export const parseFsp = (fspJson, language, targetLanguage) => {
                 const text = v.elements[0].text.replaceAll('|', '\n').split('\n').map(v => v.trim()).join('\n')
                 if (targetLanguage.includes(v.attributes.g)) line.text = text
                 else line[`language_${language[i]}`] = text
-            }
+            } else line[`language_${language[i]}`] = ''
         })
         items.push(line)
     }
@@ -77,8 +77,8 @@ export function toFsp(array, file) {
                 attributes: {g: l.split('_')[0]},
                 elements: [{
                     type: 'text', text: (() => {
-                        if (l === 'enUS' || l === 'enGB') return v['text'].replace('\n', '|')
-                        else return (v[`language_${l}`] || '').replace('\n', '|')
+                        if (v.hasOwnProperty(`language_${l}`)) return v[`language_${l}`].replace('\n', '|')
+                        else return v['text'].replace('\n', '|')
                     })()
                 }]
             })
