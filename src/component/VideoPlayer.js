@@ -8,10 +8,11 @@ const VideoPlayer = (props) => {
             layout.current.style.display = 'flex'
         } else layout.current.style.display = 'none'
     }, [props.videoUrl])
-    return <div ref={layout} style={{width: '100%', height: '250px', display: 'none'}}>
+    return <div ref={layout} style={{width: '100%', height: '250px', justifyContent: 'center', alignItems:'end', display: 'none'}}>
         <ReactPlayer style={{backgroundColor: 'black'}} ref={props.player} playing={ReactPlayer.canPlay(props.videoUrl) && props.play}
                      controls={ReactPlayer.canPlay(props.videoUrl)} width={'100%'} height={'100%'}
                      url={props.videoUrl}/>
+        <label style={{position: 'absolute', color: 'white'}}>subtitle</label>
     </div>
 };
 
