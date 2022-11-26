@@ -1,6 +1,6 @@
 import Handsontable from 'handsontable';
 import 'handsontable/dist/handsontable.full.css';
-import {useEffect, useRef} from "react";
+import {useEffect, useRef, useState} from "react";
 import {parse, parseFsp} from "../utils/srtParser";
 import {tcValidator, textValidator} from "../utils/validator";
 import {fileDownload} from "../utils/fileDownload";
@@ -22,10 +22,10 @@ const SpreadSheet = (props) => {
     const doubleQuotationMarksPositionLabel = useRef(null)
     const doubleQuotationMarksPrevNextBtn = useRef(null)
     const termBasePrevNext = useRef(null)
-    const warningMsg = useRef(null)
     const spreadSheets = useRef(null)
     const containerMain = useRef(null);
     const containerGrammarly = useRef(null);
+    const [warningMsg, setWarningMsg] = useState(null)
     useEffect(() => {
         const targetLanguage = (() => {
             if (props.file.filename && props.file.filename.endsWith('.srt')) return ['TEXT']
@@ -125,12 +125,11 @@ const SpreadSheet = (props) => {
             }
             if (msg.length) {
                 downloadBtn.current.classList.replace('btn-primary', 'btn-danger')
-                warningMsg.current.innerHTML = `<b>${msg.join(' & ')}<br>CHECK REQUIRED</b>`
-            }
+                setWarningMsg(`${msg.join(' & ')} CHECK REQUIRED`)
+            } else setWarningMsg('')
         }
         downloadBtn.current.onmouseleave = () => {
             downloadBtn.current.classList.replace('btn-danger', 'btn-primary')
-            warningMsg.current.innerHTML = '&#10240;<br>&#10240;'
         }
         const findDoubleQuotationMarks = () => {
             const indexes = []
