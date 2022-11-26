@@ -60,7 +60,7 @@ const SpreadSheet = (props) => {
                 const text = curRowData['text'].replaceAll(/<(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+>/g, '').replaceAll(/{(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+}/g, '') // remove tag
                 if (props.guideline.name === 'paramount') textCount = 0.5 * (text.match(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g).length + text.length) // 1 * koKR + 0.5 (eng & punc)
                 else textCount = text.match(/[^\s!"#$%&'()*+,-./:;<=>?@[\\\]^_`{|}~]/g).length // remove punc
-                td.innerText = Math.ceil(textCount / (TCtoSec(curRowData['end']) - TCtoSec(curRowData['start'])))
+                td.innerText = Math.ceil(textCount / (TCtoSec(curRowData['end']) - TCtoSec(curRowData['start']))) || 0
             } catch (error) {
                 td.innerText = 0
             }
