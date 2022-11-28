@@ -134,7 +134,7 @@ const SpreadSheet = (props) => {
             if (findTermBaseKeys().length) msg.push('TERMBASE')
             if (msg.length) {
                 downloadBtn.current.classList.replace('btn-primary', 'btn-danger')
-                setWarningMsg(`${msg.join(' & ')} CHECK REQUIRED`)
+                setWarningMsg(<span>{msg.join(' & ')}<br/>CHECK REQUIRED</span>)
             } else setWarningMsg('')
         }
         downloadBtn.current.onmouseleave = () => {

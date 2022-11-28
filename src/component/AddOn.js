@@ -1,4 +1,5 @@
-import {MDBBtn, MDBIcon, MDBTooltip} from "mdb-react-ui-kit";
+import {MDBBtn, MDBIcon} from "mdb-react-ui-kit";
+import ReactTooltip from 'react-tooltip';
 
 const AddOn = (props) => {
     return <div style={{
@@ -36,10 +37,9 @@ const AddOn = (props) => {
             </div>
         </div>
         <div style={{height: '25px', border: 0, borderRight: 'solid', borderWidth: 'thin', margin: '0px 5px 0px 5px'}}/>
-        <MDBTooltip tag='span' title={<span style={{fontSize: 12, color: "red"}}>{props.warningMsg}</span>}>
-            <MDBBtn style={{width: '130px'}} className={'flex-shrink-0'} size='sm'
-                    ref={props.downloadBtn} rounded={true}>DOWNLOAD</MDBBtn>
-        </MDBTooltip>
+        <MDBBtn style={{width: '130px'}} className={'flex-shrink-0'} size='sm' data-tip data-for='warningMsgTooltip'
+                ref={props.downloadBtn} rounded={true}>DOWNLOAD</MDBBtn>
+        <ReactTooltip id='warningMsgTooltip' type='error'>{props.warningMsg}</ReactTooltip>
     </div>
 };
 
