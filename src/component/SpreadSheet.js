@@ -21,6 +21,7 @@ const SpreadSheet = (props) => {
     const downloadBtn = useRef(null)
     const doubleQuotationMarksPositionLabel = useRef(null)
     const doubleQuotationMarksPrevNextBtn = useRef(null)
+    const termBaseKeysPositionLabel = useRef(null)
     const termBasePrevNext = useRef(null)
     const spreadSheets = useRef(null)
     const containerMain = useRef(null);
@@ -106,14 +107,15 @@ const SpreadSheet = (props) => {
                 fileDownload(cellData, props.file)
             }
         }
-        downloadBtn.current.onmouseover = () => {
-            const msg = []
-            let text = ''
-            cellData.map((v, index) => text += v.text)
-            if (text.match(/"/g) && text.match(/"/g).length % 2 !== 0) msg.push('DOUBLE QUOTATION MARKS')
+        const findDoubleQuotationMarks = () => {
+            const indexes = []
+            cellData.map((value, index) => value.text.includes('"') ? indexes.push(index) : null)
+            return indexes
+        }
+        const findTermBaseKeys = () => {
+            const termBaseError = []
             if (props.termBase[0]) {
                 const termBaseKeys = Object.values(props.termBase[0])
-                const termBaseError = []
                 const [koKR] = props.file.language.filter(v => v.startsWith('koKR')).map(v => `language_${v}`).slice(-1)
                 // eslint-disable-next-line
                 cellData.map((v, index) => {
@@ -121,8 +123,15 @@ const SpreadSheet = (props) => {
                         if (v[koKR].match(k) && !v['text'].match(Object.keys(props.termBase[0]).find(key => props.termBase[0][key] === k))) termBaseError.push(index)
                     })
                 })
-                if (termBaseError.length) msg.push('TERMBASE')
             }
+            return termBaseError
+        }
+        downloadBtn.current.onmouseover = () => {
+            const msg = []
+            let text = ''
+            cellData.map((v, index) => text += v.text)
+            if (text.match(/"/g) && text.match(/"/g).length % 2 !== 0) msg.push('DOUBLE QUOTATION MARKS')
+            if (findTermBaseKeys().length) msg.push('TERMBASE')
             if (msg.length) {
                 downloadBtn.current.classList.replace('btn-primary', 'btn-danger')
                 setWarningMsg(`${msg.join(' & ')} CHECK REQUIRED`)
@@ -130,11 +139,6 @@ const SpreadSheet = (props) => {
         }
         downloadBtn.current.onmouseleave = () => {
             downloadBtn.current.classList.replace('btn-danger', 'btn-primary')
-        }
-        const findDoubleQuotationMarks = () => {
-            const indexes = []
-            cellData.map((value, index) => value.text.includes('"') ? indexes.push(index) : null)
-            return indexes
         }
         let doubleQuotationMarksCurPos = 0
         let termBaseCurPos = 0
@@ -153,10 +157,18 @@ const SpreadSheet = (props) => {
             doubleQuotationMarksPositionLabel.current.innerText = `${doubleQuotationMarksCurPos}/${dqm.length}`
         }
         termBasePrevNext.current.children[0].onclick = () => {
-            console.log(props.termBase)
+            const tb = findTermBaseKeys()
+            if (termBaseCurPos <= 1 || termBaseCurPos > tb.length) termBaseCurPos = tb.length
+            else termBaseCurPos -= 1
+            hot.main.scrollViewportTo(tb[termBaseCurPos - 1])
+            termBaseKeysPositionLabel.current.innerText = `${termBaseCurPos}/${tb.length}`
         }
         termBasePrevNext.current.children[1].onclick = () => {
-            console.log(props.termBase)
+            const tb = findTermBaseKeys()
+            if (termBaseCurPos >= tb.length) termBaseCurPos = tb.length ? 1 : 0
+            else termBaseCurPos += 1
+            hot.main.scrollViewportTo(tb[termBaseCurPos - 1])
+            termBaseKeysPositionLabel.current.innerText = `${termBaseCurPos}/${tb.length}`
         }
         if (containerMain.current && Object.keys(props.file).length) {
             if (hot.main && !hot.main.isDestroyed) hot.main.destroy()
@@ -323,7 +335,9 @@ const SpreadSheet = (props) => {
     return <div>
         <AddOn display={!!(props.file.data && props.guideline.name)}
                doubleQuotationMarksPositionLabel={doubleQuotationMarksPositionLabel}
-               doubleQuotationMarksPrevNextBtn={doubleQuotationMarksPrevNextBtn} termBasePrevNext={termBasePrevNext}
+               doubleQuotationMarksPrevNextBtn={doubleQuotationMarksPrevNextBtn}
+               termBaseKeysPositionLabel={termBaseKeysPositionLabel}
+               termBasePrevNext={termBasePrevNext}
                warningMsg={warningMsg} downloadBtn={downloadBtn}/>
         <div ref={spreadSheets} style={{
             flexDirection: "row",

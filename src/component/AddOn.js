@@ -25,7 +25,7 @@ const AddOn = (props) => {
         <div style={{height: '25px', border: 0, borderRight: 'solid', borderWidth: 'thin', margin: '0px 5px 0px 5px'}}/>
         <div style={{alignItems: 'center', display: 'flex'}}>
             <label><b>Termbase</b></label>
-            <label style={{marginLeft: '5px'}} id={'termBasePosition'}>0/0</label>
+            <label style={{marginLeft: '5px'}} ref={props.termBaseKeysPositionLabel}>0/0</label>
             <div ref={props.termBasePrevNext}>
                 <MDBBtn color={'none'} floating tag='a'>
                     <MDBIcon fas icon="angle-left" size={'2x'} color={'dark'}/>
