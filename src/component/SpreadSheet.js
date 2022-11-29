@@ -28,8 +28,11 @@ const SpreadSheet = (props) => {
     const containerMain = useRef(null);
     const containerGrammarly = useRef(null);
     const [warningMsg, setWarningMsg] = useState(null)
+    const [subtitle, setSubtitle] = useState(null)
     const videoOnProgress = (state) => {
-        hot.main.scrollViewportTo(bisect(cellData.map((value) => TCtoSec(value.start)), state.playedSeconds) - 1)
+        const idx = bisect(cellData.map((value) => TCtoSec(value.start)), state.playedSeconds) - 1
+        hot.main.scrollViewportTo(idx)
+        if (idx >= 0 && subtitle !== cellData[idx]['text']) setSubtitle(cellData[idx]['text'])
     }
     useEffect(() => {
         const targetLanguage = (() => {
@@ -345,7 +348,7 @@ const SpreadSheet = (props) => {
             }
         }}>
             <div style={{flexDirection: 'column', display: 'flex', width: '30%'}}>
-                <VideoPlayer play={!!props.file.data} videoUrl={props.videoUrl} player={player}
+                <VideoPlayer play={!!props.file.data} videoUrl={props.videoUrl} player={player} subtitle={subtitle}
                              onProgress={videoOnProgress}/>
                 <div id={"hot-grammarly"} ref={containerGrammarly}/>
             </div>
