@@ -33,6 +33,7 @@ const SpreadSheet = (props) => {
             if (!props.guideline.name) return []
             else return ['paramount'].includes(props.guideline.name) ? ['koKR'] : ['enUS', 'enGB']
         })()
+        const grammarly = (async () => await Grammarly.init("client_3a8upV1a1GuH7TqFpd98Sn"))()
 
         function errorRenderer(instance, td) {
             Handsontable.renderers.TextRenderer.apply(this, arguments);
@@ -70,11 +71,6 @@ const SpreadSheet = (props) => {
             }
         }
 
-        const setGrammarly = async () => {
-            return await Grammarly.init("client_3a8upV1a1GuH7TqFpd98Sn");
-        }
-        const grammarly = setGrammarly()
-
         if (props.file.data) {
             if (props.file.filename.endsWith('.fsp')) {
                 cellData = props.file.data ? parseFsp(props.file.data, props.file.language, targetLanguage) : []
@@ -96,13 +92,10 @@ const SpreadSheet = (props) => {
             const Unchecked = []
             cellData.forEach((value, index) => {
                 cellData[index]['index'] = index + 1
-                if (value['checked'] === false) {
-                    Unchecked.push(index + 1)
-                }
+                if (value['checked'] === false) Unchecked.push(index + 1)
             })
-            if (Unchecked.length) {
-                alert('Line Unchecked\n' + Unchecked.join('\n'))
-            } else {
+            if (Unchecked.length) alert('Line Unchecked\n' + Unchecked.join('\n'))
+            else {
                 await uploadS3(props.file.filename, props.guideline.name)
                 fileDownload(cellData, props.file)
             }

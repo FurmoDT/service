@@ -4,14 +4,12 @@ import {useEffect, useRef} from "react";
 const VideoPlayer = (props) => {
     const layout = useRef(null)
     useEffect(() => {
-        if (ReactPlayer.canPlay(props.videoUrl)) {
-            layout.current.style.display = 'flex'
-        } else layout.current.style.display = 'none'
+        layout.current.style.display = ReactPlayer.canPlay(props.videoUrl) ? 'flex' : 'none'
     }, [props.videoUrl])
-    return <div ref={layout} style={{width: '100%', height: '250px', justifyContent: 'center', alignItems:'end', display: 'none'}}>
-        <ReactPlayer style={{backgroundColor: 'black'}} ref={props.player} playing={ReactPlayer.canPlay(props.videoUrl) && props.play}
-                     controls={ReactPlayer.canPlay(props.videoUrl)} width={'100%'} height={'100%'}
-                     url={props.videoUrl}/>
+    return <div ref={layout} style={{width: '100%', height: '250px', justifyContent: 'center', alignItems: 'end'}}>
+        <ReactPlayer style={{backgroundColor: 'black'}} ref={props.player} width={'100%'} height={'100%'}
+                     controls={ReactPlayer.canPlay(props.videoUrl)} progressInterval={1} url={props.videoUrl}
+                     playing={ReactPlayer.canPlay(props.videoUrl) && props.play}/>
         <label style={{position: 'absolute', color: 'white'}}>subtitle</label>
     </div>
 };
