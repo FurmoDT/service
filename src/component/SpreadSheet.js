@@ -66,17 +66,13 @@ const SpreadSheet = (props) => {
             } catch (error) {
                 td.innerText = 0
             }
-            if (td.innerText >= props.guideline['inputCPS']) {
-                td.style.backgroundColor = 'yellow'
-            }
+            if (td.innerText >= props.guideline['inputCPS']) td.style.backgroundColor = 'yellow'
         }
 
         if (props.file.data) {
             if (props.file.filename.endsWith('.fsp')) {
                 cellData = props.file.data ? parseFsp(props.file.data, props.file.language, targetLanguage) : []
-            } else if (props.file.filename.endsWith('.srt')) {
-                cellData = props.file.data ? parse(props.file.data) : []
-            }
+            } else if (props.file.filename.endsWith('.srt')) cellData = props.file.data ? parse(props.file.data) : []
             cellData.forEach((value) => {
                 value['error'] = new Set()
                 value['checked'] = false
