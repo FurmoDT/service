@@ -10,6 +10,7 @@ import {uploadS3} from "../utils/uploadS3";
 import VideoPlayer from "./VideoPlayer";
 import {MDBBtn, MDBIcon} from "mdb-react-ui-kit";
 import AddOn from "./AddOn";
+import {bisect} from "../utils/bisect";
 
 let cellData = []
 const hot = {main: null, grammarly: null}
@@ -27,6 +28,9 @@ const SpreadSheet = (props) => {
     const containerMain = useRef(null);
     const containerGrammarly = useRef(null);
     const [warningMsg, setWarningMsg] = useState(null)
+    const videoOnProgress = (state) => {
+        hot.main.scrollViewportTo(bisect(cellData.map((value) => TCtoSec(value.start)), state.playedSeconds) - 1)
+    }
     useEffect(() => {
         const targetLanguage = (() => {
             if (props.file.filename && props.file.filename.endsWith('.srt')) return ['TEXT']
@@ -341,7 +345,8 @@ const SpreadSheet = (props) => {
             }
         }}>
             <div style={{flexDirection: 'column', display: 'flex', width: '30%'}}>
-                <VideoPlayer play={!!props.file.data} videoUrl={props.videoUrl} player={player}/>
+                <VideoPlayer play={!!props.file.data} videoUrl={props.videoUrl} player={player}
+                             onProgress={videoOnProgress}/>
                 <div id={"hot-grammarly"} ref={containerGrammarly}/>
             </div>
             <div id={"hot-main"} ref={containerMain}/>
