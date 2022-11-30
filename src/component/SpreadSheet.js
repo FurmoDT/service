@@ -230,7 +230,7 @@ const SpreadSheet = (props) => {
                     const textarea = document.getElementById('hot-main').querySelector('grammarly-editor-plugin').querySelector('textarea')
                     textarea.focus()
                 });
-                if (cellData[row]['start']) player.current.seekTo(TCtoSec(cellData[row]['start']) + 0.000001)
+                if (cellData[row]['start']) player.current.seekTo(Number((TCtoSec(cellData[row]['start']) + 0.000001).toFixed(6)))
             })
             hot.main.addHook('afterChange', (changes) => grammarlyPlugin ? grammarlyPlugin.disconnect() : null)
             hot.main.addHook('afterGetRowHeader', (row) => {
