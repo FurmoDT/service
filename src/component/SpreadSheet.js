@@ -131,7 +131,7 @@ const SpreadSheet = (props) => {
             if (msg.length) {
                 downloadBtn.current.classList.replace('btn-primary', 'btn-danger')
                 setWarningMsg(<span>{msg.join(' & ')}<br/>CHECK REQUIRED</span>)
-            } else setWarningMsg('')
+            } else setWarningMsg(null)
         }
         downloadBtn.current.onmouseleave = () => {
             downloadBtn.current.classList.replace('btn-danger', 'btn-primary')

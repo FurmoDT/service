@@ -39,7 +39,7 @@ const AddOn = (props) => {
         <div style={{height: '25px', border: 0, borderRight: 'solid', borderWidth: 'thin', margin: '0px 5px 0px 5px'}}/>
         <MDBBtn style={{width: '130px'}} className={'flex-shrink-0'} size='sm' data-tip data-for='warningMsgTooltip'
                 ref={props.downloadBtn} rounded={true}>DOWNLOAD</MDBBtn>
-        <ReactTooltip id='warningMsgTooltip' type='error'>{props.warningMsg}</ReactTooltip>
+        {props.warningMsg ? <ReactTooltip id='warningMsgTooltip' type='error'>{props.warningMsg}</ReactTooltip> : null}
     </div>
 };
 
