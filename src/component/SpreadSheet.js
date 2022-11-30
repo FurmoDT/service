@@ -92,18 +92,6 @@ const SpreadSheet = (props) => {
             hot.main.render()
             hot.grammarly.render()
         }
-        downloadBtn.current.onclick = async () => {
-            const Unchecked = []
-            cellData.forEach((value, index) => {
-                cellData[index]['index'] = index + 1
-                if (value['checked'] === false) Unchecked.push(index + 1)
-            })
-            if (Unchecked.length) alert('Line Unchecked\n' + Unchecked.join('\n'))
-            else {
-                await uploadS3(props.file.filename, props.guideline.name)
-                fileDownload(cellData, props.file)
-            }
-        }
         const findDoubleQuotationMarks = () => {
             const indexes = []
             cellData.map((value, index) => value.text.includes('"') ? indexes.push(index) : null)
@@ -135,6 +123,18 @@ const SpreadSheet = (props) => {
             } else setWarningMsg(null)
         }
         downloadBtn.current.onmouseleave = () => downloadBtn.current.classList.replace('btn-danger', 'btn-primary')
+        downloadBtn.current.onclick = async () => {
+            const Unchecked = []
+            cellData.forEach((value, index) => {
+                cellData[index]['index'] = index + 1
+                if (value['checked'] === false) Unchecked.push(index + 1)
+            })
+            if (Unchecked.length) alert('Line Unchecked\n' + Unchecked.join('\n'))
+            else {
+                await uploadS3(props.file.filename, props.guideline.name)
+                fileDownload(cellData, props.file)
+            }
+        }
         let doubleQuotationMarksCurPos = 0
         let termBaseCurPos = 0
         doubleQuotationMarksPrevNextBtn.current.children[0].onclick = () => {
