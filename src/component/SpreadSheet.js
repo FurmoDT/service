@@ -1,7 +1,7 @@
 import Handsontable from 'handsontable';
 import 'handsontable/dist/handsontable.full.css';
 import {useEffect, useRef, useState} from "react";
-import {parse, parseFsp} from "../utils/srtParser";
+import {parseSrt, parseFsp} from "../utils/srtParser";
 import {tcValidator, textValidator} from "../utils/validator";
 import {fileDownload} from "../utils/fileDownload";
 import * as Grammarly from "@grammarly/editor-sdk";
@@ -77,14 +77,13 @@ const SpreadSheet = (props) => {
         }
 
         if (props.file.data) {
-            if (props.file.filename.endsWith('.fsp')) {
-                cellData = props.file.data ? parseFsp(props.file.data, props.file.language, targetLanguage) : []
-            } else if (props.file.filename.endsWith('.srt')) cellData = props.file.data ? parse(props.file.data) : []
+            if (props.file.filename.endsWith('.fsp')) cellData = parseFsp(props.file.data, props.file.language, targetLanguage)
+            else if (props.file.filename.endsWith('.srt')) cellData = parseSrt(props.file.data)
             cellData.forEach((value) => {
                 value['error'] = new Set()
                 value['checked'] = false
             })
-        }
+        } else cellData = []
         resizeBtn.current.onclick = (e) => {
             [resizeBtn.current.children[0].style.display, resizeBtn.current.children[1].style.display] = [resizeBtn.current.children[1].style.display, resizeBtn.current.children[0].style.display];
             spreadSheets.current.style.height = spreadSheets.current.style.height === '500px' ? '800px' : '500px'
@@ -133,9 +132,7 @@ const SpreadSheet = (props) => {
                 setWarningMsg(<span>{msg.join(' & ')}<br/>CHECK REQUIRED</span>)
             } else setWarningMsg(null)
         }
-        downloadBtn.current.onmouseleave = () => {
-            downloadBtn.current.classList.replace('btn-danger', 'btn-primary')
-        }
+        downloadBtn.current.onmouseleave = () => downloadBtn.current.classList.replace('btn-danger', 'btn-primary')
         let doubleQuotationMarksCurPos = 0
         let termBaseCurPos = 0
         doubleQuotationMarksPrevNextBtn.current.children[0].onclick = () => {

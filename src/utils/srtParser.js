@@ -1,6 +1,6 @@
 import {json2xml} from "xml-js";
 
-export const parse = (srtText) => {
+export const parseSrt = (srtText) => {
     const normalizedSrtData = srtText.replace(/\r\n/g, '\n');
     const lines = normalizedSrtData.split('\n');
     const items = [];
