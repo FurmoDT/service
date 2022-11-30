@@ -1,7 +1,7 @@
 import Handsontable from 'handsontable';
 import 'handsontable/dist/handsontable.full.css';
 import {useEffect, useRef, useState} from "react";
-import {parseSrt, parseFsp} from "../utils/srtParser";
+import {parseFsp, parseSrt} from "../utils/srtParser";
 import {tcValidator, textValidator} from "../utils/validator";
 import {fileDownload} from "../utils/fileDownload";
 import * as Grammarly from "@grammarly/editor-sdk";
@@ -31,8 +31,10 @@ const SpreadSheet = (props) => {
     const [subtitle, setSubtitle] = useState(null)
     const videoOnProgress = (state) => {
         const idx = bisect(cellData.map((value) => TCtoSec(value.start)), state.playedSeconds) - 1
-        hot.main.scrollViewportTo(idx)
-        if (idx >= 0 && subtitle !== cellData[idx]['text']) setSubtitle(cellData[idx]['text'])
+        if (idx >= 0 && subtitle !== cellData[idx]['text']) {
+            setSubtitle(cellData[idx]['text'])
+            hot.main.scrollViewportTo(idx)
+        }
     }
     useEffect(() => {
         const targetLanguage = (() => {
@@ -230,19 +232,13 @@ const SpreadSheet = (props) => {
                 });
                 player.current.seekTo(TCtoSec(cellData[row]['start']))
             })
-            hot.main.addHook('afterChange', (changes) => {
-                if (grammarlyPlugin) {
-                    grammarlyPlugin.disconnect()
-                }
-            })
+            hot.main.addHook('afterChange', (changes) => grammarlyPlugin ? grammarlyPlugin.disconnect() : null)
             hot.main.addHook('afterGetRowHeader', (row) => {
                 if (cellData[row]['checked'] === false) {
                     cellData[row]['checked'] = true
                 }
             })
-            for (let i = 0; i < hot.main.countRenderedRows() - 2; i++) { // default rendered rows
-                cellData[i]['checked'] = true
-            }
+            for (let i = 0; i < hot.main.countRenderedRows() - 2; i++) cellData[i]['checked'] = true // default rendered rows
         }
         if (containerGrammarly.current && Object.keys(props.file).length) {
             if (hot.grammarly && !hot.grammarly.isDestroyed) hot.grammarly.destroy()
@@ -255,9 +251,7 @@ const SpreadSheet = (props) => {
                 stretchH: 'all',
                 className: 'htLeft',
                 readOnly: !props.guideline.name || props.guideline.name === 'paramount',
-                columns: [
-                    {data: 'grammarly'},
-                ],
+                columns: [{data: 'grammarly'}],
                 maxRows: 1,
                 licenseKey: 'non-commercial-and-evaluation'
             })
@@ -294,9 +288,7 @@ const SpreadSheet = (props) => {
                     const textarea = document.getElementById('hot-grammarly').querySelector('grammarly-editor-plugin').querySelector('textarea')
                     let curText = ''
                     cellData.map((v, index) => curText += 'Index:' + (index + 1) + '\n' + v.text + '\n')
-                    if (textarea.value !== curText) {
-                        textarea.value = curText.slice(0, -1)
-                    }
+                    if (textarea.value !== curText) textarea.value = curText.slice(0, -1)
                     const updateGrammarlyData = () => {
                         grammarlyColPos = textarea.selectionStart
                         updateMainText(textarea.value)
@@ -309,14 +301,10 @@ const SpreadSheet = (props) => {
                 document.getElementById('hot-grammarly').getElementsByClassName('ht_master')[0].getElementsByClassName('wtHolder')[0].style.overflowY = 'hidden'
             })
             hot.grammarly.addHook('afterChange', (changes) => {
-                if (grammarlyPlugin) {
-                    grammarlyPlugin.disconnect()
-                }
+                if (grammarlyPlugin) grammarlyPlugin.disconnect()
                 updateMainText(changes[0][3], true)
             })
-            hot.grammarly.addHook('afterSelection', (row, column, row2, column2, preventScrolling, selectionLayerLevel) => {
-                preventScrolling.value = true
-            })
+            hot.grammarly.addHook('afterSelection', (row, column, row2, column2, preventScrolling) => preventScrolling.value = true)
             hot.grammarly.setDataAtCell(0, 0, (() => {
                 let grammarlyText = ''
                 cellData.map((v, index) => grammarlyText += 'Index:' + (index + 1) + '\n' + v.text + '\n')
