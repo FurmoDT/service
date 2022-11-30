@@ -9,7 +9,7 @@ const VideoPlayer = (props) => {
     return <div ref={layout} style={{width: '100%', height: '250px', justifyContent: 'center', alignItems: 'end'}}>
         <ReactPlayer style={{backgroundColor: 'black'}} ref={props.player} width={'100%'} height={'100%'}
                      controls={ReactPlayer.canPlay(props.videoUrl)} progressInterval={1} url={props.videoUrl}
-                     playing={ReactPlayer.canPlay(props.videoUrl) && props.play} onProgress={props.onProgress}/>
+                     onProgress={props.onProgress}/>
         <label style={{position: 'absolute', color: 'white', pointerEvents: 'none', whiteSpace:'pre', fontSize: 12}}>{props.subtitle}</label>
     </div>
 };

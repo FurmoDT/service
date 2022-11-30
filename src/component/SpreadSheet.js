@@ -230,7 +230,7 @@ const SpreadSheet = (props) => {
                     const textarea = document.getElementById('hot-main').querySelector('grammarly-editor-plugin').querySelector('textarea')
                     textarea.focus()
                 });
-                player.current.seekTo(TCtoSec(cellData[row]['start']))
+                if (cellData[row]['start']) player.current.seekTo(TCtoSec(cellData[row]['start']) + 0.000001)
             })
             hot.main.addHook('afterChange', (changes) => grammarlyPlugin ? grammarlyPlugin.disconnect() : null)
             hot.main.addHook('afterGetRowHeader', (row) => {
@@ -333,7 +333,7 @@ const SpreadSheet = (props) => {
             }
         }}>
             <div style={{flexDirection: 'column', display: 'flex', width: '30%'}}>
-                <VideoPlayer play={!!props.file.data} videoUrl={props.videoUrl} player={player} subtitle={subtitle}
+                <VideoPlayer videoUrl={props.videoUrl} player={player} subtitle={subtitle}
                              onProgress={videoOnProgress}/>
                 <div id={"hot-grammarly"} ref={containerGrammarly}/>
             </div>
