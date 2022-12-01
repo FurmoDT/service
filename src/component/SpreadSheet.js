@@ -234,9 +234,7 @@ const SpreadSheet = (props) => {
             })
             hot.main.addHook('afterChange', (changes) => grammarlyPlugin ? grammarlyPlugin.disconnect() : null)
             hot.main.addHook('afterGetRowHeader', (row) => {
-                if (cellData[row]['checked'] === false) {
-                    cellData[row]['checked'] = true
-                }
+                if (cellData[row]['checked'] === false) cellData[row]['checked'] = true
             })
             for (let i = 0; i < hot.main.countRenderedRows() - 2; i++) cellData[i]['checked'] = true // default rendered rows
         }
