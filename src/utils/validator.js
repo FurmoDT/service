@@ -1,6 +1,12 @@
-export const tcValidator = (r, c, v, td, instance, cellData, sep) => {
+import {TCtoSec} from "./calculator";
+
+export const tcValidator = (r, c, v, td, instance, cellData, guideline, sep) => {
     if (!v || !new RegExp(`^(\\d{2}:\\d{2}:\\d{2}\\${sep}\\d{3})`).test(v) || (c === 0 && instance.getDataAtCell(r - 1, c + 1) > v) || (c === 1 && instance.getDataAtCell(r, c - 1) > v)) {
         td.style.backgroundColor = 'red'
+    }
+    if (guideline.name === 'kcp' && TCtoSec(cellData[r]['end']) - TCtoSec(cellData[r]['start']) > 7) {
+        td.style.backgroundColor = 'red'
+        cellData[r]['tcError'] = new Set(['TC Interval Over 7 seconds'])
     }
 }
 
@@ -17,9 +23,9 @@ export const textValidator = (r, c, v, td, instance, cellData, guideline) => {
             td.style.backgroundColor = 'yellow'
             errors.add('Possible Uppercase')
         }
-        if (cellData[r - 1] && cellData[r - 1]['text'] && cellData[r - 1]['text'].match(/[.?!]$/g)){
+        if (cellData[r - 1] && cellData[r - 1]['text'] && cellData[r - 1]['text'].match(/[.?!]$/g)) {
             const char = v.match(/[a-zA-Z]/g)
-            if (char && char[0] !== char[0].toUpperCase()){
+            if (char && char[0] !== char[0].toUpperCase()) {
                 td.style.backgroundColor = 'yellow'
                 errors.add('Possible Uppercase')
             }
@@ -29,7 +35,7 @@ export const textValidator = (r, c, v, td, instance, cellData, guideline) => {
             errors.add('MaxLine Exceeded')
         }
         v.split('\n').forEach((value) => {
-            if (value.length > guideline['inputMaxCharacter']){
+            if (value.length > guideline['inputMaxCharacter']) {
                 td.style.backgroundColor = 'red'
                 errors.add('MaxCharacter Exceeded')
             }
@@ -43,5 +49,5 @@ export const textValidator = (r, c, v, td, instance, cellData, guideline) => {
             errors.add('2 or 4+ dots')
         }
     }
-    cellData[r]['error'] = errors
+    cellData[r]['textError'] = errors
 }

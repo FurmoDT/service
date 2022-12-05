@@ -46,16 +46,12 @@ const SpreadSheet = (props) => {
 
         function errorRenderer(instance, td) {
             Handsontable.renderers.TextRenderer.apply(this, arguments);
-            td.innerText = [...cellData[arguments[2]]['error']].join('\n')
+            td.innerText = [...cellData[arguments[2]]['tcError'], ...cellData[arguments[2]]['textError']].join('\n')
         }
 
         function tcRenderer(instance, td) {
             Handsontable.renderers.TextRenderer.apply(this, arguments);
-            tcValidator(arguments[2], arguments[3], arguments[5], td, instance, cellData, (() => {
-                // eslint-disable-next-line
-                if (props.file.filename.endsWith('.fsp')) return '\.'
-                else if (props.file.filename.endsWith('.srt')) return ','
-            })())
+            tcValidator(arguments[2], arguments[3], arguments[5], td, instance, cellData, props.guideline, props.file.filename.endsWith('.fsp') ? '.' : ',')
         }
 
         function textRenderer(instance, td) {
@@ -82,7 +78,8 @@ const SpreadSheet = (props) => {
             if (props.file.filename.endsWith('.fsp')) cellData = parseFsp(props.file.data, props.file.language, targetLanguage)
             else if (props.file.filename.endsWith('.srt')) cellData = parseSrt(props.file.data)
             cellData.forEach((value) => {
-                value['error'] = new Set()
+                value['tcError'] = new Set()
+                value['textError'] = new Set()
                 value['checked'] = false
             })
         } else cellData = []
