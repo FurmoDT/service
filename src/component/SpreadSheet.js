@@ -101,7 +101,7 @@ const SpreadSheet = (props) => {
                     })
                 })
             }
-            return termBaseError
+            return [...new Set(termBaseError)]
         }
         downloadBtn.current.onmouseover = () => {
             const msg = []
