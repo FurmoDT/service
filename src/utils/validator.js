@@ -51,3 +51,17 @@ export const textValidator = (r, c, v, td, instance, cellData, guideline) => {
     }
     cellData[r]['textError'] = errors
 }
+
+export const cpsValidator = (r, td, cellData, guideline) => {
+    const curRowData = cellData[r]
+    try {
+        let textCount
+        const text = curRowData['text'].replaceAll(/<(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+>/g, '').replaceAll(/{(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+}/g, '') // remove tag
+        if (guideline.name === 'paramount') textCount = 0.5 * (text.match(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g).length + text.length) // 1 * koKR + 0.5 (eng & punc)
+        else textCount = text.match(/[^\s!"#$%&'()*+,-./:;<=>?@[\\\]^_`{|}~]/g).length // remove punc
+        td.innerText = Math.ceil(textCount / (TCtoSec(curRowData['end']) - TCtoSec(curRowData['start']))) || 0
+    } catch (error) {
+        td.innerText = 0
+    }
+    if (td.innerText >= guideline['inputCPS']) td.style.backgroundColor = 'yellow'
+}

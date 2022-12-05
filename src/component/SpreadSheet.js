@@ -2,7 +2,7 @@ import Handsontable from 'handsontable';
 import 'handsontable/dist/handsontable.full.css';
 import {useEffect, useRef, useState} from "react";
 import {parseFsp, parseSrt} from "../utils/srtParser";
-import {tcValidator, textValidator} from "../utils/validator";
+import {cpsValidator, tcValidator, textValidator} from "../utils/validator";
 import {fileDownload} from "../utils/fileDownload";
 import * as Grammarly from "@grammarly/editor-sdk";
 import {TCtoSec} from "../utils/calculator";
@@ -61,17 +61,7 @@ const SpreadSheet = (props) => {
 
         function cpsRenderer(instance, td) {
             Handsontable.renderers.TextRenderer.apply(this, arguments);
-            const curRowData = cellData[arguments[2]]
-            try {
-                let textCount
-                const text = curRowData['text'].replaceAll(/<(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+>/g, '').replaceAll(/{(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+}/g, '') // remove tag
-                if (props.guideline.name === 'paramount') textCount = 0.5 * (text.match(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g).length + text.length) // 1 * koKR + 0.5 (eng & punc)
-                else textCount = text.match(/[^\s!"#$%&'()*+,-./:;<=>?@[\\\]^_`{|}~]/g).length // remove punc
-                td.innerText = Math.ceil(textCount / (TCtoSec(curRowData['end']) - TCtoSec(curRowData['start']))) || 0
-            } catch (error) {
-                td.innerText = 0
-            }
-            if (td.innerText >= props.guideline['inputCPS']) td.style.backgroundColor = 'yellow'
+            cpsValidator(arguments[2], td, cellData, props.guideline)
         }
 
         if (props.file.data) {
