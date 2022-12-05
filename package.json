@@ -11,7 +11,7 @@
     "buffer": "^6.0.3",
     "detect-file-encoding-and-language": "^2.3.0",
     "gh-pages": "^4.0.0",
-    "handsontable": "^12.1.2",
+    "handsontable": "^12.2.0",
     "mdb-react-ui-kit": "^4.2.0",
     "react": "^18.2.0",
     "react-aws-s3": "^1.5.0",
