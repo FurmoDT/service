@@ -28,12 +28,16 @@ const SpreadSheet = (props) => {
     const containerMain = useRef(null);
     const containerGrammarly = useRef(null);
     const [warningMsg, setWarningMsg] = useState(null)
-    const [subtitle, setSubtitle] = useState(null)
+    const subtitle = useRef(null)
     const videoOnProgress = (state) => {
         const idx = bisect(cellData.map((value) => TCtoSec(value.start)), state.playedSeconds) - 1
-        if (idx >= 0 && subtitle !== cellData[idx]['text']) {
-            setSubtitle(cellData[idx]['text'])
-            hot.main.scrollViewportTo(idx)
+        if (idx >= 0) {
+            if (state.playedSeconds >= TCtoSec(cellData[idx]['start']) && state.playedSeconds <= TCtoSec(cellData[idx]['end'])){
+                if (subtitle.current.innerText !== cellData[idx]['text']) {
+                    subtitle.current.innerText = cellData[idx]['text']
+                    hot.main.scrollViewportTo(idx)
+                }
+            } else subtitle.current.innerText = ''
         }
     }
     useEffect(() => {
