@@ -1,5 +1,6 @@
 import Handsontable from 'handsontable';
-import 'handsontable/dist/handsontable.full.css';
+// import 'handsontable/dist/handsontable.full.css';
+import '../css/Handsontable.css'
 import {useEffect, useRef, useState} from "react";
 import {parseFsp, parseSrt} from "../utils/srtParser";
 import {cpsValidator, tcValidator, textValidator} from "../utils/validator";
