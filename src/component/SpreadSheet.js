@@ -68,7 +68,6 @@ const SpreadSheet = (props) => {
             Handsontable.renderers.TextRenderer.apply(this, arguments);
             cpsValidator(arguments[2], td, cellData, props.guideline)
         }
-
         if (props.file.data) {
             if (props.file.filename.endsWith('.fsp')) cellData = parseFsp(props.file.data, props.file.language, targetLanguage)
             else if (props.file.filename.endsWith('.srt')) cellData = parseSrt(props.file.data)
@@ -78,85 +77,6 @@ const SpreadSheet = (props) => {
                 value['checked'] = false
             })
         } else cellData = []
-        resizeBtn.current.onclick = (e) => {
-            [resizeBtn.current.children[0].style.display, resizeBtn.current.children[1].style.display] = [resizeBtn.current.children[1].style.display, resizeBtn.current.children[0].style.display];
-            spreadSheets.current.style.height = spreadSheets.current.style.height === '500px' ? '800px' : '500px'
-            hot.main.render()
-            hot.grammarly.render()
-        }
-        const findDoubleQuotationMarks = () => {
-            const indexes = []
-            cellData.map((value, index) => value.text.includes('"') ? indexes.push(index) : null)
-            return indexes
-        }
-        const findTermBaseKeys = () => {
-            const termBaseError = []
-            if (props.termBase[0] && props.file.filename.endsWith('.fsp')) {
-                const termBaseKeys = Object.values(props.termBase[0])
-                const [koKR] = props.file.language.filter(v => v.startsWith('koKR')).map(v => `language_${v}`).slice(-1)
-                // eslint-disable-next-line
-                cellData.map((v, index) => {
-                    termBaseKeys.forEach((k) => {
-                        if (v[koKR].match(k) && !v['text'].match(Object.keys(props.termBase[0]).find(key => props.termBase[0][key] === k))) termBaseError.push(index)
-                    })
-                })
-            }
-            return [...new Set(termBaseError)]
-        }
-        downloadBtn.current.onmouseover = () => {
-            const msg = []
-            let text = ''
-            cellData.map((v, index) => text += v.text)
-            if (text.match(/"/g) && text.match(/"/g).length % 2 !== 0) msg.push('DOUBLE QUOTATION MARKS')
-            if (findTermBaseKeys().length) msg.push('TERMBASE')
-            if (msg.length) {
-                downloadBtn.current.classList.replace('btn-primary', 'btn-danger')
-                setWarningMsg(<span>{msg.join(' & ')}<br/>CHECK REQUIRED</span>)
-            } else setWarningMsg(null)
-        }
-        downloadBtn.current.onmouseleave = () => downloadBtn.current.classList.replace('btn-danger', 'btn-primary')
-        downloadBtn.current.onclick = async () => {
-            const Unchecked = []
-            cellData.forEach((value, index) => {
-                cellData[index]['index'] = index + 1
-                if (value['checked'] === false) Unchecked.push(index + 1)
-            })
-            if (Unchecked.length) alert('Line Unchecked\n' + Unchecked.join('\n'))
-            else {
-                await uploadS3(props.file.filename, props.guideline.name)
-                fileDownload(cellData, props.file)
-            }
-        }
-        let doubleQuotationMarksCurPos = 0
-        let termBaseCurPos = 0
-        doubleQuotationMarksPrevNextBtn.current.children[0].onclick = () => {
-            const dqm = findDoubleQuotationMarks()
-            if (doubleQuotationMarksCurPos <= 1 || doubleQuotationMarksCurPos > dqm.length) doubleQuotationMarksCurPos = dqm.length
-            else doubleQuotationMarksCurPos -= 1
-            hot.main.scrollViewportTo(dqm[doubleQuotationMarksCurPos - 1])
-            doubleQuotationMarksPositionLabel.current.innerText = `${doubleQuotationMarksCurPos}/${dqm.length}`
-        }
-        doubleQuotationMarksPrevNextBtn.current.children[1].onclick = () => {
-            const dqm = findDoubleQuotationMarks()
-            if (doubleQuotationMarksCurPos >= dqm.length) doubleQuotationMarksCurPos = dqm.length ? 1 : 0
-            else doubleQuotationMarksCurPos += 1
-            hot.main.scrollViewportTo(dqm[doubleQuotationMarksCurPos - 1])
-            doubleQuotationMarksPositionLabel.current.innerText = `${doubleQuotationMarksCurPos}/${dqm.length}`
-        }
-        termBasePrevNext.current.children[0].onclick = () => {
-            const tb = findTermBaseKeys()
-            if (termBaseCurPos <= 1 || termBaseCurPos > tb.length) termBaseCurPos = tb.length
-            else termBaseCurPos -= 1
-            hot.main.scrollViewportTo(tb[termBaseCurPos - 1])
-            termBaseKeysPositionLabel.current.innerText = `${termBaseCurPos}/${tb.length}`
-        }
-        termBasePrevNext.current.children[1].onclick = () => {
-            const tb = findTermBaseKeys()
-            if (termBaseCurPos >= tb.length) termBaseCurPos = tb.length ? 1 : 0
-            else termBaseCurPos += 1
-            hot.main.scrollViewportTo(tb[termBaseCurPos - 1])
-            termBaseKeysPositionLabel.current.innerText = `${termBaseCurPos}/${tb.length}`
-        }
         if (containerMain.current && Object.keys(props.file).length) {
             if (hot.main && !hot.main.isDestroyed) hot.main.destroy()
             hot.main = new Handsontable(containerMain.current, {
@@ -300,6 +220,90 @@ const SpreadSheet = (props) => {
                 cellData.map((v, index) => grammarlyText += 'Index:' + (index + 1) + '\n' + v.text + '\n')
                 return grammarlyText.slice(0, -1)
             })())
+        }
+        resizeBtn.current.onclick = (e) => {
+            [resizeBtn.current.children[0].style.display, resizeBtn.current.children[1].style.display] = [resizeBtn.current.children[1].style.display, resizeBtn.current.children[0].style.display];
+            spreadSheets.current.style.height = spreadSheets.current.style.height === '500px' ? '800px' : '500px'
+            hot.main.render()
+            hot.grammarly.render()
+        }
+        const findDoubleQuotationMarks = () => {
+            const indexes = []
+            cellData.map((value, index) => value.text.includes('"') ? indexes.push(index) : null)
+            return indexes
+        }
+        const findTermBaseKeys = () => {
+            const termBaseError = []
+            if (props.termBase[0] && props.file.filename.endsWith('.fsp')) {
+                const termBaseKeys = Object.values(props.termBase[0])
+                const [koKR] = props.file.language.filter(v => v.startsWith('koKR')).map(v => `language_${v}`).slice(-1)
+                // eslint-disable-next-line
+                cellData.map((v, index) => {
+                    termBaseKeys.forEach((k) => {
+                        if (v[koKR].match(k) && !v['text'].match(Object.keys(props.termBase[0]).find(key => props.termBase[0][key] === k))) termBaseError.push(index)
+                    })
+                })
+            }
+            return [...new Set(termBaseError)]
+        }
+        downloadBtn.current.onmouseover = () => {
+            const msg = []
+            let text = ''
+            cellData.map((v, index) => text += v.text)
+            if (text.match(/"/g) && text.match(/"/g).length % 2 !== 0) msg.push('DOUBLE QUOTATION MARKS')
+            if (findTermBaseKeys().length) msg.push('TERMBASE')
+            if (msg.length) {
+                downloadBtn.current.classList.replace('btn-primary', 'btn-danger')
+                setWarningMsg(<span>{msg.join(' & ')}<br/>CHECK REQUIRED</span>)
+            } else setWarningMsg(null)
+        }
+        downloadBtn.current.onmouseleave = () => downloadBtn.current.classList.replace('btn-danger', 'btn-primary')
+        downloadBtn.current.onclick = async () => {
+            const Unchecked = []
+            cellData.forEach((value, index) => {
+                cellData[index]['index'] = index + 1
+                if (value['checked'] === false) Unchecked.push(index + 1)
+            })
+            if (Unchecked.length) alert('Line Unchecked\n' + Unchecked.join('\n'))
+            else {
+                await uploadS3(props.file.filename, props.guideline.name)
+                fileDownload(cellData, props.file)
+            }
+        }
+        let doubleQuotationMarksCurPos = 0
+        let termBaseCurPos = 0
+        const targetColumn = Math.max.apply(null, targetLanguage.map((value) => hot.main ? hot.main.getColHeader().indexOf(value): 0))
+        doubleQuotationMarksPrevNextBtn.current.children[0].onclick = () => {
+            const dqm = findDoubleQuotationMarks()
+            if (doubleQuotationMarksCurPos <= 1 || doubleQuotationMarksCurPos > dqm.length) doubleQuotationMarksCurPos = dqm.length
+            else doubleQuotationMarksCurPos -= 1
+            hot.main.selectCell(dqm[doubleQuotationMarksCurPos - 1], targetColumn)
+            hot.main.scrollViewportTo(dqm[doubleQuotationMarksCurPos - 1])
+            doubleQuotationMarksPositionLabel.current.innerText = `${doubleQuotationMarksCurPos}/${dqm.length}`
+        }
+        doubleQuotationMarksPrevNextBtn.current.children[1].onclick = () => {
+            const dqm = findDoubleQuotationMarks()
+            if (doubleQuotationMarksCurPos >= dqm.length) doubleQuotationMarksCurPos = dqm.length ? 1 : 0
+            else doubleQuotationMarksCurPos += 1
+            hot.main.selectCell(dqm[doubleQuotationMarksCurPos - 1], targetColumn)
+            hot.main.scrollViewportTo(dqm[doubleQuotationMarksCurPos - 1])
+            doubleQuotationMarksPositionLabel.current.innerText = `${doubleQuotationMarksCurPos}/${dqm.length}`
+        }
+        termBasePrevNext.current.children[0].onclick = () => {
+            const tb = findTermBaseKeys()
+            if (termBaseCurPos <= 1 || termBaseCurPos > tb.length) termBaseCurPos = tb.length
+            else termBaseCurPos -= 1
+            hot.main.selectCell(tb[termBaseCurPos - 1], targetColumn)
+            hot.main.scrollViewportTo(tb[termBaseCurPos - 1])
+            termBaseKeysPositionLabel.current.innerText = `${termBaseCurPos}/${tb.length}`
+        }
+        termBasePrevNext.current.children[1].onclick = () => {
+            const tb = findTermBaseKeys()
+            if (termBaseCurPos >= tb.length) termBaseCurPos = tb.length ? 1 : 0
+            else termBaseCurPos += 1
+            hot.main.selectCell(tb[termBaseCurPos - 1], targetColumn)
+            hot.main.scrollViewportTo(tb[termBaseCurPos - 1])
+            termBaseKeysPositionLabel.current.innerText = `${termBaseCurPos}/${tb.length}`
         }
     }, [props.file, props.guideline, props.termBase, props.videoUrl, props.player]);
 
