@@ -33,7 +33,7 @@ const SpreadSheet = (props) => {
     const videoOnProgress = (state) => {
         const idx = bisect(cellData.map((value) => TCtoSec(value.start)), state.playedSeconds) - 1
         if (idx >= 0) {
-            if (state.playedSeconds >= TCtoSec(cellData[idx]['start']) && state.playedSeconds <= TCtoSec(cellData[idx]['end'])){
+            if (state.playedSeconds >= TCtoSec(cellData[idx]['start']) && state.playedSeconds <= TCtoSec(cellData[idx]['end'])) {
                 if (subtitle.current.innerText !== cellData[idx]['text']) {
                     subtitle.current.innerText = cellData[idx]['text']
                     if (!hot.main.getActiveEditor()?.isOpened()) hot.main.scrollViewportTo(idx)
@@ -68,6 +68,7 @@ const SpreadSheet = (props) => {
             Handsontable.renderers.TextRenderer.apply(this, arguments);
             cpsValidator(arguments[2], td, cellData, props.guideline)
         }
+
         if (props.file.data) {
             if (props.file.filename.endsWith('.fsp')) cellData = parseFsp(props.file.data, props.file.language, targetLanguage)
             else if (props.file.filename.endsWith('.srt')) cellData = parseSrt(props.file.data)
@@ -77,6 +78,11 @@ const SpreadSheet = (props) => {
                 value['checked'] = false
             })
         } else cellData = []
+        const getTotalText = () => {
+            let text = ''
+            cellData.map((v, index) => text += 'Index:' + (index + 1) + '\n' + v.text + '\n')
+            return text.slice(0, -1)
+        }
         if (containerMain.current && Object.keys(props.file).length) {
             if (hot.main && !hot.main.isDestroyed) hot.main.destroy()
             hot.main = new Handsontable(containerMain.current, {
@@ -196,9 +202,8 @@ const SpreadSheet = (props) => {
                         },
                     )
                     const textarea = document.getElementById('hot-grammarly').querySelector('grammarly-editor-plugin').querySelector('textarea')
-                    let curText = ''
-                    cellData.map((v, index) => curText += 'Index:' + (index + 1) + '\n' + v.text + '\n')
-                    if (textarea.value !== curText) textarea.value = curText.slice(0, -1)
+                    const totalText = getTotalText()
+                    if (textarea.value !== totalText) textarea.value = totalText
                     const updateGrammarlyData = () => {
                         grammarlyColPos = textarea.selectionStart
                         updateMainText(textarea.value)
@@ -215,11 +220,7 @@ const SpreadSheet = (props) => {
                 updateMainText(changes[0][3], true)
             })
             hot.grammarly.addHook('afterSelection', (row, column, row2, column2, preventScrolling) => preventScrolling.value = true)
-            hot.grammarly.setDataAtCell(0, 0, (() => {
-                let grammarlyText = ''
-                cellData.map((v, index) => grammarlyText += 'Index:' + (index + 1) + '\n' + v.text + '\n')
-                return grammarlyText.slice(0, -1)
-            })())
+            hot.grammarly.setDataAtCell(0, 0, getTotalText())
         }
         resizeBtn.current.onclick = (e) => {
             [resizeBtn.current.children[0].style.display, resizeBtn.current.children[1].style.display] = [resizeBtn.current.children[1].style.display, resizeBtn.current.children[0].style.display];
@@ -229,7 +230,7 @@ const SpreadSheet = (props) => {
         }
         const findDoubleQuotationMarks = () => {
             const indexes = []
-            cellData.map((value, index) => value.text.includes('"') ? indexes.push(index) : null)
+            cellData.map((value, index) => value.text?.includes('"') ? indexes.push(index) : null)
             return indexes
         }
         const findTermBaseKeys = () => {
@@ -248,9 +249,8 @@ const SpreadSheet = (props) => {
         }
         downloadBtn.current.onmouseover = () => {
             const msg = []
-            let text = ''
-            cellData.map((v, index) => text += v.text)
-            if (text.match(/"/g) && text.match(/"/g).length % 2 !== 0) msg.push('DOUBLE QUOTATION MARKS')
+            const totalText = getTotalText()
+            if (totalText.match(/"/g)?.length % 2 !== 0) msg.push('DOUBLE QUOTATION MARKS')
             if (findTermBaseKeys().length) msg.push('TERMBASE')
             if (msg.length) {
                 downloadBtn.current.classList.replace('btn-primary', 'btn-danger')
@@ -272,7 +272,7 @@ const SpreadSheet = (props) => {
         }
         let doubleQuotationMarksCurPos = 0
         let termBaseCurPos = 0
-        const targetColumn = Math.max.apply(null, targetLanguage.map((value) => hot.main ? hot.main.getColHeader().indexOf(value): 0))
+        const targetColumn = Math.max.apply(null, targetLanguage.map((value) => hot.main ? hot.main.getColHeader().indexOf(value) : 0))
         doubleQuotationMarksPrevNextBtn.current.children[0].onclick = () => {
             const dqm = findDoubleQuotationMarks()
             if (doubleQuotationMarksCurPos <= 1 || doubleQuotationMarksCurPos > dqm.length) doubleQuotationMarksCurPos = dqm.length
