@@ -31,7 +31,7 @@ export const textValidator = (r, c, v, td, instance, cellData, guideline) => {
             }
         }
         if (cellData[r + 1] && cellData[r + 1]['text'] && cellData[r + 1]['text'][0].match(/[A-Z]$/g)) {
-            if (!v[v.length - 1].match(/[.?!]/g)) {
+            if (!v[v.length - 1].match(/[.?!)]/g)) {
                 td.style.backgroundColor = 'yellow'
                 errors.add('Possible Endswith Punctuation')
             }
