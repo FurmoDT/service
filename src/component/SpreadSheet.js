@@ -36,7 +36,7 @@ const SpreadSheet = (props) => {
             if (state.playedSeconds >= TCtoSec(cellData[idx]['start']) && state.playedSeconds <= TCtoSec(cellData[idx]['end'])){
                 if (subtitle.current.innerText !== cellData[idx]['text']) {
                     subtitle.current.innerText = cellData[idx]['text']
-                    hot.main.scrollViewportTo(idx)
+                    if (!hot.main.getActiveEditor()?.isOpened()) hot.main.scrollViewportTo(idx)
                 }
             } else subtitle.current.innerText = ''
         }
