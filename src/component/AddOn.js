@@ -9,7 +9,10 @@ const AddOn = (props) => {
         justifyContent: 'end',
         margin: '10px 10px 10px 10px'
     }}>
-        {/*<a target={'_blank'} rel={'noreferrer noopenner'} href={'https://docs.google.com/document'}>Google Docs</a>*/}
+        <div style={{flexDirection: 'column', alignItems: 'center', display: 'flex', margin: '-5px 5px -5px 5px', fontSize: 13}}>
+            <a target={'_blank'} rel={'noreferrer noopenner'} href={'https://docs.google.com/document'}>Google Docs</a>
+            <a target={'_blank'} rel={'noreferrer noopenner'} href={'https://www.superookie.com/en-grammarcheck'}>Superookie</a>
+        </div>
         <div style={{height: '25px', border: 0, borderRight: 'solid', borderWidth: 'thin', margin: '0px 5px 0px 5px'}}/>
         <div style={{alignItems: 'center', display: 'flex'}}>
             <label><b>Double Quotation Marks</b></label>

@@ -43,7 +43,7 @@ const SpreadSheet = (props) => {
     }
     useEffect(() => {
         const targetLanguage = (() => {
-            if (props.file.filename && props.file.filename.endsWith('.srt')) return ['TEXT']
+            if (props.file.filename?.endsWith('.srt')) return ['TEXT']
             if (!props.guideline.name) return []
             else return ['paramount'].includes(props.guideline.name) ? ['koKR'] : ['enUS', 'enGB']
         })()
@@ -156,6 +156,7 @@ const SpreadSheet = (props) => {
             })
             for (let i = 0; i < hot.main.countRenderedRows() - 2; i++) cellData[i]['checked'] = true // default rendered rows
         }
+        const targetColumn = Math.max.apply(null, targetLanguage.map((value) => hot.main?.getColHeader().indexOf(value)))
         if (containerGrammarly.current && Object.keys(props.file).length) {
             if (hot.grammarly && !hot.grammarly.isDestroyed) hot.grammarly.destroy()
             hot.grammarly = new Handsontable(containerGrammarly.current, {
@@ -174,7 +175,7 @@ const SpreadSheet = (props) => {
             let grammarlyPlugin = null
             let grammarlyColPos = 0
             let curIndex = 1
-            const updateMainText = (text, forceUpdate = false) => {
+            const updateMainText = (text) => {
                 let lastLineBreak = text.lastIndexOf('\n', grammarlyColPos - 1)
                 let curLine = text.slice(lastLineBreak + 1, text.indexOf('\n', grammarlyColPos))
                 if (!curLine.startsWith('Index:')) {
@@ -183,7 +184,7 @@ const SpreadSheet = (props) => {
                         lastLineBreak = text.lastIndexOf('\n', lastLineBreak - 1)
                     }
                     const idx = Number(curLine.split('Index:')[1])
-                    if (forceUpdate || curIndex !== idx) {
+                    if (curIndex !== idx) {
                         const targetText = text.slice(text.indexOf('\n', text.indexOf(`Index:${curIndex}`)) + 1, cellData.length === curIndex ? text.length : text.indexOf(`Index:${curIndex + 1}`) - 1)
                         if (cellData[curIndex - 1]['text'] !== targetText) {
                             hot.main.setDataAtCell(curIndex - 1, 2 + Math.max(...[props.file.language.indexOf('enUS'), props.file.language.indexOf('enGB'), props.file.language.indexOf('TEXT')]), targetText)
@@ -217,7 +218,18 @@ const SpreadSheet = (props) => {
             })
             hot.grammarly.addHook('afterChange', (changes) => {
                 if (grammarlyPlugin) grammarlyPlugin.disconnect()
-                updateMainText(changes[0][3], true)
+                const changedText = changes[0][3]
+                if (getTotalText() !== changedText) {
+                    const changed = []
+                    for (let i = 1; i < cellData.length + 1; i++) {
+                        const targetText = changedText.slice(changedText.indexOf('\n', changedText.indexOf(`Index:${i}`)) + 1, i === cellData.length ? changedText.length : changedText.indexOf(`Index:${i + 1}`) - 1)
+                        if (cellData[i - 1].text !== targetText) {
+                            hot.main.setDataAtCell(i - 1, targetColumn, targetText)
+                            changed.push(i - 1)
+                        }
+                    }
+                    hot.main.scrollViewportTo(changed[changed.length - 1])
+                }
             })
             hot.grammarly.addHook('afterSelection', (row, column, row2, column2, preventScrolling) => preventScrolling.value = true)
             hot.grammarly.setDataAtCell(0, 0, getTotalText())
@@ -272,7 +284,6 @@ const SpreadSheet = (props) => {
         }
         let doubleQuotationMarksCurPos = 0
         let termBaseCurPos = 0
-        const targetColumn = Math.max.apply(null, targetLanguage.map((value) => hot.main ? hot.main.getColHeader().indexOf(value) : 0))
         doubleQuotationMarksPrevNextBtn.current.children[0].onclick = () => {
             const dqm = findDoubleQuotationMarks()
             if (doubleQuotationMarksCurPos <= 1 || doubleQuotationMarksCurPos > dqm.length) doubleQuotationMarksCurPos = dqm.length
