@@ -1,13 +1,18 @@
 import {TCtoSec} from "./calculator";
 
 export const tcValidator = (r, c, v, td, instance, cellData, guideline, sep) => {
+    const errors = new Set()
     if (!v || !new RegExp(`^(\\d{2}:\\d{2}:\\d{2}\\${sep}\\d{3})`).test(v) || (c === 0 && instance.getDataAtCell(r - 1, c + 1) > v) || (c === 1 && instance.getDataAtCell(r, c - 1) > v)) {
         td.style.backgroundColor = 'red'
     }
-    if (guideline.name === 'kcp' && TCtoSec(cellData[r]['end']) - TCtoSec(cellData[r]['start']) > 7) {
-        td.style.backgroundColor = 'red'
-        cellData[r]['tcError'] = new Set(['TC Interval Over 7 seconds'])
+    if (guideline.name === 'kcp') {
+        const gap = TCtoSec(cellData[r]['end']) - TCtoSec(cellData[r]['start'])
+        if (gap < 1 || gap > 7){
+            td.style.backgroundColor = 'red'
+            errors.add('TC Interval Invalid (1 ~ 7 seconds)')
+        }
     }
+    cellData[r]['tcError'] = errors
 }
 
 
