@@ -19,18 +19,18 @@ export const textValidator = (r, c, v, td, instance, cellData, guideline) => {
         errors.add('Empty Cell')
     } else {
         v = v.replaceAll(/<(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+>/g, '').replaceAll(/{(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+}/g, '')
-        if (v.match(/[.?!][^a-zA-z]*[a-z]/g)) {
+        if (v.match(/[.?!][^a-zA-Z]*[a-z]/g)) {
             td.style.backgroundColor = 'yellow'
             errors.add('Possible Uppercase')
         }
-        if (cellData[r - 1] && cellData[r - 1]['text'] && cellData[r - 1]['text'].match(/[.?!]$/g)) {
+        if (cellData[r - 1]?.text?.match(/[.?!][^a-zA-Z]*$/g)) {
             const char = v.match(/[a-zA-Z]/g)
             if (char && char[0] !== char[0].toUpperCase()) {
                 td.style.backgroundColor = 'yellow'
                 errors.add('Possible Uppercase')
             }
         }
-        if (cellData[r + 1] && cellData[r + 1]['text'] && cellData[r + 1]['text'][0].match(/[A-Z]$/g)) {
+        if (cellData[r + 1]?.text?.match(/^[A-Z]/g)) {
             if (!v[v.length - 1].match(/[.?!)]/g)) {
                 td.style.backgroundColor = 'yellow'
                 errors.add('Possible Endswith Punctuation')
