@@ -93,7 +93,7 @@ const SpreadSheet = (props) => {
                 manualColumnResize: true,
                 data: cellData,
                 rowHeaders: true,
-                rowHeights: 30,
+                rowHeights: 25,
                 width: '70%',
                 height: '100%',
                 className: 'htLeft',
@@ -161,8 +161,6 @@ const SpreadSheet = (props) => {
             if (hot.grammarly && !hot.grammarly.isDestroyed) hot.grammarly.destroy()
             hot.grammarly = new Handsontable(containerGrammarly.current, {
                 colHeaders: ['Grammar Check'],
-                colWidths: 500,
-                rowHeights: 30,
                 width: '100%',
                 height: '100%',
                 stretchH: 'all',
