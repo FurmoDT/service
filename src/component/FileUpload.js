@@ -36,7 +36,7 @@ const FileUpload = (props) => {
     const [uploadedFile, setUploadedFile] = useState(null)
     const onDrop = useCallback((acceptedFiles) => {
         acceptedFiles.forEach((file) => {
-            const fileFormat = file.name.substring(file.name.lastIndexOf('.'))
+            const fileFormat = file.name.substring(file.name.lastIndexOf('.')).toLowerCase()
             if (Array.prototype.concat(subtitleFormat, videoFormat, termBaseFormat).includes(fileFormat)) {
                 const reader = new FileReader()
                 reader.onabort = () => console.log('file reading was aborted')
