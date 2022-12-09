@@ -4,11 +4,13 @@ export const tcValidator = (r, c, v, td, instance, cellData, guideline, sep) => 
     const errors = new Set()
     if (!v || !new RegExp(`^(\\d{2}:\\d{2}:\\d{2}\\${sep}\\d{3})`).test(v) || (c === 0 && instance.getDataAtCell(r - 1, c + 1) > v) || (c === 1 && instance.getDataAtCell(r, c - 1) > v)) {
         td.style.backgroundColor = 'red'
+        td.style.color = 'white'
     }
     if (guideline.name === 'kcp') {
         const gap = TCtoSec(cellData[r]['end']) - TCtoSec(cellData[r]['start'])
         if (gap < 1 || gap > 7){
             td.style.backgroundColor = 'red'
+            td.style.color = 'white'
             errors.add('TC Interval Invalid (1 ~ 7 seconds)')
         }
     }
@@ -21,6 +23,7 @@ export const textValidator = (r, c, v, td, instance, cellData, guideline) => {
     if (!v) { // null cell
         cellData[r]['text'] = ''
         td.style.backgroundColor = 'red'
+        td.style.color = 'white'
         errors.add('Empty Cell')
     } else {
         v = v.replaceAll(/<(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+>/g, '').replaceAll(/{(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+}/g, '')
@@ -43,20 +46,24 @@ export const textValidator = (r, c, v, td, instance, cellData, guideline) => {
         }
         if (v.split('\n').length > guideline['inputMaxLine']) {
             td.style.backgroundColor = 'red'
+            td.style.color = 'white'
             errors.add('MaxLine Exceeded')
         }
         v.split('\n').forEach((value) => {
             if (value.length > guideline['inputMaxCharacter']) {
                 td.style.backgroundColor = 'red'
+                td.style.color = 'white'
                 errors.add('MaxCharacter Exceeded')
             }
         })
         if (v.includes('  ')) { // multiple spaces
             td.style.backgroundColor = 'red'
+            td.style.color = 'white'
             errors.add('Multiple Spaces')
         }
         if (/(^|[^.])\.{2}(?!\.)/.test(v) || /(^|[^.])\.{4,}(?!\.)/.test(v)) { // 2 or 4+ dots
             td.style.backgroundColor = 'red'
+            td.style.color = 'white'
             errors.add('2 or 4+ dots')
         }
     }

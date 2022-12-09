@@ -211,6 +211,7 @@ const SpreadSheet = (props) => {
                     document.getElementById('hot-grammarly').querySelector('grammarly-editor-plugin').addEventListener('keyup', updateGrammarlyData)
                     textarea.setSelectionRange(grammarlyColPos, grammarlyColPos)
                     textarea.focus()
+                    textarea.style.backgroundColor = 'seashell'
                 });
                 document.getElementById('hot-grammarly').getElementsByClassName('ht_master')[0].getElementsByClassName('wtHolder')[0].style.overflowY = 'hidden'
             })
