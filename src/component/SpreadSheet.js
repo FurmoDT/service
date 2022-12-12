@@ -81,7 +81,7 @@ const SpreadSheet = (props) => {
         const getTotalText = () => {
             let text = ''
             cellData.map((v, index) => text += 'Index:' + (index + 1) + '\n' + v.text + '\n')
-            return text
+            return text.slice(0, -1)
         }
         if (containerMain.current && Object.keys(props.file).length) {
             if (hot.main && !hot.main.isDestroyed) hot.main.destroy()
@@ -218,7 +218,7 @@ const SpreadSheet = (props) => {
             hot.grammarly.addHook('afterChange', (changes) => {
                 if (grammarlyPlugin) grammarlyPlugin.disconnect()
                 const changedText = changes[0][3].slice(-1) === '\n' ? changes[0][3] : changes[0][3] + '\n'
-                if (getTotalText() !== changedText) {
+                if (`${getTotalText()}\n` !== changedText) {
                     const changed = []
                     for (let i = 1; i < cellData.length + 1; i++) {
                         const targetText = changedText.slice(changedText.indexOf('\n', changedText.indexOf(`Index:${i}`)) + 1, i === cellData.length ? changedText.length - 1 : changedText.indexOf(`Index:${i + 1}`) - 1)
