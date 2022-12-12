@@ -8,10 +8,14 @@ export const tcValidator = (r, c, v, td, instance, cellData, guideline, sep) => 
     }
     if (guideline.name === 'kcp') {
         const gap = TCtoSec(cellData[r]['end']) - TCtoSec(cellData[r]['start'])
-        if (gap < 1 || gap > 7){
+        if (gap < 1) {
             td.style.backgroundColor = 'red'
             td.style.color = 'white'
-            errors.add('TC Interval Invalid (1 ~ 7 seconds)')
+            errors.add('TC Interval Under 1 second')
+        } else if (gap > 7) {
+            td.style.backgroundColor = 'red'
+            td.style.color = 'white'
+            errors.add('TC Interval Over 7 seconds')
         }
     }
     cellData[r]['tcError'] = errors
