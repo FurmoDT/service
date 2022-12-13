@@ -25,6 +25,8 @@ const SpreadSheet = (props) => {
     const doubleQuotationMarksPrevNextBtn = useRef(null)
     const termBaseKeysPositionLabel = useRef(null)
     const termBasePrevNext = useRef(null)
+    const termBasePopover = useRef(null)
+    const [termBasePopoverText, setTermBasePopoverText] = useState(null)
     const spreadSheets = useRef(null)
     const containerMain = useRef(null);
     const containerGrammarly = useRef(null);
@@ -301,6 +303,8 @@ const SpreadSheet = (props) => {
         }
         termBasePrevNext.current.children[0].onclick = () => {
             const tb = findTermBaseKeys()
+            setTermBasePopoverText('')
+            termBasePopover.current.click()
             if (termBaseCurPos <= 1 || termBaseCurPos > tb.length) termBaseCurPos = tb.length
             else termBaseCurPos -= 1
             hot.main.selectCell(tb[termBaseCurPos - 1], targetColumn)
@@ -309,6 +313,8 @@ const SpreadSheet = (props) => {
         }
         termBasePrevNext.current.children[1].onclick = () => {
             const tb = findTermBaseKeys()
+            setTermBasePopoverText('')
+            termBasePopover.current.click()
             if (termBaseCurPos >= tb.length) termBaseCurPos = tb.length ? 1 : 0
             else termBaseCurPos += 1
             hot.main.selectCell(tb[termBaseCurPos - 1], targetColumn)
@@ -323,6 +329,8 @@ const SpreadSheet = (props) => {
                doubleQuotationMarksPrevNextBtn={doubleQuotationMarksPrevNextBtn}
                termBaseKeysPositionLabel={termBaseKeysPositionLabel}
                termBasePrevNext={termBasePrevNext}
+               termBasePopover={termBasePopover}
+               termBasePopoverText={termBasePopoverText}
                warningMsg={warningMsg} downloadBtn={downloadBtn}/>
         <div ref={spreadSheets} style={{
             flexDirection: "row",

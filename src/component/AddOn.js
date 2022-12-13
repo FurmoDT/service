@@ -1,14 +1,8 @@
-import {MDBBtn, MDBIcon} from "mdb-react-ui-kit";
+import {MDBBtn, MDBIcon, MDBPopover, MDBPopoverBody} from "mdb-react-ui-kit";
 import ReactTooltip from 'react-tooltip';
 
 const AddOn = (props) => {
-    return <div style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        display: props.display ? 'flex' : 'none',
-        justifyContent: 'end',
-        margin: '10px 10px 10px 10px'
-    }}>
+    return <div style={{flexDirection: 'row', alignItems: 'center', display: props.display ? 'flex' : 'none', justifyContent: 'end', margin: '10px 10px 10px 10px'}}>
         <div style={{flexDirection: 'column', alignItems: 'center', display: 'flex', margin: '-5px 5px -5px 5px', fontSize: 13}}>
             <a target={'_blank'} rel={'noreferrer noopenner'} href={'https://docs.google.com/document'}>Google Docs</a>
             <a target={'_blank'} rel={'noreferrer noopenner'} href={'https://www.superookie.com/en-grammarcheck'}>Superookie</a>
@@ -28,7 +22,9 @@ const AddOn = (props) => {
         </div>
         <div style={{height: '25px', border: 0, borderRight: 'solid', borderWidth: 'thin', margin: '0px 5px 0px 5px'}}/>
         <div style={{alignItems: 'center', display: 'flex'}}>
-            <label><b>Termbase</b></label>
+            <MDBPopover tag={'label'} btnChildren={<label ref={props.termBasePopover}><b>Termbase</b></label>} placement='bottom' dismiss>
+                <MDBPopoverBody>{props.termBasePopoverText}</MDBPopoverBody>
+            </MDBPopover>
             <label style={{marginLeft: '5px'}} ref={props.termBaseKeysPositionLabel}>0/0</label>
             <div ref={props.termBasePrevNext}>
                 <MDBBtn color={'none'} floating tag='a'>
