@@ -247,18 +247,23 @@ const SpreadSheet = (props) => {
             return indexes
         }
         const findTermBaseKeys = () => {
-            const termBaseError = []
+            const termBaseError = {}
             if (props.termBase[0] && props.file.filename.endsWith('.fsp')) {
                 const termBaseKeys = Object.values(props.termBase[0])
                 const koKR = props.file.language.filter(v => v.startsWith('koKR')).map(v => `language_${v}`).slice(-1).pop()
                 // eslint-disable-next-line
                 cellData.map((v, index) => {
-                    termBaseKeys.forEach((k) => {
-                        if (v[koKR].match(k) && !v['text'].match(Object.keys(props.termBase[0]).find(key => props.termBase[0][key] === k))) termBaseError.push(index)
+                    const matches = {}
+                    termBaseKeys.forEach((termBaseKey) => {
+                        if (v[koKR].match(termBaseKey)) {
+                            const termBaseValue = Object.keys(props.termBase[0]).find(key => props.termBase[0][key] === termBaseKey)
+                            if (!v['text'].match(termBaseValue)) matches[termBaseKey] = termBaseValue
+                        }
                     })
+                    if (Object.keys(matches).length) termBaseError[index] = matches
                 })
             }
-            return [...new Set(termBaseError)]
+            return termBaseError
         }
         downloadBtn.current.onmouseover = () => {
             const msg = []
@@ -303,23 +308,26 @@ const SpreadSheet = (props) => {
         }
         termBasePrevNext.current.children[0].onclick = () => {
             const tb = findTermBaseKeys()
-            setTermBasePopoverText('')
-            termBasePopover.current.click()
-            if (termBaseCurPos <= 1 || termBaseCurPos > tb.length) termBaseCurPos = tb.length
+            const tbKeys = Object.keys(tb).map((v) => parseInt(v))
+            if (termBaseCurPos <= 1 || termBaseCurPos > tbKeys.length) termBaseCurPos = tbKeys.length
             else termBaseCurPos -= 1
-            hot.main.selectCell(tb[termBaseCurPos - 1], targetColumn)
-            hot.main.scrollViewportTo(tb[termBaseCurPos - 1])
-            termBaseKeysPositionLabel.current.innerText = `${termBaseCurPos}/${tb.length}`
+            setTermBasePopoverText(JSON.stringify(tb[tbKeys[termBaseCurPos - 1]])?.slice(1, -1))
+            // setTermBasePopoverText(`${tb[tbKeys[termBaseCurPos - 1]]}`)
+            termBasePopover.current.click()
+            hot.main.selectCell(tbKeys[termBaseCurPos - 1], targetColumn)
+            hot.main.scrollViewportTo(tbKeys[termBaseCurPos - 1])
+            termBaseKeysPositionLabel.current.innerText = `${termBaseCurPos}/${tbKeys.length}`
         }
         termBasePrevNext.current.children[1].onclick = () => {
             const tb = findTermBaseKeys()
-            setTermBasePopoverText('')
-            termBasePopover.current.click()
-            if (termBaseCurPos >= tb.length) termBaseCurPos = tb.length ? 1 : 0
+            const tbKeys = Object.keys(tb).map((v) => parseInt(v))
+            if (termBaseCurPos >= tbKeys.length) termBaseCurPos = tbKeys.length ? 1 : 0
             else termBaseCurPos += 1
-            hot.main.selectCell(tb[termBaseCurPos - 1], targetColumn)
-            hot.main.scrollViewportTo(tb[termBaseCurPos - 1])
-            termBaseKeysPositionLabel.current.innerText = `${termBaseCurPos}/${tb.length}`
+            setTermBasePopoverText(JSON.stringify(tb[tbKeys[termBaseCurPos - 1]])?.slice(1, -1))
+            termBasePopover.current.click()
+            hot.main.selectCell(tbKeys[termBaseCurPos - 1], targetColumn)
+            hot.main.scrollViewportTo(tbKeys[termBaseCurPos - 1])
+            termBaseKeysPositionLabel.current.innerText = `${termBaseCurPos}/${tbKeys.length}`
         }
     }, [props.file, props.guideline, props.termBase, props.videoUrl, props.player]);
 
