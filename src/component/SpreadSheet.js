@@ -248,7 +248,7 @@ const SpreadSheet = (props) => {
             const termBaseError = []
             if (props.termBase[0] && props.file.filename.endsWith('.fsp')) {
                 const termBaseKeys = Object.values(props.termBase[0])
-                const [koKR] = props.file.language.filter(v => v.startsWith('koKR')).map(v => `language_${v}`).slice(-1)
+                const koKR = props.file.language.filter(v => v.startsWith('koKR')).map(v => `language_${v}`).slice(-1).pop()
                 // eslint-disable-next-line
                 cellData.map((v, index) => {
                     termBaseKeys.forEach((k) => {
