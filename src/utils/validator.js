@@ -1,21 +1,21 @@
 import {TCtoSec} from "./calculator";
 
+const setTDColor = (td, backgroundColor) => {
+    td.style.backgroundColor = backgroundColor
+    if (backgroundColor === 'red') td.style.color = 'white'
+}
+
 export const tcValidator = (r, c, v, td, instance, cellData, guideline, sep) => {
     const errors = new Set()
-    if (!v || !new RegExp(`^(\\d{2}:\\d{2}:\\d{2}\\${sep}\\d{3})`).test(v) || (c === 0 && instance.getDataAtCell(r - 1, c + 1) > v) || (c === 1 && instance.getDataAtCell(r, c - 1) > v)) {
-        td.style.backgroundColor = 'red'
-        td.style.color = 'white'
-    }
+    if (!v || !new RegExp(`^(\\d{2}:\\d{2}:\\d{2}\\${sep}\\d{3})`).test(v) || (c === 0 && instance.getDataAtCell(r - 1, c + 1) > v) || (c === 1 && instance.getDataAtCell(r, c - 1) > v)) setTDColor(td, 'red')
     if (guideline.name === 'kcp') {
         const gap = TCtoSec(cellData[r]['end']) - TCtoSec(cellData[r]['start'])
         if (gap < 1) {
-            td.style.backgroundColor = 'red'
-            td.style.color = 'white'
-            errors.add('TC Interval Under 1 second')
+            setTDColor(td, 'red')
+            errors.add('TC Interval Under 1 Second')
         } else if (gap > 7) {
-            td.style.backgroundColor = 'red'
-            td.style.color = 'white'
-            errors.add('TC Interval Over 7 seconds')
+            setTDColor(td, 'red')
+            errors.add('TC Interval Over 7 Seconds')
         }
     }
     cellData[r]['tcError'] = errors
@@ -26,49 +26,44 @@ export const textValidator = (r, c, v, td, instance, cellData, guideline) => {
     const errors = new Set()
     if (!v) { // null cell
         cellData[r]['text'] = ''
-        td.style.backgroundColor = 'red'
-        td.style.color = 'white'
+        setTDColor(td, 'red')
         errors.add('Empty Cell')
     } else {
         v = v.replaceAll(/<(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+>/g, '').replaceAll(/{(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+}/g, '')
         if (v.match(/[.?!][^a-zA-Z]*[a-z]/g)) {
-            td.style.backgroundColor = 'yellow'
-            errors.add('Possible Uppercase')
+            setTDColor(td, 'yellow')
+            errors.add('First Word Capitalization')
         }
         if (cellData[r - 1]?.text?.match(/[.?!][^a-zA-Z]*$/g)) {
             const char = v.match(/[a-zA-Z]/g)
             if (char && char[0] !== char[0].toUpperCase()) {
-                td.style.backgroundColor = 'yellow'
-                errors.add('Possible Uppercase')
+                setTDColor(td, 'yellow')
+                errors.add('First Word Capitalization')
             }
         }
         if (cellData[r + 1]?.text?.match(/^[A-Z]/g)) {
             if (!v[v.length - 1].match(/[.?!)]/g)) {
-                td.style.backgroundColor = 'yellow'
-                errors.add('Possible Endswith Punctuation')
+                setTDColor(td, 'yellow')
+                errors.add('End Punctuation')
             }
         }
         if (v.split('\n').length > guideline['inputMaxLine']) {
-            td.style.backgroundColor = 'red'
-            td.style.color = 'white'
-            errors.add('MaxLine Exceeded')
+            setTDColor(td, 'red')
+            errors.add('Max Lines Exceeded')
         }
         v.split('\n').forEach((value) => {
             if (value.length > guideline['inputMaxCharacter']) {
-                td.style.backgroundColor = 'red'
-                td.style.color = 'white'
-                errors.add('MaxCharacter Exceeded')
+                setTDColor(td, 'red')
+                errors.add('Max Characters Exceeded')
             }
         })
         if (v.includes('  ')) { // multiple spaces
-            td.style.backgroundColor = 'red'
-            td.style.color = 'white'
+            setTDColor(td, 'red')
             errors.add('Multiple Spaces')
         }
         if (/(^|[^.])\.{2}(?!\.)/.test(v) || /(^|[^.])\.{4,}(?!\.)/.test(v)) { // 2 or 4+ dots
-            td.style.backgroundColor = 'red'
-            td.style.color = 'white'
-            errors.add('2 or 4+ dots')
+            setTDColor(td, 'red')
+            errors.add('2 Or 4+ Dots')
         }
     }
     cellData[r]['textError'] = errors
@@ -85,5 +80,5 @@ export const cpsValidator = (r, td, cellData, guideline) => {
     } catch (error) {
         td.innerText = 0
     }
-    if (td.innerText >= guideline['inputCPS']) td.style.backgroundColor = 'yellow'
+    if (td.innerText >= guideline['inputCPS']) setTDColor(td, 'yellow')
 }
