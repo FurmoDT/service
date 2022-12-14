@@ -120,9 +120,9 @@ const FileUpload = (props) => {
         {isDragActive ? <p>Drop the file here ...</p> : <Fragment>
             <p>Drag & Drop here, or click to select file</p>
             <em>{(() => {
-                if (props.fileType === 'subtitle') return `(${subtitleFormat.join(', ')} will be accepted)`
-                else if (props.fileType === 'video') return `(${videoFormat.join(', ')} will be accepted)`
-                else if (props.fileType === 'termBase') return `(${termBaseFormat.join(', ')} will be accepted)`
+                if (props.fileType === 'subtitle') return `(${subtitleFormat.join(', ')} allowed)`
+                else if (props.fileType === 'video') return `(${videoFormat.join(', ')} under 2GB allowed)`
+                else if (props.fileType === 'termBase') return `(${termBaseFormat.join(', ')} allowed)`
             })()}</em>
         </Fragment>}
         {uploadedFile ? <h3>uploaded file<br/>{uploadedFile.name}</h3> :
