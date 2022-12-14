@@ -23,7 +23,7 @@ const AddOn = (props) => {
         <div style={{height: '25px', border: 0, borderRight: 'solid', borderWidth: 'thin', margin: '0px 5px 0px 5px'}}/>
         <div style={{alignItems: 'center', display: 'flex'}}>
             <MDBPopover tag={'label'} btnChildren={<label ref={props.termBasePopover}><b>Termbase</b></label>} placement='bottom' dismiss>
-                <MDBPopoverBody>{props.termBasePopoverText}</MDBPopoverBody>
+                <MDBPopoverBody style={{display: props.termBasePopoverText ? '' : 'none'}}>{props.termBasePopoverText}</MDBPopoverBody>
             </MDBPopover>
             <label style={{marginLeft: '5px'}} ref={props.termBaseKeysPositionLabel}>0/0</label>
             <div ref={props.termBasePrevNext}>
