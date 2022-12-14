@@ -104,7 +104,8 @@ const FileUpload = (props) => {
                         props.setTermBase(termBase)
                     }
                 }
-                reader.readAsArrayBuffer(file)
+                if (videoFormat.includes(fileFormat)) reader.readAsArrayBuffer(file.slice(0, 1))
+                else reader.readAsArrayBuffer(file)
             }
         })
     }, [props, subtitleFormat, videoFormat, termBaseFormat])
