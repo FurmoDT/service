@@ -249,15 +249,19 @@ const SpreadSheet = (props) => {
         const findTermBaseKeys = () => {
             const termBaseError = {}
             if (props.termBase[0] && props.file.filename.endsWith('.fsp')) {
-                const termBaseKeys = Object.values(props.termBase[0])
+                const termBaseKeys = Object.keys(props.termBase[0])
                 const koKR = props.file.language.filter(v => v.startsWith('koKR')).map(v => `language_${v}`).slice(-1).pop()
                 // eslint-disable-next-line
                 cellData.map((v, index) => {
                     const matches = {}
                     termBaseKeys.forEach((termBaseKey) => {
                         if (v[koKR].match(termBaseKey)) {
-                            const termBaseValue = Object.keys(props.termBase[0]).find(key => props.termBase[0][key] === termBaseKey)
-                            if (!v['text'].match(termBaseValue)) matches[termBaseKey] = termBaseValue
+                            const termBaseValues = props.termBase[0][termBaseKey]
+                            let matched = false
+                            termBaseValues.forEach((value) => {
+                                if (v['text'].match(value)) matched = true
+                            })
+                            if (!matched) matches[termBaseKey] = termBaseValues
                         }
                     })
                     if (Object.keys(matches).length) termBaseError[index] = matches

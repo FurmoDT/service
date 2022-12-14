@@ -86,11 +86,14 @@ const FileUpload = (props) => {
                             const sheetData = XLSX.utils.sheet_to_json(ws, {header: 1})
                             if (index === 0) {
                                 const termBaseDictionary = {}
+                                let key, values
                                 sheetData.forEach((row) => {
-                                    let key = ''
-                                    row.forEach((value) => {
-                                        if (new RegExp(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g).test(value)) key = value
-                                        else termBaseDictionary[value] = key
+                                    row.forEach((r) => {
+                                        if (new RegExp(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]+/g).test(r)) {
+                                            if (values?.length) termBaseDictionary[key] = values
+                                            key = r
+                                            values = []
+                                        } else values.push(r)
                                     })
                                 })
                                 termBase[index] = termBaseDictionary
