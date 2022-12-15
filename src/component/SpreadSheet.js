@@ -272,7 +272,7 @@ const SpreadSheet = (props) => {
         downloadBtn.current.onmouseover = () => {
             const msg = []
             const totalText = getTotalText()
-            if (totalText.match(/"/g)?.length % 2 !== 0) msg.push('DOUBLE QUOTATION MARKS')
+            if (totalText.match(/"/g)?.length % 2 === 1) msg.push('DOUBLE QUOTATION MARKS')
             if (findTermBaseKeys().length) msg.push('TERMBASE')
             if (msg.length) {
                 downloadBtn.current.classList.replace('btn-primary', 'btn-danger')
