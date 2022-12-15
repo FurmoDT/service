@@ -213,7 +213,7 @@ const SpreadSheet = (props) => {
                     document.getElementById('hot-grammarly').querySelector('grammarly-editor-plugin').addEventListener('keyup', updateGrammarlyData)
                     textarea.setSelectionRange(grammarlyColPos, grammarlyColPos)
                     textarea.focus()
-                    textarea.style.backgroundColor = 'seashell'
+                    textarea.style.backgroundColor = 'aliceblue'
                 });
                 document.getElementById('hot-grammarly').getElementsByClassName('ht_master')[0].getElementsByClassName('wtHolder')[0].style.overflowY = 'hidden'
             })
@@ -310,28 +310,24 @@ const SpreadSheet = (props) => {
             hot.main.scrollViewportTo(dqm[doubleQuotationMarksCurPos - 1])
             doubleQuotationMarksPositionLabel.current.innerText = `${doubleQuotationMarksCurPos}/${dqm.length}`
         }
-        termBasePrevNext.current.children[0].onclick = () => {
-            const tb = findTermBaseKeys()
-            const tbKeys = Object.keys(tb).map((v) => parseInt(v))
-            if (termBaseCurPos <= 1 || termBaseCurPos > tbKeys.length) termBaseCurPos = tbKeys.length
-            else termBaseCurPos -= 1
-            setTermBasePopoverText(JSON.stringify(tb[tbKeys[termBaseCurPos - 1]])?.slice(1, -1))
-            termBasePopover.current.click()
-            hot.main.selectCell(tbKeys[termBaseCurPos - 1], targetColumn)
-            hot.main.scrollViewportTo(tbKeys[termBaseCurPos - 1])
-            termBaseKeysPositionLabel.current.innerText = `${termBaseCurPos}/${tbKeys.length}`
-        }
-        termBasePrevNext.current.children[1].onclick = () => {
-            const tb = findTermBaseKeys()
-            const tbKeys = Object.keys(tb).map((v) => parseInt(v))
-            if (termBaseCurPos >= tbKeys.length) termBaseCurPos = tbKeys.length ? 1 : 0
-            else termBaseCurPos += 1
-            setTermBasePopoverText(JSON.stringify(tb[tbKeys[termBaseCurPos - 1]])?.slice(1, -1))
-            termBasePopover.current.click()
-            hot.main.selectCell(tbKeys[termBaseCurPos - 1], targetColumn)
-            hot.main.scrollViewportTo(tbKeys[termBaseCurPos - 1])
-            termBaseKeysPositionLabel.current.innerText = `${termBaseCurPos}/${tbKeys.length}`
-        }
+        Array.prototype.forEach.call(termBasePrevNext.current.children, (element, index) => {
+            element.onclick = () => {
+                const tb = findTermBaseKeys()
+                const tbKeys = Object.keys(tb).map((v) => parseInt(v))
+                if (index === 0) {
+                    if (termBaseCurPos <= 1 || termBaseCurPos > tbKeys.length) termBaseCurPos = tbKeys.length
+                    else termBaseCurPos -= 1
+                } else if (index === 1) {
+                    if (termBaseCurPos >= tbKeys.length) termBaseCurPos = tbKeys.length ? 1 : 0
+                    else termBaseCurPos += 1
+                }
+                setTermBasePopoverText(JSON.stringify(tb[tbKeys[termBaseCurPos - 1]])?.slice(1, -1))
+                termBasePopover.current.click()
+                hot.main.selectCell(tbKeys[termBaseCurPos - 1], targetColumn)
+                hot.main.scrollViewportTo(tbKeys[termBaseCurPos - 1])
+                termBaseKeysPositionLabel.current.innerText = `${termBaseCurPos}/${tbKeys.length}`
+            }
+        })
     }, [props.file, props.guideline, props.termBase, props.videoUrl, props.player]);
 
     return <div>
