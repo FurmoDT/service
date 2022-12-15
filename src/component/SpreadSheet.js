@@ -321,7 +321,9 @@ const SpreadSheet = (props) => {
                     if (termBaseCurPos >= tbKeys.length) termBaseCurPos = tbKeys.length ? 1 : 0
                     else termBaseCurPos += 1
                 }
-                setTermBasePopoverText(JSON.stringify(tb[tbKeys[termBaseCurPos - 1]])?.slice(1, -1))
+                setTermBasePopoverText(Object.entries(tb[tbKeys[termBaseCurPos - 1]]).map((value) => {
+                    return `${value[0]}: ${value[1]}`
+                }).join('\n'))
                 termBasePopover.current.click()
                 hot.main.selectCell(tbKeys[termBaseCurPos - 1], targetColumn)
                 hot.main.scrollViewportTo(tbKeys[termBaseCurPos - 1])
