@@ -22,7 +22,7 @@ const AddOn = (props) => {
         </div>
         <div style={{height: '25px', border: 0, borderRight: 'solid', borderWidth: 'thin', margin: '0px 5px 0px 5px'}}/>
         <div style={{alignItems: 'center', display: 'flex'}}>
-            <MDBPopover tag={'label'} btnChildren={<label ref={props.termBasePopover}>Termbase</label>} placement='bottom' dismiss poperStyle={{backgroundColor: 'aliceblue', whiteSpace: 'pre-wrap'}}>
+            <MDBPopover tag={'label'} btnChildren={<label ref={props.termBasePopover}>Termbase</label>} placement='bottom' dismiss poperStyle={{backgroundColor: 'aliceblue', borderStyle: 'solid', borderWidth: 'thin', whiteSpace: 'pre-wrap'}}>
                 <MDBPopoverBody style={{display: props.termBasePopoverText ? '' : 'none'}}>{props.termBasePopoverText}</MDBPopoverBody>
             </MDBPopover>
             <label style={{marginLeft: '5px'}} ref={props.termBaseKeysPositionLabel}>0/0</label>
