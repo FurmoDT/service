@@ -17,6 +17,7 @@ const Guideline = (props) => {
             if (samples[i] !== e.target) samples[i].checked = false
             else {
                 if (e.target.checked) {
+                    let targetLanguage = ['enUS', 'enGB']
                     if (e.target.id === 'kbsWorld') {
                         setInputValue(1, 55, 30)
                         setReadOnly(true)
@@ -26,6 +27,11 @@ const Guideline = (props) => {
                     } else if (e.target.id === 'paramount') {
                         setInputValue(2, 16, 12)
                         setReadOnly(true)
+                        targetLanguage = ['koKR']
+                    } else if (e.target.id === 'engToKor') {
+                        setInputValue(2, 30, 30)
+                        setReadOnly(false)
+                        targetLanguage = ['koKR']
                     } else if (e.target.id === 'custom') {
                         setInputValue(0, 0, 0)
                         setReadOnly(false)
@@ -35,7 +41,8 @@ const Guideline = (props) => {
                             name: e.target.id,
                             inputMaxLine: Number(document.getElementById('inputMaxLine').value),
                             inputMaxCharacter: Number(document.getElementById('inputMaxCharacter').value),
-                            inputCPS: Number(document.getElementById('inputCPS').value)
+                            inputCPS: Number(document.getElementById('inputCPS').value),
+                            targetLanguage: targetLanguage
                         }
                     }))
                 } else {
@@ -44,7 +51,8 @@ const Guideline = (props) => {
                         name: null,
                         inputMaxLine: 0,
                         inputMaxCharacter: 0,
-                        inputCPS: 0
+                        inputCPS: 0,
+                        targetLanguage: []
                     })
                 }
             }
@@ -59,6 +67,7 @@ const Guideline = (props) => {
         <MDBCheckbox onClick={(e) => checkBoxEvent(e)} name='inlineCheck' id='kbsWorld' label='KBS World' inline/>
         <MDBCheckbox onClick={(e) => checkBoxEvent(e)} name='inlineCheck' id='kcp' label='KCP' inline/>
         <MDBCheckbox onClick={(e) => checkBoxEvent(e)} name='inlineCheck' id='paramount' label='Paramount' inline/>
+        <MDBCheckbox onClick={(e) => checkBoxEvent(e)} name='inlineCheck' id='engToKor' label='Eng->Kor Test' inline/>
         <MDBCheckbox onClick={(e) => checkBoxEvent(e)} name='inlineCheck' id='custom' label='Custom' inline/>
         <MDBRow center={true} style={{marginTop: 10}}>
             <MDBCol size={1}>

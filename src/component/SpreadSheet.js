@@ -46,8 +46,7 @@ const SpreadSheet = (props) => {
     useEffect(() => {
         const targetLanguage = (() => {
             if (props.file.filename?.endsWith('.srt')) return ['TEXT']
-            if (!props.guideline.name) return []
-            else return ['paramount'].includes(props.guideline.name) ? ['koKR'] : ['enUS', 'enGB']
+            return props.guideline.targetLanguage ? props.guideline.targetLanguage : []
         })()
         const grammarly = (async () => await Grammarly.init("client_3a8upV1a1GuH7TqFpd98Sn"))()
 
@@ -167,7 +166,7 @@ const SpreadSheet = (props) => {
                 height: '100%',
                 stretchH: 'all',
                 className: 'htLeft',
-                readOnly: !props.guideline.name || props.guideline.name === 'paramount',
+                readOnly: targetLanguage.includes('koKR'),
                 columns: [{data: 'grammarly'}],
                 maxRows: 1,
                 licenseKey: 'non-commercial-and-evaluation'
