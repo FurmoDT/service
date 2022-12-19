@@ -42,7 +42,7 @@ export const textValidator = (r, c, v, td, instance, cellData, guideline) => {
             }
         }
         if (cellData[r + 1]?.text?.match(/^[A-Z]/g)) {
-            if (!v[v.length - 1].match(/[.?!)]/g)) {
+            if (!v[v.length - 1].match(/[.?!)][^a-zA-Z]+/g)) {
                 setTDColor(td, 'yellow')
                 errors.add('End Punctuation')
             }
