@@ -9,17 +9,17 @@ export const tcValidator = (r, c, v, td, instance, cellData, guideline, sep) => 
     const errors = new Set()
     if (!v || !new RegExp(`^(\\d{2}:\\d{2}:\\d{2}\\${sep}\\d{3})`).test(v)) {
         setTDColor(td, 'red')
-        errors.add('TC Invalid')
+        errors.add(`TC${c === 0 ? '_IN' : '_OUT'} Invalid`)
     } else {
         if (c === 0) {
             if (instance.getDataAtCell(r - 1, c + 1) > v) {
                 setTDColor(td, 'red')
-                errors.add('TC Invalid')
+                errors.add('TC_IN Invalid')
             }
         } else if (c === 1) {
             if (instance.getDataAtCell(r, c - 1) > v) {
                 setTDColor(td, 'red')
-                errors.add('TC Invalid')
+                errors.add('TC_OUT Invalid')
             }
             if (guideline.name === 'kcp') {
                 const gap = TCtoSec(cellData[r]['end']) - TCtoSec(cellData[r]['start'])
