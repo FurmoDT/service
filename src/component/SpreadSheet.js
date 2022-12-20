@@ -52,7 +52,7 @@ const SpreadSheet = (props) => {
 
         function errorRenderer(instance, td) {
             Handsontable.renderers.TextRenderer.apply(this, arguments);
-            td.innerText = [...cellData[arguments[2]]['tcError'], ...cellData[arguments[2]]['textError']].join('\n')
+            td.innerText = [...cellData[arguments[2]]['tcInError'], ...cellData[arguments[2]]['tcOutError'], ...cellData[arguments[2]]['textError']].join('\n')
         }
 
         function tcRenderer(instance, td) {
@@ -74,7 +74,8 @@ const SpreadSheet = (props) => {
             if (props.file.filename.endsWith('.fsp')) cellData = parseFsp(props.file.data, props.file.language, targetLanguage)
             else if (props.file.filename.endsWith('.srt')) cellData = parseSrt(props.file.data)
             cellData.forEach((value) => {
-                value['tcError'] = new Set()
+                value['tcInError'] = new Set()
+                value['tcOutError'] = new Set()
                 value['textError'] = new Set()
                 value['checked'] = false
             })

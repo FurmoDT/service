@@ -7,18 +7,34 @@ const setTDColor = (td, backgroundColor) => {
 
 export const tcValidator = (r, c, v, td, instance, cellData, guideline, sep) => {
     const errors = new Set()
-    if (!v || !new RegExp(`^(\\d{2}:\\d{2}:\\d{2}\\${sep}\\d{3})`).test(v) || (c === 0 && instance.getDataAtCell(r - 1, c + 1) > v) || (c === 1 && instance.getDataAtCell(r, c - 1) > v)) setTDColor(td, 'red')
-    if (guideline.name === 'kcp') {
-        const gap = TCtoSec(cellData[r]['end']) - TCtoSec(cellData[r]['start'])
-        if (gap < 1) {
-            setTDColor(td, 'red')
-            errors.add('TC Interval Under 1 Second')
-        } else if (gap > 7) {
-            setTDColor(td, 'red')
-            errors.add('TC Interval Over 7 Seconds')
+    if (!v || !new RegExp(`^(\\d{2}:\\d{2}:\\d{2}\\${sep}\\d{3})`).test(v)) {
+        setTDColor(td, 'red')
+        errors.add('TC Invalid')
+    } else {
+        if (c === 0) {
+            if (instance.getDataAtCell(r - 1, c + 1) > v) {
+                setTDColor(td, 'red')
+                errors.add('TC Invalid')
+            }
+        } else if (c === 1) {
+            if (instance.getDataAtCell(r, c - 1) > v) {
+                setTDColor(td, 'red')
+                errors.add('TC Invalid')
+            }
+            if (guideline.name === 'kcp') {
+                const gap = TCtoSec(cellData[r]['end']) - TCtoSec(cellData[r]['start'])
+                if (gap < 1) {
+                    setTDColor(td, 'red')
+                    errors.add('TC Interval Under 1 Second')
+                } else if (gap > 7) {
+                    setTDColor(td, 'red')
+                    errors.add('TC Interval Over 7 Seconds')
+                }
+            }
         }
     }
-    cellData[r]['tcError'] = errors
+    if (c === 0) cellData[r]['tcInError'] = errors
+    if (c === 1) cellData[r]['tcOutError'] = errors
 }
 
 
