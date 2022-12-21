@@ -41,7 +41,7 @@ const SpreadSheet = (props) => {
                     if (!hot.main.getActiveEditor()?.isOpened()) hot.main.scrollViewportTo(idx)
                 }
             } else subtitle.current.innerText = ''
-        }
+        } else subtitle.current.innerText = ''
     }
     useEffect(() => {
         const targetLanguage = (() => {
