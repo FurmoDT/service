@@ -96,6 +96,7 @@ const FileUpload = (props) => {
                                         } else values.push(r)
                                     })
                                 })
+                                if (key && values) termBaseDictionary[key] = values
                                 termBase[index] = termBaseDictionary
                             } else if (index === 1) {
                                 termBase[index] = sheetData
