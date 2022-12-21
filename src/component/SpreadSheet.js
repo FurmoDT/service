@@ -273,7 +273,7 @@ const SpreadSheet = (props) => {
             const msg = []
             const totalText = getTotalText()
             if (totalText.match(/"/g)?.length % 2 === 1) msg.push('DOUBLE QUOTATION MARKS')
-            if (findTermBaseKeys().length) msg.push('TERMBASE')
+            if (Object.keys(findTermBaseKeys()).length) msg.push('TERMBASE')
             if (msg.length) {
                 downloadBtn.current.classList.replace('btn-primary', 'btn-danger')
                 setWarningMsg(<span>{msg.join(' & ')}<br/>CHECK REQUIRED</span>)
