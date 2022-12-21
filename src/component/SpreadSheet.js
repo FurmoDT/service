@@ -314,6 +314,7 @@ const SpreadSheet = (props) => {
             element.onclick = () => {
                 const tb = findTermBaseKeys()
                 const tbKeys = Object.keys(tb).map((v) => parseInt(v))
+                if (!tbKeys.length) return
                 if (index === 0) {
                     if (termBaseCurPos <= 1 || termBaseCurPos > tbKeys.length) termBaseCurPos = tbKeys.length
                     else termBaseCurPos -= 1
