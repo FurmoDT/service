@@ -32,7 +32,7 @@ const SpreadSheet = (props) => {
     const containerGrammarly = useRef(null);
     const [warningMsg, setWarningMsg] = useState(null)
     const subtitle = useRef(null)
-    let subtitleIndex, videoPlaying
+    let subtitleIndex = 0, videoPlaying
     const videoOnPlay = () => videoPlaying = true
     const videoOnPause = () => videoPlaying = false
     const videoOnProgress = (state) => {
