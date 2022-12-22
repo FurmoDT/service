@@ -32,16 +32,25 @@ const SpreadSheet = (props) => {
     const containerGrammarly = useRef(null);
     const [warningMsg, setWarningMsg] = useState(null)
     const subtitle = useRef(null)
+    let subtitleIndex, videoPlaying
+    const videoOnPlay = () => videoPlaying = true
+    const videoOnPause = () => videoPlaying = false
     const videoOnProgress = (state) => {
-        const idx = bisect(cellData.map((value) => TCtoSec(value.start)), state.playedSeconds) - 1
-        if (idx >= 0) {
-            if (state.playedSeconds >= TCtoSec(cellData[idx]['start']) && state.playedSeconds <= TCtoSec(cellData[idx]['end'])) {
-                if (subtitle.current.innerText !== cellData[idx]['text']) {
-                    subtitle.current.innerText = cellData[idx]['text']
-                    if (!hot.main.getActiveEditor()?.isOpened()) hot.main.scrollViewportTo(idx)
-                }
-            } else subtitle.current.innerText = ''
+        if (!videoPlaying) subtitle.current.innerText = ''
+        const start = cellData[subtitleIndex]?.['start'], end = cellData[subtitleIndex]?.['end']
+        if (!start || !end) return
+        const text = cellData[subtitleIndex]?.['text']
+        if (state.playedSeconds >= TCtoSec(start) && state.playedSeconds <= TCtoSec(end)) {
+            if (subtitle.current.innerText !== text) {
+                subtitle.current.innerText = text
+                if (!hot.main.getSelected()) hot.main.scrollViewportTo(subtitleIndex)
+            }
         } else subtitle.current.innerText = ''
+        if (state.playedSeconds > TCtoSec(end))
+            subtitleIndex += 1
+    }
+    const videoOnSeek = (seconds) => {
+        subtitleIndex = Math.max(bisect(cellData.map((value) => TCtoSec(value.start)), seconds) - 1, 0)
     }
     useEffect(() => {
         const targetLanguage = (() => {
@@ -355,8 +364,8 @@ const SpreadSheet = (props) => {
             }
         }}>
             <div style={{flexDirection: 'column', display: 'flex', width: '30%'}}>
-                <VideoPlayer videoUrl={props.videoUrl} player={player} subtitle={subtitle}
-                             onProgress={videoOnProgress}/>
+                <VideoPlayer videoUrl={props.videoUrl} player={player} subtitle={subtitle} onProgress={videoOnProgress}
+                             onSeek={videoOnSeek} onPlay={videoOnPlay} onPause={videoOnPause}/>
                 <div id={"hot-grammarly"} ref={containerGrammarly}/>
             </div>
             <div id={"hot-main"} ref={containerMain}/>
