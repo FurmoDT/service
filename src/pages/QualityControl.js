@@ -3,7 +3,7 @@ import FileUpload from "../component/FileUpload";
 import SpreadSheet from "../component/SpreadSheet";
 import Collapsible from 'react-collapsible';
 import Guideline from "../component/Guideline";
-
+import UrlReader from "../component/UrlReader";
 
 const QualityControl = () => {
     const [file, setFile] = useState({})
@@ -14,15 +14,26 @@ const QualityControl = () => {
     return <Fragment>
         <Collapsible open={true} trigger={<div id={'trigger'}/>}>
             <div style={{flexDirection: "row", display: "flex"}}>
-                <FileUpload fileType={'subtitle'} setFile={(value) => {
-                    setFile(value)
-                }}/>
-                <FileUpload fileType={'video'} setVideoUrl={(value) => {
-                    setVideoUrl(value)
-                }}/>
-                <FileUpload fileType={'termBase'} setTermBase={(value) => {
-                    setTermBase(value)
-                }}/>
+                <div style={{flex: 1}}>
+                    <FileUpload fileType={'subtitle'} setFile={(value) => {
+                        setFile(value)
+                    }}/>
+                    <UrlReader disabled={true} fileType={'subtitle'}/>
+                </div>
+                <div style={{flex: 1}}>
+                    <FileUpload fileType={'video'} setVideoUrl={(value) => {
+                        setVideoUrl(value)
+                    }}/>
+                    <UrlReader disabled={true} fileType={'video'}/>
+                </div>
+                <div style={{flex: 1}}>
+                    <FileUpload fileType={'termBase'} setTermBase={(value) => {
+                        setTermBase(value)
+                    }}/>
+                    <UrlReader disabled={false} fileType={'termBase'} setTermBase={(value) => {
+                        setTermBase(value)
+                    }}/>
+                </div>
             </div>
             <Guideline guideline={guideline} setGuideline={setGuideline}/>
         </Collapsible>
