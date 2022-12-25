@@ -3,7 +3,7 @@ import {useCallback, useRef} from "react";
 import {googleSheetReader} from "../utils/googleSheet";
 
 
-export default function UrlReader(props) {
+const UrlReader = (props) => {
     const fileUrlInput = useRef(null)
     const enterClickEvent = useCallback((event) => {
         if (props.fileType === 'subtitle') {
@@ -29,3 +29,5 @@ export default function UrlReader(props) {
         </MDBInputGroup>
     </div>
 }
+
+export default UrlReader
