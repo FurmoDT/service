@@ -1,5 +1,7 @@
 import {MDBBtn, MDBInputGroup} from 'mdb-react-ui-kit';
 import {useCallback, useRef} from "react";
+import {googleSheetReader} from "../utils/googleSheet";
+
 
 export default function UrlReader(props) {
     const fileUrlInput = useRef(null)
@@ -9,6 +11,7 @@ export default function UrlReader(props) {
         } else if (props.fileType === 'video') {
 
         } else if (props.fileType === 'termBase' && fileUrlInput.current.value) {
+            googleSheetReader(fileUrlInput.current.value)
             // read Google SpreadSheet and props.setTermBase(value)
         }
     }, [])
@@ -16,7 +19,7 @@ export default function UrlReader(props) {
         fileUrlInput.current.value = ''
     }, [])
 
-    return <div>
+    return <div style={{margin: '0px 5px 0px 5px'}}>
         <MDBInputGroup>
             <input className='form-control' ref={fileUrlInput}
                    placeholder={`${props.fileType.charAt(0).toUpperCase() + props.fileType.slice(1).toLowerCase()} URL`}
