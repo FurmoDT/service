@@ -18,6 +18,11 @@ const UrlReader = (props) => {
     const clearClickEvent = useCallback((event) => {
         fileUrlInput.current.value = ''
         event.target.parentNode.children[1].disabled = false
+        if (props.fileType === 'subtitle') {
+
+        } else if (props.fileType === 'video') {
+
+        } else if (props.fileType === 'termBase') props.setTermBase({})
     }, [])
 
     return <div style={{margin: '0px 5px 0px 5px'}}>
