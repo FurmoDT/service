@@ -1,6 +1,6 @@
 import {MDBBtn, MDBInputGroup} from 'mdb-react-ui-kit';
 import {useCallback, useRef} from "react";
-import {googleSheetReader} from "../utils/googleSheet";
+import {googleSheetReader} from "../utils/xlsxReader";
 
 
 const UrlReader = (props) => {
@@ -11,12 +11,13 @@ const UrlReader = (props) => {
         } else if (props.fileType === 'video') {
 
         } else if (props.fileType === 'termBase' && fileUrlInput.current.value) {
-            googleSheetReader(fileUrlInput.current.value)
-            // read Google SpreadSheet and props.setTermBase(value)
+            props.setTermBase(googleSheetReader(fileUrlInput.current.value))
+            event.target.disabled = true
         }
     }, [])
     const clearClickEvent = useCallback((event) => {
         fileUrlInput.current.value = ''
+        event.target.parentNode.children[1].disabled = false
     }, [])
 
     return <div style={{margin: '0px 5px 0px 5px'}}>

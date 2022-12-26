@@ -2,7 +2,7 @@ import {Fragment, useCallback, useMemo, useState} from 'react'
 import {useDropzone} from 'react-dropzone'
 import languageEncoding from "detect-file-encoding-and-language";
 import {xml2json} from "xml-js";
-import * as XLSX from 'xlsx';
+import {xlsxReader} from "../utils/xlsxReader";
 
 
 const baseStyle = {
@@ -79,30 +79,7 @@ const FileUpload = (props) => {
                     } else if (videoFormat.includes(fileFormat)) {
                         props.setVideoUrl(URL.createObjectURL(file))
                     } else if (termBaseFormat.includes(fileFormat)) {
-                        const termBase = {}
-                        const wb = XLSX.read(binaryStr, {type: 'binary'})
-                        wb.SheetNames.forEach((value, index) => {
-                            const ws = wb.Sheets[value]
-                            const sheetData = XLSX.utils.sheet_to_json(ws, {header: 1})
-                            if (index === 0) {
-                                const termBaseDictionary = {}
-                                let key, values
-                                sheetData.forEach((row) => {
-                                    row.forEach((r) => {
-                                        if (new RegExp(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]+/g).test(r)) {
-                                            if (values?.length) termBaseDictionary[key] = values
-                                            key = r
-                                            values = []
-                                        } else values.push(r)
-                                    })
-                                })
-                                if (key && values) termBaseDictionary[key] = values
-                                termBase[index] = termBaseDictionary
-                            } else if (index === 1) {
-                                termBase[index] = sheetData
-                            }
-                        })
-                        props.setTermBase(termBase)
+                        props.setTermBase(xlsxReader(binaryStr))
                     }
                 }
                 if (videoFormat.includes(fileFormat)) reader.readAsArrayBuffer(file.slice(0, 1))
