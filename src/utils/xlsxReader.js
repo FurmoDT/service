@@ -24,12 +24,15 @@ export const googleSheetReader = (url) => {
     const sheetId = regex.exec(url)
     const termBase = {}
     if (sheetId) {
-        axios.get(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId[1]}/values/Sheet1?key=${process.env.REACT_APP_GOOGLE_API_KEY}`)
+        axios.get(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId[1]}?key=${process.env.REACT_APP_GOOGLE_API_KEY}`)
             .then((value) => {
-                termBase[0] = sheetReader(value.data.values.map(value => value.slice(1)))
-            })
-            .catch((error) => {
-                console.log(error.response)
+                axios.get(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId[1]}/values/${value.data.sheets[0].properties.title}?key=${process.env.REACT_APP_GOOGLE_API_KEY}`)
+                    .then((value) => {
+                        termBase[0] = sheetReader(value.data.values)
+                    })
+                    .catch((error) => {
+                        console.log(error.response)
+                    })
             })
     }
     return termBase
