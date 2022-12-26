@@ -8,7 +8,7 @@ const sheetReader = (sheetData) => {
     const termBaseDictionary = {}
     let key, values
     sheetData.forEach((row) => {
-        row.slice(1).forEach((r) => {
+        row.forEach((r) => {
             if (new RegExp(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]+/g).test(r)) {
                 if (values?.length) termBaseDictionary[key] = values
                 key = r
@@ -26,7 +26,7 @@ export const googleSheetReader = (url) => {
     if (sheetId) {
         axios.get(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId[1]}/values/Sheet1?key=${process.env.REACT_APP_GOOGLE_API_KEY}`)
             .then((value) => {
-                termBase[0] = sheetReader(value.data.values)
+                termBase[0] = sheetReader(value.data.values.map(value => value.slice(1)))
             })
             .catch((error) => {
                 console.log(error.response)
