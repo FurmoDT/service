@@ -18,13 +18,13 @@ const QualityControl = () => {
                     <FileUpload fileType={'subtitle'} setFile={(value) => {
                         setFile(value)
                     }}/>
-                    <UrlReader disabled={true} fileType={'subtitle'}/>
+                    {/*<UrlReader disabled={true} fileType={'subtitle'}/>*/}
                 </div>
                 <div style={{flex: 1}}>
                     <FileUpload fileType={'video'} setVideoUrl={(value) => {
                         setVideoUrl(value)
                     }}/>
-                    <UrlReader disabled={true} fileType={'video'}/>
+                    {/*<UrlReader disabled={true} fileType={'video'}/>*/}
                 </div>
                 <div style={{flex: 1}}>
                     <FileUpload fileType={'termBase'} setTermBase={(value) => {
