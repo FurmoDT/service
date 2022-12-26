@@ -11,18 +11,28 @@ const UrlReader = (props) => {
         } else if (props.fileType === 'video') {
 
         } else if (props.fileType === 'termBase' && fileUrlInput.current.value) {
-            props.setTermBase(googleSheetReader(fileUrlInput.current.value))
-            event.target.disabled = true
+            googleSheetReader(fileUrlInput.current.value)
+                .then((value) => {
+                    props.setTermBase(value.termBase)
+                    fileUrlInput.current.value = value.name
+                    fileUrlInput.current.disabled = true
+                    event.target.disabled = true
+                }).catch(() => {
+                fileUrlInput.current.value = ''
+            })
         }
     }, [])
     const clearClickEvent = useCallback((event) => {
-        fileUrlInput.current.value = ''
-        event.target.parentNode.children[1].disabled = false
         if (props.fileType === 'subtitle') {
 
         } else if (props.fileType === 'video') {
 
-        } else if (props.fileType === 'termBase') props.setTermBase({})
+        } else if (props.fileType === 'termBase') {
+            fileUrlInput.current.value = ''
+            fileUrlInput.current.disabled = false
+            event.target.parentNode.children[1].disabled = false
+            props.setTermBase({})
+        }
     }, [])
 
     return <div style={{margin: '0px 5px 0px 5px'}}>

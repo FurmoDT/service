@@ -20,22 +20,24 @@ const sheetReader = (sheetData) => {
     return termBaseDictionary
 }
 
-export const googleSheetReader = (url) => {
+
+export const googleSheetReader = async (url) => {
     const sheetId = regex.exec(url)
-    const termBase = {}
     if (sheetId) {
-        axios.get(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId[1]}?key=${process.env.REACT_APP_GOOGLE_API_KEY}`)
-            .then((value) => {
-                axios.get(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId[1]}/values/${value.data.sheets[0].properties.title}?key=${process.env.REACT_APP_GOOGLE_API_KEY}`)
-                    .then((value) => {
-                        termBase[0] = sheetReader(value.data.values)
+        return await axios.get(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId[1]}?key=${process.env.REACT_APP_GOOGLE_API_KEY}`)
+            .then((metaData) => {
+                const termBase = {}
+                const data = {'name': metaData.data.properties.title, 'termBase': termBase}
+                return axios.get(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId[1]}/values/${metaData.data.sheets[0].properties.title}?key=${process.env.REACT_APP_GOOGLE_API_KEY}`)
+                    .then((sheet) => {
+                        termBase[0] = sheetReader(sheet.data.values)
+                        return data
                     })
                     .catch((error) => {
                         console.log(error.response)
                     })
             })
     }
-    return termBase
 }
 
 export const xlsxReader = (data) => {
