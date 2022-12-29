@@ -17,7 +17,7 @@ const Guideline = (props) => {
             if (samples[i] !== e.target) samples[i].checked = false
             else {
                 if (e.target.checked) {
-                    let targetLanguage = ['enUS', 'enGB']
+                    let targetLanguage = ['enUS']
                     if (e.target.id === 'kbsWorld') {
                         setInputValue(1, 55, 30)
                         setReadOnly(true)

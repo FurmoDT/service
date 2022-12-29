@@ -99,6 +99,7 @@ const SpreadSheet = (props) => {
             hot.main = new Handsontable(containerMain.current, {
                 colHeaders: ['TC_IN', 'TC_OUT', ...props.file.language.map((v) => {
                     if (props.guideline.name) return (targetLanguage.includes(v)) ? v : `&#128274;${v}`
+                    else if (v === 'enGB') return 'MEMO'
                     else return `&#128274;${v}`
                 }), 'CPS', 'ERROR'],
                 manualColumnResize: true,
@@ -118,6 +119,7 @@ const SpreadSheet = (props) => {
                             data: 'text',
                             renderer: textRenderer
                         } : {data: 'text', editor: null, disableVisualSelection: true}
+                        else if (value === 'enGB') return {data: `language_${value}`}
                         else return {data: `language_${value}`, editor: null, disableVisualSelection: true}
                     }),
                     {
@@ -333,7 +335,9 @@ const SpreadSheet = (props) => {
                     if (termBaseCurPos >= tbKeys.length) termBaseCurPos = tbKeys.length ? 1 : 0
                     else termBaseCurPos += 1
                 }
-                setTermBasePopoverText(tb[tbKeys[termBaseCurPos - 1]].map((value) => {return `${value.key}: ${value.values}`}).join('\n'))
+                setTermBasePopoverText(tb[tbKeys[termBaseCurPos - 1]].map((value) => {
+                    return `${value.key}: ${value.values}`
+                }).join('\n'))
                 termBasePopover.current.click()
                 hot.main.selectCell(tbKeys[termBaseCurPos - 1], targetColumn)
                 hot.main.scrollViewportTo(tbKeys[termBaseCurPos - 1])
