@@ -258,22 +258,25 @@ const SpreadSheet = (props) => {
         const findTermBaseKeys = () => {
             const termBaseError = {}
             if (props.termBase[0] && props.file.filename.endsWith('.fsp')) {
-                const termBaseKeys = Object.keys(props.termBase[0])
                 const koKR = props.file.language.filter(v => v.startsWith('koKR')).map(v => `language_${v}`).slice(-1).pop()
                 // eslint-disable-next-line
                 cellData.map((v, index) => {
-                    const matches = {}
-                    termBaseKeys.forEach((termBaseKey) => {
-                        if (v[koKR].match(termBaseKey)) {
-                            const termBaseValues = props.termBase[0][termBaseKey]
-                            let matched = false
-                            termBaseValues.forEach((value) => {
-                                if (v['text'].match(value)) matched = true
+                    props.termBase[0].forEach((tbKeyArray) => {
+                        let is_key = false
+                        tbKeyArray['key'].forEach((tbKey) => {
+                            if (v[koKR].match(tbKey)) is_key = true
+                        })
+                        if (is_key) {
+                            let is_value = false
+                            tbKeyArray['values'].forEach((tbValue) => {
+                                if (v['text'].match(tbValue)) is_value = true
                             })
-                            if (!matched) matches[termBaseKey] = termBaseValues
+                            if (!is_value) {
+                                if (termBaseError[index]) termBaseError[index].push(tbKeyArray)
+                                else termBaseError[index] = [tbKeyArray]
+                            }
                         }
                     })
-                    if (Object.keys(matches).length) termBaseError[index] = matches
                 })
             }
             return termBaseError
@@ -323,7 +326,6 @@ const SpreadSheet = (props) => {
             element.onclick = () => {
                 const tb = findTermBaseKeys()
                 const tbKeys = Object.keys(tb).map((v) => parseInt(v))
-                if (!tbKeys.length) return
                 if (index === 0) {
                     if (termBaseCurPos <= 1 || termBaseCurPos > tbKeys.length) termBaseCurPos = tbKeys.length
                     else termBaseCurPos -= 1
@@ -331,9 +333,7 @@ const SpreadSheet = (props) => {
                     if (termBaseCurPos >= tbKeys.length) termBaseCurPos = tbKeys.length ? 1 : 0
                     else termBaseCurPos += 1
                 }
-                setTermBasePopoverText(Object.entries(tb[tbKeys[termBaseCurPos - 1]]).map((value) => {
-                    return `${value[0]}: ${value[1]}`
-                }).join('\n'))
+                setTermBasePopoverText(tb[tbKeys[termBaseCurPos - 1]].map((value) => {return `${value.key}: ${value.values}`}).join('\n'))
                 termBasePopover.current.click()
                 hot.main.selectCell(tbKeys[termBaseCurPos - 1], targetColumn)
                 hot.main.scrollViewportTo(tbKeys[termBaseCurPos - 1])
