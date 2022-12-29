@@ -21,7 +21,7 @@ const UrlReader = (props) => {
                 fileUrlInput.current.value = ''
             })
         }
-    }, [])
+    }, [props])
     const clearClickEvent = useCallback((event) => {
         if (props.fileType === 'subtitle') {
 
@@ -33,7 +33,7 @@ const UrlReader = (props) => {
             event.target.parentNode.children[1].disabled = false
             props.setTermBase({})
         }
-    }, [])
+    }, [props])
 
     return <div style={{margin: '0px 5px 0px 5px'}}>
         <MDBInputGroup>
