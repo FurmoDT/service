@@ -98,8 +98,8 @@ const SpreadSheet = (props) => {
             if (hot.main && !hot.main.isDestroyed) hot.main.destroy()
             hot.main = new Handsontable(containerMain.current, {
                 colHeaders: ['TC_IN', 'TC_OUT', ...props.file.language.map((v) => {
+                    if (v === 'enGB') return 'MEMO'
                     if (props.guideline.name) return (targetLanguage.includes(v)) ? v : `&#128274;${v}`
-                    else if (v === 'enGB') return 'MEMO'
                     else return `&#128274;${v}`
                 }), 'CPS', 'ERROR'],
                 manualColumnResize: true,
