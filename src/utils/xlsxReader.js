@@ -5,19 +5,22 @@ const regex = /^https:\/\/docs\.google\.com\/spreadsheets\/d\/([a-zA-Z0-9_-]+)\/
 
 
 const sheetReader = (sheetData) => {
-    const termBaseDictionary = {}
-    let key, values
+    const termBase = []
+    let key = [], values = []
     sheetData.forEach((row) => {
         row.forEach((r) => {
-            if (new RegExp(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]+/g).test(r)) {
-                if (values?.length) termBaseDictionary[key] = values
-                key = r
-                values = []
-            } else values?.push(r)
+            if (new RegExp(/^[ㄱ-ㅎ|ㅏ-ㅣ|가-힣| ]+$/g).test(r)) {
+                if (values.length) {
+                    if (key.length) termBase.push({'key': key, 'values': values})
+                    key = []
+                    values = []
+                }
+                key.push(r)
+            } else if (r) values.push(r)
         })
     })
-    if (key && values) termBaseDictionary[key] = values
-    return termBaseDictionary
+    if (key.length && values.length) termBase.push({'key': key, 'values': values})
+    return termBase
 }
 
 
