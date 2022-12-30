@@ -54,7 +54,7 @@ const FileUpload = (props) => {
                                 const data = JSON.parse(xml2json(str, {compact: false}))
                                 props.setFile({
                                     'filename': file.name,
-                                    'data': JSON.parse(xml2json(str, {compact: false})),
+                                    'data': data,
                                     'language': (() => {
                                         let lang
                                         let counter = {}
@@ -67,6 +67,17 @@ const FileUpload = (props) => {
                                                 return `${reversedValue}_${counter[value] + 1}`
                                             } else return reversedValue
                                         })
+                                        if (!lang.includes('enGB')) {
+                                            data.elements[0].elements[4].elements.push(
+                                                {
+                                                    type: 'element',
+                                                    name: 'lc',
+                                                    attributes: {'code': 'enGB'},
+                                                    elements: [{type: 'text', text: '영어(영국)'}]
+                                                })
+                                            lang.unshift('enGB')
+                                        }
+                                        console.log(data.elements[0].elements[4])
                                         return lang.reverse()
                                     })()
                                 })

@@ -198,7 +198,7 @@ const SpreadSheet = (props) => {
                     if (curIndex !== idx) {
                         const targetText = text.slice(text.indexOf('\n', text.indexOf(`Index:${curIndex}`)) + 1, cellData.length === curIndex ? text.length : text.indexOf(`Index:${curIndex + 1}`) - 1)
                         if (cellData[curIndex - 1]['text'] !== targetText) {
-                            hot.main.setDataAtCell(curIndex - 1, 2 + Math.max(...[props.file.language.indexOf('enUS'), props.file.language.indexOf('enGB'), props.file.language.indexOf('TEXT')]), targetText)
+                            hot.main.setDataAtCell(curIndex - 1, 2 + Math.max(...[props.file.language.indexOf('enUS'), props.file.language.indexOf('TEXT')]), targetText)
                             hot.main.scrollViewportTo(curIndex - 1)
                         }
                         curIndex = idx
