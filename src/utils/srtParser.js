@@ -76,6 +76,7 @@ export function toFsp(array, file) {
                 elements: [{
                     type: 'text', text: (() => {
                         if (v.hasOwnProperty(`language_${l}`)) return v[`language_${l}`].replace('\n', '|')
+                        else if (l === 'enGB') return ''
                         else return v['text'].replace('\n', '|')
                     })()
                 }]
