@@ -98,6 +98,7 @@ const SpreadSheet = (props) => {
             if (hot.main && !hot.main.isDestroyed) hot.main.destroy()
             hot.main = new Handsontable(containerMain.current, {
                 colHeaders: ['TC_IN', 'TC_OUT', ...props.file.language.map((v) => {
+                    if (v === 'MEMO') return v // .srt
                     if (v === 'enGB') return 'MEMO'
                     if (props.guideline.name) return (targetLanguage.includes(v)) ? v : `&#128274;${v}`
                     else return `&#128274;${v}`
@@ -119,6 +120,7 @@ const SpreadSheet = (props) => {
                             data: 'text',
                             renderer: textRenderer
                         } : {data: 'text', editor: null, disableVisualSelection: true}
+                        else if (value === 'MEMO') return {data: 'memo'}
                         else if (value === 'enGB') return {data: `language_${value}`}
                         else return {data: `language_${value}`, editor: null, disableVisualSelection: true}
                     }),

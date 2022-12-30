@@ -83,7 +83,7 @@ const FileUpload = (props) => {
                             } else if (file.name.endsWith('.srt')) props.setFile({
                                 'filename': file.name,
                                 'data': str,
-                                'language': ['TEXT']
+                                'language': ['TEXT', 'MEMO']
                             })
                         });
                     } else if (videoFormat.includes(fileFormat)) {
