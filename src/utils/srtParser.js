@@ -80,7 +80,6 @@ export function toFsp(array, file) {
                     })()
                 }]
             })
-
         })
         file.data.elements[0].elements[5].elements[i] = newLine
     })

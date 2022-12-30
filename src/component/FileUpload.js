@@ -77,7 +77,6 @@ const FileUpload = (props) => {
                                                 })
                                             lang.unshift('enGB')
                                         }
-                                        console.log(data.elements[0].elements[4])
                                         return lang.reverse()
                                     })()
                                 })
