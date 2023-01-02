@@ -278,6 +278,7 @@ const SpreadSheet = (props) => {
                     if (p === '(') tempIndex = index
                     parentheses = p
                 })
+                return null
             })
             return Array.from(indexes)
         }
