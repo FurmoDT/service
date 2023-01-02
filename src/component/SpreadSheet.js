@@ -310,22 +310,21 @@ const SpreadSheet = (props) => {
         }
         let doubleQuotationMarksCurPos = 0
         let termBaseCurPos = 0
-        doubleQuotationMarksPrevNextBtn.current.children[0].onclick = () => {
-            const dqm = findDoubleQuotationMarks()
-            if (doubleQuotationMarksCurPos <= 1 || doubleQuotationMarksCurPos > dqm.length) doubleQuotationMarksCurPos = dqm.length
-            else doubleQuotationMarksCurPos -= 1
-            hot.main.selectCell(dqm[doubleQuotationMarksCurPos - 1], targetColumn)
-            hot.main.scrollViewportTo(dqm[doubleQuotationMarksCurPos - 1])
-            doubleQuotationMarksPositionLabel.current.innerText = `${doubleQuotationMarksCurPos}/${dqm.length}`
-        }
-        doubleQuotationMarksPrevNextBtn.current.children[1].onclick = () => {
-            const dqm = findDoubleQuotationMarks()
-            if (doubleQuotationMarksCurPos >= dqm.length) doubleQuotationMarksCurPos = dqm.length ? 1 : 0
-            else doubleQuotationMarksCurPos += 1
-            hot.main.selectCell(dqm[doubleQuotationMarksCurPos - 1], targetColumn)
-            hot.main.scrollViewportTo(dqm[doubleQuotationMarksCurPos - 1])
-            doubleQuotationMarksPositionLabel.current.innerText = `${doubleQuotationMarksCurPos}/${dqm.length}`
-        }
+        Array.prototype.forEach.call(doubleQuotationMarksPrevNextBtn.current.children, (element, index) => {
+            element.onclick = () => {
+                const dqm = findDoubleQuotationMarks()
+                if (index === 0) {
+                    if (doubleQuotationMarksCurPos <= 1 || doubleQuotationMarksCurPos > dqm.length) doubleQuotationMarksCurPos = dqm.length
+                    else doubleQuotationMarksCurPos -= 1
+                } else if (index === 1) {
+                    if (doubleQuotationMarksCurPos >= dqm.length) doubleQuotationMarksCurPos = dqm.length ? 1 : 0
+                    else doubleQuotationMarksCurPos += 1
+                }
+                hot.main.selectCell(dqm[doubleQuotationMarksCurPos - 1], targetColumn)
+                hot.main.scrollViewportTo(dqm[doubleQuotationMarksCurPos - 1])
+                doubleQuotationMarksPositionLabel.current.innerText = `${doubleQuotationMarksCurPos}/${dqm.length}`
+            }
+        })
         Array.prototype.forEach.call(termBasePrevNext.current.children, (element, index) => {
             element.onclick = () => {
                 const tb = findTermBaseKeys()
