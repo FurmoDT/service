@@ -9,6 +9,32 @@ const AddOn = (props) => {
         </div>
         <div style={{height: '25px', border: 0, borderRight: 'solid', borderWidth: 'thin', margin: '0px 5px 0px 5px'}}/>
         <div style={{alignItems: 'center', display: 'flex'}}>
+            <label>Music Note</label>
+            <label style={{marginLeft: '5px'}} ref={props.notePositionLabel}>0/0</label>
+            <div ref={props.notePrevNextBtn}>
+                <MDBBtn size={'sm'} color={'none'} floating tag='a'>
+                    <MDBIcon fas icon="chevron-left" color={'dark'}/>
+                </MDBBtn>
+                <MDBBtn size={'sm'} color={'none'} floating tag='a'>
+                    <MDBIcon fas icon="chevron-right" color={'dark'}/>
+                </MDBBtn>
+            </div>
+        </div>
+        <div style={{height: '25px', border: 0, borderRight: 'solid', borderWidth: 'thin', margin: '0px 5px 0px 5px'}}/>
+        <div style={{alignItems: 'center', display: 'flex'}}>
+            <label>Parentheses</label>
+            <label style={{marginLeft: '5px'}} ref={props.parenthesesPositionLabel}>0/0</label>
+            <div ref={props.parenthesesPrevNextBtn}>
+                <MDBBtn size={'sm'} color={'none'} floating tag='a'>
+                    <MDBIcon fas icon="chevron-left" color={'dark'}/>
+                </MDBBtn>
+                <MDBBtn size={'sm'} color={'none'} floating tag='a'>
+                    <MDBIcon fas icon="chevron-right" color={'dark'}/>
+                </MDBBtn>
+            </div>
+        </div>
+        <div style={{height: '25px', border: 0, borderRight: 'solid', borderWidth: 'thin', margin: '0px 5px 0px 5px'}}/>
+        <div style={{alignItems: 'center', display: 'flex'}}>
             <label>Double Quotation Marks</label>
             <label style={{marginLeft: '5px'}} ref={props.doubleQuotationMarksPositionLabel}>0/0</label>
             <div ref={props.doubleQuotationMarksPrevNextBtn}>

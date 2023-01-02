@@ -21,6 +21,10 @@ const SpreadSheet = (props) => {
     const player = useRef(null)
     const resizeBtn = useRef(null)
     const downloadBtn = useRef(null)
+    const notePositionLabel = useRef(null)
+    const notePrevNextBtn = useRef(null)
+    const parenthesesPositionLabel = useRef(null)
+    const parenthesesPrevNextBtn = useRef(null)
     const doubleQuotationMarksPositionLabel = useRef(null)
     const doubleQuotationMarksPrevNextBtn = useRef(null)
     const termBaseKeysPositionLabel = useRef(null)
@@ -254,6 +258,29 @@ const SpreadSheet = (props) => {
             hot.main.render()
             hot.grammarly.render()
         }
+        const findNotes = () => {
+            const indexes = []
+            cellData.map((value, index) => {
+                if ((value.text?.slice(0, 1) === '♪') + (value.text?.slice(-1) === '♪') === 1) indexes.push(index)
+                return null
+            })
+            return indexes
+        }
+        const findParentheses = () => {
+            const indexes = new Set()
+            let tempIndex
+            let parentheses = ')'
+            cellData.map((value, index) => {
+                value.text?.match(/[()]/g)?.forEach((p) => {
+                    if (parentheses === p)
+                        if (p === ')') indexes.add(index)
+                        else if (p === '(') indexes.add(tempIndex)
+                    if (p === '(') tempIndex = index
+                    parentheses = p
+                })
+            })
+            return Array.from(indexes)
+        }
         const findDoubleQuotationMarks = () => {
             const indexes = []
             cellData.map((value, index) => value.text?.includes('"') ? indexes.push(index) : null)
@@ -263,7 +290,6 @@ const SpreadSheet = (props) => {
             const termBaseError = {}
             if (props.termBase[0] && props.file.filename.endsWith('.fsp')) {
                 const koKR = props.file.language.filter(v => v.startsWith('koKR')).map(v => `language_${v}`).slice(-1).pop()
-                // eslint-disable-next-line
                 cellData.map((v, index) => {
                     props.termBase[0].forEach((tbKeyArray) => {
                         let is_key = false
@@ -281,6 +307,7 @@ const SpreadSheet = (props) => {
                             }
                         }
                     })
+                    return null
                 })
             }
             return termBaseError
@@ -288,6 +315,8 @@ const SpreadSheet = (props) => {
         downloadBtn.current.onmouseover = () => {
             const msg = []
             const totalText = getTotalText()
+            if (findNotes().length) msg.push('MUSIC NOTE')
+            if (findParentheses().length) msg.push('PARENTHESES')
             if (totalText.match(/"/g)?.length % 2 === 1) msg.push('DOUBLE QUOTATION MARKS')
             if (Object.keys(findTermBaseKeys()).length) msg.push('TERMBASE')
             if (msg.length) {
@@ -308,8 +337,40 @@ const SpreadSheet = (props) => {
                 fileDownload(cellData, props.file)
             }
         }
+        let noteCurPos = 0
+        let parenthesesCurPos = 0
         let doubleQuotationMarksCurPos = 0
         let termBaseCurPos = 0
+        Array.prototype.forEach.call(notePrevNextBtn.current.children, (element, index) => {
+            element.onclick = () => {
+                const n = findNotes()
+                if (index === 0) {
+                    if (noteCurPos <= 1 || noteCurPos > n.length) noteCurPos = n.length
+                    else noteCurPos -= 1
+                } else if (index === 1) {
+                    if (noteCurPos >= n.length) noteCurPos = n.length ? 1 : 0
+                    else noteCurPos += 1
+                }
+                hot.main.selectCell(n[noteCurPos - 1], targetColumn)
+                hot.main.scrollViewportTo(n[noteCurPos - 1])
+                notePositionLabel.current.innerText = `${noteCurPos}/${n.length}`
+            }
+        })
+        Array.prototype.forEach.call(parenthesesPrevNextBtn.current.children, (element, index) => {
+            element.onclick = () => {
+                const p = findParentheses()
+                if (index === 0) {
+                    if (parenthesesCurPos <= 1 || parenthesesCurPos > p.length) parenthesesCurPos = p.length
+                    else parenthesesCurPos -= 1
+                } else if (index === 1) {
+                    if (parenthesesCurPos >= p.length) parenthesesCurPos = p.length ? 1 : 0
+                    else parenthesesCurPos += 1
+                }
+                hot.main.selectCell(p[parenthesesCurPos - 1], targetColumn)
+                hot.main.scrollViewportTo(p[parenthesesCurPos - 1])
+                parenthesesPositionLabel.current.innerText = `${parenthesesCurPos}/${p.length}`
+            }
+        })
         Array.prototype.forEach.call(doubleQuotationMarksPrevNextBtn.current.children, (element, index) => {
             element.onclick = () => {
                 const dqm = findDoubleQuotationMarks()
@@ -349,6 +410,10 @@ const SpreadSheet = (props) => {
 
     return <div>
         <AddOn display={!!(props.file.data && props.guideline.name)}
+               notePositionLabel={notePositionLabel}
+               notePrevNextBtn={notePrevNextBtn}
+               parenthesesPositionLabel={parenthesesPositionLabel}
+               parenthesesPrevNextBtn={parenthesesPrevNextBtn}
                doubleQuotationMarksPositionLabel={doubleQuotationMarksPositionLabel}
                doubleQuotationMarksPrevNextBtn={doubleQuotationMarksPrevNextBtn}
                termBaseKeysPositionLabel={termBaseKeysPositionLabel}
