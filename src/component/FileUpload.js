@@ -38,11 +38,15 @@ const FileUpload = (props) => {
         acceptedFiles.forEach((file) => {
             const fileFormat = file.name.substring(file.name.lastIndexOf('.')).toLowerCase()
             if (Array.prototype.concat(subtitleFormat, videoFormat, termBaseFormat).includes(fileFormat)) {
+                setUploadedFile(file)
+                if (videoFormat.includes(fileFormat)) {
+                    props.setVideoUrl(URL.createObjectURL(file))
+                    return
+                }
                 const reader = new FileReader()
                 reader.onabort = () => console.log('file reading was aborted')
                 reader.onerror = () => console.log('file reading has failed')
                 reader.onload = () => {
-                    setUploadedFile(file)
                     let binaryStr = new ArrayBuffer(0)
                     binaryStr = reader.result
                     if (subtitleFormat.includes(fileFormat)) {
@@ -86,14 +90,11 @@ const FileUpload = (props) => {
                                 'language': ['TEXT', 'MEMO']
                             })
                         });
-                    } else if (videoFormat.includes(fileFormat)) {
-                        props.setVideoUrl(URL.createObjectURL(file))
                     } else if (termBaseFormat.includes(fileFormat)) {
                         props.setTermBase(xlsxReader(binaryStr))
                     }
                 }
-                if (videoFormat.includes(fileFormat)) reader.readAsArrayBuffer(file.slice(0, 1))
-                else reader.readAsArrayBuffer(file)
+                reader.readAsArrayBuffer(file)
             }
         })
     }, [props, subtitleFormat, videoFormat, termBaseFormat])
