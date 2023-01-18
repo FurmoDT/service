@@ -407,7 +407,7 @@ const SpreadSheet = (props) => {
                 termBaseKeysPositionLabel.current.innerText = `${termBaseCurPos}/${tbKeys.length}`
             }
         })
-    }, [props.file, props.guideline, props.termBase, props.videoUrl, props.player]);
+    }, [props.file, props.guideline, props.termBase, props.videoUrl]);
 
     return <div>
         <AddOn display={!!(props.file.data && props.guideline.name)}
